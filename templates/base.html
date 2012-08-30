@@ -28,8 +28,13 @@
           <a class="brand" href="{% url 'index' %}">UIConnect</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+              {% if user.is_authenticated %}
+              <li><a href="#">Hello {{user.username}}!</a></li>
+              <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+              {% else %}
               <li><a href="{% url 'accounts:login' %}">Login</a></li>
               <li><a href="{% url 'accounts:register' %}">Register</a></li>
+              {% endif %}
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
