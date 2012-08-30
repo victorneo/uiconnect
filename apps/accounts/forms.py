@@ -25,6 +25,7 @@ class LoginForm(forms.Form):
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(max_length=75, required=True)
+    email = forms.EmailField(required=True)
     password = forms.CharField(max_length=200, required=True, widget=forms.PasswordInput)
     password2 = forms.CharField(max_length=200, required=True, widget=forms.PasswordInput, help_text=u'Confirm your password.')
     bio = forms.CharField(max_length=400, required=False, widget=forms.Textarea)
@@ -36,6 +37,7 @@ class RegistrationForm(forms.Form):
             Fieldset(
                 'Register',
                 'username',
+                'email',
                 'password',
                 'password2',
                 'bio',
