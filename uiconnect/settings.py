@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'south',
     'crispy_forms',
     'endless_pagination',
+    'django_jenkins',
     'accounts',
     'listings',
     # Uncomment the next line to enable the admin:
@@ -168,6 +169,15 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 ENDLESS_PAGINATION_PER_PAGE = 15
+
+
+# Jenkins Configuration
+PROJECT_APPS = ('accounts', 'listings')
+JENKINS_TASKS = (
+    'django_jenkins.tasks.run_pylint',
+    'django_jenkins.tasks.with_coverage',
+    'django_jenkins.tasks.django_tests',
+)
 
 try:
     from local_settings import *

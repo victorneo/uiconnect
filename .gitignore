@@ -2,4 +2,5 @@
 *.pot
 *.pyc
 *.sqlite
+reports/
 local_settings.py

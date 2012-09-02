@@ -1,0 +1,8 @@
+Django==1.4.1
+PIL==1.1.7
+South==0.7.6
+django-coverage==1.2.2
+django-crispy-forms==1.1.4
+django-endless-pagination==1.1
+django-imagekit==2.0.1
+wsgiref==0.1.2
