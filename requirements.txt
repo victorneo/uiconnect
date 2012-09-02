@@ -1,8 +1,13 @@
 Django==1.4.1
 PIL==1.1.7
 South==0.7.6
+coverage==3.5.2
 django-coverage==1.2.2
 django-crispy-forms==1.1.4
 django-endless-pagination==1.1
 django-imagekit==2.0.1
+django-jenkins==0.13.0
+logilab-astng==0.24.0
+logilab-common==0.58.1
+pylint==0.25.2
 wsgiref==0.1.2
