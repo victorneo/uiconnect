@@ -1,9 +1,12 @@
+import os
+import binascii
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login as lgin, logout as lgout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .forms import LoginForm, RegistrationForm
+from .forms import *
 
 
 def login(request):
@@ -41,9 +44,9 @@ def register(request):
                 password = form.cleaned_data['password'],
                 email = form.cleaned_data['email'],
             )
-            user.bio = form.cleaned_data['bio']
-            user.avatar = form.cleaned_data['avatar']
-            user.save()
+            user.get_profile().bio = form.cleaned_data['bio']
+            user.get_profile().avatar = form.cleaned_data['avatar']
+            user.get_profile().save()
 
             user = authenticate(username=user.username, password=form.cleaned_data['password'])
             lgin(request, user)
@@ -52,3 +55,63 @@ def register(request):
             messages.error(request, u'Username has been taken.')
 
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def profile(request):
+    user = request.user
+    profile = user.get_profile()
+    initial = {
+        'name': user.first_name,
+        'email': user.email,
+        'bio': profile.bio,
+        'avatar': profile.avatar,
+    }
+    form = ProfileForm(request.POST or None, request.FILES or None, initial=initial)
+
+    if form.is_valid():
+        user.first_name = form.cleaned_data['name']
+        user.email = form.cleaned_data['email']
+
+        if form.cleaned_data['password']:
+            user.set_password(form.cleaned_data['password'])
+
+        user.save()
+        profile.bio = form.cleaned_data['bio']
+
+        if form.cleaned_data.get('avatar', None):
+            if profile.avatar and form.cleaned_data['avatar'] != profile.avatar:
+                profile.avatar.delete()
+
+            profile.avatar = form.cleaned_data['avatar']
+
+        profile.save()
+
+        messages.success(request, u'Your profile has been updated.')
+        return redirect(reverse('accounts:profile'))
+
+    return render(request, 'accounts/profile.html', {'form': form})
+
+
+def forgot_password(request):
+    form = ForgotPasswordForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        try:
+            user = User.objects.get(username=form.cleaned_data['username'])
+            password = binascii.b2a_hex(os.urandom(30))
+            user.set_password(password)
+            user.save()
+
+            send_mail('Your temporary password', '%s' % password, 'uiconnect303@gmail.com',
+                [user.email,])
+
+            messages.success(request, 'Email with temporary password has been sent.')
+
+            return redirect(reverse('accounts:login'))
+
+        except User.DoesNotExist:
+            messages.error(request, 'Invalid email.')
+
+    return render(request, 'accounts/forgot_password.html', {
+        'form': form,
+    })

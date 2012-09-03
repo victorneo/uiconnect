@@ -2,5 +2,6 @@
 *.pot
 *.pyc
 *.sqlite
+static/media
 reports/
 local_settings.py

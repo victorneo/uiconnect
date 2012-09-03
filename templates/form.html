@@ -1,0 +1,6 @@
+{% load crispy_forms_tags %}
+<form class="form-horizontal" method="POST" enctype="multipart/form-data" action="{{ form_action }}">
+  <h3>{{legend}}</h3>
+  {% include 'messages.html' %}
+  {% crispy form %}
+</form>
