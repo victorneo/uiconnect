@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 from imagekit.models.fields import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -13,7 +14,7 @@ class Listing(models.Model):
 
 class ListingImage(models.Model):
     listing = models.ForeignKey(Listing, related_name='images')
-    image = models.ImageField(upload_to='listings')
+    image = models.ImageField(upload_to='listings', null=True, blank=True)
     formatted_image = ImageSpecField(
         image_field='image',
         format='JPEG',
@@ -25,3 +26,12 @@ class ListingImage(models.Model):
         format='JPEG',
         options={'quality': 80}
     )
+
+
+def create_listing_images(sender, instance, created, **kwargs):
+    if created:
+        for i in range(0, 3):
+            ListingImage(listing=instance).save()
+
+
+post_save.connect(create_listing_images, sender=Listing)
