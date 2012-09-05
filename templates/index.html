@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
+{% load url from future %}
 
 {% block content %}
-  <div class="span6 offset3">
+  <div class="span10 offset1">
+    {% include 'messages.html' %}
     {% if listings %}
-
-    <ul class="thumbnails">
       {% for listing in listings %}
-      <li class="span4">
-        <a href="#" class="thumbnail"><img src="listing.thumbnail.url" alt=""></a>
-      </li>
+      <div class="span3">
+        <h4>{{ listing.name }}</h4>
+        <a href="{% url 'listings:view' listing.id %}" class="thumbnail">
+          <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
+          <p>{{listing.description|truncatewords:10}}</p>
+        </a>
+      </div>
       {% endfor %}
-    </ul>
     {% else %}
       <h3>No listings</h3>
     {% endif %}
