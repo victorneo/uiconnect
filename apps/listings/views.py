@@ -1,8 +1,10 @@
+import json
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .forms import AddListingForm, ListingImageForm
+from .forms import AddListingForm, AddImageForm
 from .models import Listing, ListingImage
+
 
 
 def index(request):
@@ -35,23 +37,41 @@ def manage_images(request, listing_id):
         listing = None
 
     if listing is None:
-        return redirect('listings:index')
+        return redirect(reverse('listings:index'))
 
-    initial = {}
-    count = 1
-    for img in listing.images.all()[:3]:
-        initial['image%d' % count] = img
-        count += 1
-
-    form = ListingImageForm(request.POST or None, request.FILES or None, initial=initial)
+    form = AddImageForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
-        data = form.cleaned_data
-
-        message.success(request, u'Images uploaded successfully.')
-        return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing.id}))
+        img = ListingImage(
+            listing=listing,
+            image=form.cleaned_data['img'],
+        )
+        img.save()
+        messages.success(request, u'Image uploaded!')
+        return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing_id}))
 
     return render(request, 'listings/images.html', {
-        'form': form,
         'listing': listing,
     })
+
+
+def delete_image(request, listing_id, image_id):
+    try:
+        listing = Listing.objects.get(id=listing_id)
+        if request.user != listing.user:
+            listing = None
+
+        img = listing.images.get(id=image_id)
+    except Listing.DoesNotExist:
+        listing = None
+    except ListingImage.DoesNotExist:
+        img = None
+
+    if listing is None or img is None:
+        return redirect(reverse('index'))
+
+    img.thumbnail.delete()
+    img.formatted_image.delete()
+    img.delete()
+
+    return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing_id}))

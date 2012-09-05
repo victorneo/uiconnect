@@ -29,23 +29,5 @@ class AddListingForm(forms.ModelForm):
         exclude = ('user',)
 
 
-class ListingImageForm(forms.Form):
-    image1 = forms.ImageField(required=False)
-    image2 = forms.ImageField(required=False)
-    image3 = forms.ImageField(required=False)
-
-    def __init__(self, *args, **kwargs):
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Fieldset(
-                '',
-                'image1',
-                'image2',
-                'image3',
-            ),
-            FormActions(
-                Submit('submit', 'Upload', css_class='btn btn-primary')
-            )
-        )
-        super(ListingImageForm, self).__init__(*args, **kwargs)
+class AddImageForm(forms.Form):
+    img = forms.ImageField()
