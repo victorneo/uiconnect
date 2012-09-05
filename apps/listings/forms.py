@@ -31,3 +31,4 @@ class AddListingForm(forms.ModelForm):
 
 class AddImageForm(forms.Form):
     img = forms.ImageField()
+    caption = forms.CharField(max_length=1000, required=False)

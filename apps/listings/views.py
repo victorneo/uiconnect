@@ -1,15 +1,24 @@
+from decimal import Decimal
 import json
-from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from .forms import AddListingForm, AddImageForm
 from .models import Listing, ListingImage
-
 
 
 def index(request):
     return render(request, 'index.html', {
         'listings': Listing.objects.all(),
+    })
+
+
+def view(request, listing_id):
+    listing = get_object_or_404(Listing, pk=listing_id)
+    return render(request, 'listings/view.html', {
+        'listing': listing,
     })
 
 
@@ -26,6 +35,62 @@ def add(request):
     return render(request, 'listings/add.html', {
         'form': form,
     })
+
+
+def delete(request, listing_id):
+    try:
+        listing = Listing.objects.get(id=listing_id)
+        if request.user != listing.user:
+            listing = None
+    except Listing.DoesNotExist:
+        listing = None
+
+    if listing is None:
+        return redirect(reverse('listings:index'))
+
+    for img in listing.images.all():
+        img.formatted_image.delete()
+        img.thumbnail.delete()
+
+    listing.delete()
+    messages.success(request, u'Listing has been deleted.')
+
+    return redirect(reverse('index'))
+
+
+@csrf_exempt
+def update(request, listing_id):
+    try:
+        listing = Listing.objects.get(id=listing_id)
+        if request.user != listing.user:
+            listing = None
+    except Listing.DoesNotExist:
+        listing = None
+
+    if listing is None:
+        return redirect(reverse('listings:index'))
+
+    param = request.POST['id']
+    value = request.POST['value']
+
+    print param, value
+
+    if param == 'listing_name':
+        listing.name = value
+    elif param == 'listing_description':
+        listing.description = value
+    else:
+        try:
+            listing.price = Decimal(value)
+        except Exception as e:
+            print e
+
+    try:
+        listing.save()
+    except Exception as e:
+        print e
+
+    return HttpResponse(value)
 
 
 def manage_images(request, listing_id):
@@ -45,6 +110,7 @@ def manage_images(request, listing_id):
         img = ListingImage(
             listing=listing,
             image=form.cleaned_data['img'],
+            caption=form.cleaned_data['caption'],
         )
         img.save()
         messages.success(request, u'Image uploaded!')

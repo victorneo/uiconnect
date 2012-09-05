@@ -1,1 +1,14 @@
 form>fieldset>legend{border: 0; display: none;}
+
+a.thumbnail{color: #000;}
+a.thumbnail:hover{text-decoration: none;}
+
+/* Listing page */
+
+div.listing-info { margin-left: 20px; }
+
+div.listing-info dl { margin-left: -10px; }
+div.listing-info dl>dt {width: 95px; margin-bottom: 20px; }
+div.listing-info dl>dd {margin-bottom: 20px;}
+
+.editable {background-color: #ddd;}

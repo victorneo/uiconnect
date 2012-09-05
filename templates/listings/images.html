@@ -26,12 +26,25 @@
     <h3>Upload a new image</h3>
     <form class="form-horizontal" action="{% url 'listings:manage_images' listing.id %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="fileupload fileupload-new" data-provides="fileupload">
-        <div class="fileupload-new thumbnail"><img src="" style="width: 200px; height: 100px;" /></div>
-        <div class="fileupload-preview fileupload-exists thumbnail" style="width: 200px;"></div>
-        <div style="display: inline;">
-        <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="img" /></span>
-          <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+
+      <div class="control-group">
+        <label class="control-label">Image</label>
+        <div class="controls">
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+            <div class="fileupload-new thumbnail"><img src="" style="width: 200px; height: 100px;" /></div>
+            <div class="fileupload-preview fileupload-exists thumbnail" style="width: 200px;"></div>
+            <div style="display: inline;">
+            <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="img" /></span>
+              <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Caption</label>
+        <div class="controls">
+          <textarea name="caption" class="span5"></textarea>
         </div>
       </div>
 
