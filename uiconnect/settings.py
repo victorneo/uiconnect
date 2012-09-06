@@ -179,6 +179,10 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.django_tests',
 )
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 try:
     from local_settings import *
 except:
