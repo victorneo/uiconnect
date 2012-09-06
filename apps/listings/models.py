@@ -31,12 +31,9 @@ class ListingImage(models.Model):
 
 
 def delete_thumbnail_images(sender, instance, **kwargs):
-    try:
-        instance.formatted_image.delete()
-        instance.thumbnail.delete()
-        instance.image.delete()
-    except Exception as e:
-        print e
+    instance.formatted_image.delete()
+    instance.thumbnail.delete()
+    instance.image.delete()
 
 
 pre_delete.connect(delete_thumbnail_images, sender=ListingImage)

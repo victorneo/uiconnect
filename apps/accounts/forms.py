@@ -75,6 +75,22 @@ class RegistrationForm(forms.Form):
         )
         super(RegistrationForm, self).__init__(*args, **kwargs)
 
+    def clean(self):
+        cleaned_data = super(RegistrationForm, self).clean()
+        password = cleaned_data.get('password', '')
+        password2 = cleaned_data.get('password2', '')
+
+        if password != password2:
+            msg = u'Passwords are not the same.'
+            self._errors['password'] = self.error_class([msg])
+            self._errors['password2'] = self.error_class('')
+
+            del cleaned_data['password']
+            del cleaned_data['password2']
+
+        # Always return the full collection of cleaned data.
+        return cleaned_data
+
 
 class ProfileForm(forms.Form):
     name = forms.CharField(max_length=100, required=False)
