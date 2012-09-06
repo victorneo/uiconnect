@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from imagekit.models.fields import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -28,3 +28,15 @@ class ListingImage(models.Model):
         format='JPEG',
         options={'quality': 80}
     )
+
+
+def delete_thumbnail_images(sender, instance, **kwargs):
+    try:
+        instance.formatted_image.delete()
+        instance.thumbnail.delete()
+        instance.image.delete()
+    except Exception as e:
+        print e
+
+
+pre_delete.connect(delete_thumbnail_images, sender=ListingImage)
