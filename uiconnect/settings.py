@@ -1,6 +1,7 @@
 import os
 import sys
-# Django settings for uiconnect project.
+from django.core.urlresolvers import reverse_lazy
+
 
 SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(SETTINGS_DIR, '..', 'apps'))
@@ -166,6 +167,8 @@ LOGGING = {
 }
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+LOGIN_REDIRECT_URL = reverse_lazy('listings:index')
+LOGIN_URL = reverse_lazy('accounts:login')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
 ENDLESS_PAGINATION_PER_PAGE = 15

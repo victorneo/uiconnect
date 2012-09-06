@@ -3,6 +3,7 @@ import binascii
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login as lgin, logout as lgout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -14,10 +15,11 @@ def login(request):
 
     if form.is_valid():
         user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+        url = request.GET.get('next', reverse('index'))
 
         if user:
             lgin(request, user)
-            return redirect(reverse('index'))
+            return redirect(url)
         else:
             messages.error(request, u'Invalid login.')
 
@@ -57,6 +59,7 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
+@login_required
 def profile(request):
     user = request.user
     profile = user.get_profile()
@@ -98,15 +101,18 @@ def forgot_password(request):
     if request.method == 'POST' and form.is_valid():
         try:
             user = User.objects.get(username=form.cleaned_data['username'])
-            password = binascii.b2a_hex(os.urandom(30))
+            password = binascii.b2a_hex(os.urandom(20))
             user.set_password(password)
             user.save()
 
-            send_mail('Your temporary password', '%s' % password, 'uiconnect303@gmail.com',
-                [user.email,])
+            send_mail(
+                'Your temporary password',
+                '%s' % password,
+                'uiconnect303@gmail.com',
+                [user.email,]
+            )
 
             messages.success(request, 'Email with temporary password has been sent.')
-
             return redirect(reverse('accounts:login'))
 
         except User.DoesNotExist:
