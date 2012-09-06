@@ -63,20 +63,18 @@ def update(request, listing_id):
     param = request.POST['id']
     value = request.POST['value']
 
-    if param == 'listing_name':
+    if param == 'listing_name' and value.strip() != '':
         listing.name = value
     elif param == 'listing_description':
         listing.description = value
     else:
         try:
-            listing.price = Decimal(value)
+            price = Decimal(value)
+            listing.price = price
         except Exception as e:
-            print e
+            value = listing.price
 
-    try:
-        listing.save()
-    except Exception as e:
-        print e
+    listing.save()
 
     return HttpResponse(value)
 

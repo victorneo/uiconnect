@@ -112,11 +112,11 @@ def forgot_password(request):
                 [user.email,]
             )
 
-            messages.success(request, 'Email with temporary password has been sent.')
+            messages.success(request, u'Email with temporary password has been sent.')
             return redirect(reverse('accounts:login'))
 
         except User.DoesNotExist:
-            messages.error(request, 'Invalid email.')
+            messages.error(request, u'Invalid username.')
 
     return render(request, 'accounts/forgot_password.html', {
         'form': form,
