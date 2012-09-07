@@ -86,6 +86,9 @@ def profile(request):
                 profile.avatar.delete()
 
             profile.avatar = form.cleaned_data['avatar']
+        elif request.POST.get('avatar-clear', None) and profile.avatar:
+            profile.avatar.delete()
+
 
         profile.save()
 
