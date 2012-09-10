@@ -77,7 +77,6 @@ def update(request, listing_id):
 
     return render(request, 'listings/update.html', {
         'listing': listing,
-        'form': form,
     })
 
 

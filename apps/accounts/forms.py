@@ -94,6 +94,7 @@ class RegistrationForm(forms.Form):
 
 class ProfileForm(forms.Form):
     name = forms.CharField(max_length=100)
+    email = forms.EmailField(required=True)
     password = forms.CharField(
         max_length=200,
         required=False,

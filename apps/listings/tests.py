@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.test.client import Client
 from uiconnect import settings
 from accounts.factories import UserFactory, UserProfileFactory
+from categories.factories import CategoryFactory
 from .factories import ListingFactory, ListingImageFactory
 from .models import Listing, ListingImage
 
@@ -35,7 +36,7 @@ class ListingViewTest(TestCase):
     def test_index_template(self):
         response = self.c.get(INDEX_URL)
         self.assertTemplateUsed(response, 'index.html')
-        self.assertEquals(1, response.context['listings'].count())
+        self.assertTrue(response.context['categories'] != None)
 
     def test_view_template(self):
         url = reverse('listings:view', kwargs={'listing_id': self.l.id})
@@ -62,10 +63,12 @@ class ListingViewTest(TestCase):
         self.assertTemplateUsed(response, 'listings/add.html')
 
     def test_add_valid(self):
+        category = CategoryFactory()
         data = {
             'name': 'ListingAddValid',
             'description': 'Desc for ListingAddValid',
             'price': 111,
+            'categories': '%d' % category.id,
         }
 
         response = self.c.post(ADD_URL, data)
@@ -138,30 +141,8 @@ class ListingViewTest(TestCase):
 
     def test_update(self):
         url = reverse('listings:update', kwargs={'listing_id': self.l.id})
-
-        name = 'new listing name'
-        desc = 'desc for new listing name'
-        price = 911.00
-
-        response = self.c.post(url, {'id': 'listing_name', 'value': name})
-        self.assertEquals(name, response.content)
-
-        response = self.c.post(url, {'id': 'listing_description', 'value': desc})
-        self.assertEquals(desc, response.content)
-
-        response = self.c.post(url, {'id': 'listing_price', 'value': price})
-        self.assertEquals(price, float(response.content))
-
-        l = Listing.objects.get(id=self.l.id)
-        self.assertEquals(name, l.name)
-        self.assertEquals(desc, l.description)
-        self.assertEquals(price, l.price)
-
-    def test_update_invalid_price(self):
-        url = reverse('listings:update', kwargs={'listing_id': self.l.id})
-
-        response = self.c.post(url, {'id': 'listing_price', 'value': 'abc'})
-        self.assertEquals(self.l.price, float(response.content))
+        response = self.c.get(url)
+        self.assertTemplateUsed(response, 'listings/update.html')
 
     def test_update_invalid_user(self):
         self.c.logout()

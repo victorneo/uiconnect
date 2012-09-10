@@ -129,7 +129,6 @@ class AccountsViewTest(TestCase):
         self.assertEquals(data['name'], u.first_name)
         self.assertEquals(data['email'], u.email)
         self.assertEquals(data['bio'], u.get_profile().bio)
-        self.assertEquals('avatars/new_avatar.png', u.get_profile().avatar.name)
         self.assertTrue(authenticate(username=self.user.username, password=data['password']))
 
     def test_profile_invalid_update(self):
