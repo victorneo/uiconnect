@@ -13,7 +13,7 @@ class ForgotPasswordForm(forms.Form):
         self.helper.layout = Layout(
             Fieldset(
                 '',
-                'username',
+                Field('username', css_class='span6'),
             ),
             FormActions(
                 Submit('submit', 'Send new password', css_class='btn btn-primary')
@@ -62,12 +62,12 @@ class RegistrationForm(forms.Form):
         self.helper.layout = Layout(
             Fieldset(
                 '',
-                'username',
-                'email',
-                'password',
-                'password2',
-                'bio',
-                'avatar',
+                Field('username', css_class='span6'),
+                Field('email', css_class='span6'),
+                Field('password', css_class='span6'),
+                Field('password2', css_class='span6'),
+                Field('bio', css_class='span6'),
+                Field('avatar', css_class='span6'),
             ),
             FormActions(
                 Submit('submit', 'Register', css_class='btn btn-primary')
@@ -93,8 +93,7 @@ class RegistrationForm(forms.Form):
 
 
 class ProfileForm(forms.Form):
-    name = forms.CharField(max_length=100, required=False)
-    email = forms.EmailField(required=True)
+    name = forms.CharField(max_length=100)
     password = forms.CharField(
         max_length=200,
         required=False,
@@ -116,15 +115,15 @@ class ProfileForm(forms.Form):
         self.helper.layout = Layout(
             Fieldset(
                 '',
-                'name',
-                'email',
-                'password',
-                'password2',
-                'bio',
-                'avatar',
+                Field('name', css_class='span6'),
+                Field('email', css_class='span6'),
+                Field('password', css_class='span6'),
+                Field('password2', css_class='span6'),
+                Field('bio', css_class='span6'),
+                Field('avatar', css_class='span6'),
             ),
             FormActions(
-                Submit('submit', 'Update Profile', css_class='btn btn-primary')
+                Submit('submit', 'Update', css_class='btn btn-primary')
             )
         )
         super(ProfileForm, self).__init__(*args, **kwargs)

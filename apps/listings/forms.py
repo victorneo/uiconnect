@@ -13,9 +13,10 @@ class AddListingForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 '',
-                'name',
-                'description',
-                'price',
+                Field('name', css_class='span6'),
+                Field('description', css_class='span6'),
+                Field('price', css_class='span6'),
+                Field('categories', css_class='span6'),
             ),
             FormActions(
                 Submit('submit', 'Add', css_class='btn btn-primary')
@@ -26,7 +27,7 @@ class AddListingForm(forms.ModelForm):
 
     class Meta:
         model = Listing
-        exclude = ('user',)
+        exclude = ('user', 'is_featured')
 
 
 class AddImageForm(forms.Form):
