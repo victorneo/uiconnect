@@ -15,16 +15,6 @@
     </p>
 
     {% if user == listing.user or user.is_staff %}
-    <h5>Owner's menu</h5>
-
-    <h6>Images</h6>
-    <a href="{% url 'listings:manage_images' listing.id %}">Manage listing images</a>
-
-    <h6>Edit</h6>
-    <p>Edit your listings by clicking at <span class="editable">grey areas</span> with the <i class="icon-pencil"></i> icon and hit "OK" to save.</p>
-
-    <h6>Delete listing</h6>
-    <button class="btn btn-danger" data-target="#myModal" data-toggle="modal">Delete</button>
     <div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -43,7 +33,6 @@
   </div>
 
   <div class="span10">
-
     <div class="pull-left">
       <div id="listingCarousel" class="carousel slide" data-interval="0" style="width: 200px; height: 430px;">
         <div class="carousel-inner">
@@ -68,11 +57,11 @@
     </div>
 
     <div class="pull-left listing-info">
-      <h1>{% if user == listing.user %}<i class="icon-pencil" style="margin-top: 15px;"></i>{% endif %} <span class="edit {% if user == listing.user %}editable{% endif %}" id="listing_name">{{listing.name}}</span> </h1>
+      <h1>{{listing.name}}</h1>
 
       <dl class="span7 dl-horizontal">
-        <dt>{% if user == listing.user %}<i class="icon-pencil"></i>{% endif %} Selling for</dt>
-        <dd>USD <p class="edit {% if user == listing.user %}editable{% endif %}" id="listing_price" style="display: inline;">{{listing.price}}</p> </dd>
+        <dt>Selling for</dt>
+        <dd>USD {{listing.price}}</dd>
 
         <dt>Collections</dt>
         <dd>
@@ -81,13 +70,22 @@
           <a class="label label-info" href="#">good student</a>
         </dd>
 
-        <dt>{% if user == listing.user %}<i class="icon-pencil"></i>{% endif %} Description </dt>
-        <dd><span class="desc {% if user == listing.user %}editable{% endif %}" id="listing_description">{{listing.description}}</span></dd>
+        <dt>Description </dt>
+        <dd>{{listing.description}}</dd>
 
       </dl>
     </div>
 
     <div class="clearfix">&nbsp;</div>
+    <h5>Owner's menu</h5>
+
+    <div class="btn-toolbar" style="margin-bottom: 30px;">
+      <div class="btn-group">
+        <a class="btn btn-danger" href="#" data-target="#myModal" data-toggle="modal"><i class="icon-trash"></i> Delete Listing</a>
+        <a class="btn" href="#"><i class="icon-camera"></i> Manage Images</a>
+        <a class="btn" href="#"><i class="icon-pencil"></i> Edit Listing</a>
+      </div>
+    </div>
   </div>
 {% endblock %}
 

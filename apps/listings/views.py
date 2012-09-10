@@ -1,18 +1,22 @@
 from decimal import Decimal
-import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from categories.models import Category
 from .forms import AddListingForm, AddImageForm
 from .models import Listing, ListingImage
 
 
 def index(request):
+    categories = Category.objects.all()
+    for c in categories:
+        c.featured_listings = c.listings.filter(is_featured=True).all()
+
     return render(request, 'index.html', {
-        'listings': Listing.objects.all(),
+        'categories': categories,
     })
 
 
@@ -24,12 +28,24 @@ def view(request, listing_id):
 
 
 @login_required
+def dashboard(request):
+    listings = Listing.objects.filter(user=request.user).all()
+    return render(request, 'listings/dashboard.html', {
+        'listings': listings,
+    })
+
+
+@login_required
 def add(request):
     form = AddListingForm(request.POST or None)
 
     if form.is_valid():
         listing = form.save(commit=False)
         listing.user = request.user
+        listing.save()
+        for c in form.cleaned_data['categories']:
+            listing.categories.add(c)
+
         listing.save()
         messages.success(request, u'Your listing has been created. Upload some images!')
         return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing.id}))
@@ -53,30 +69,16 @@ def delete(request, listing_id):
 
 
 @login_required
-@csrf_exempt
 def update(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
 
     if listing.user != request.user:
         return redirect(reverse('listings:view', kwargs={'listing_id': listing_id}))
 
-    param = request.POST['id']
-    value = request.POST['value']
-
-    if param == 'listing_name' and value.strip() != '':
-        listing.name = value
-    elif param == 'listing_description':
-        listing.description = value
-    else:
-        try:
-            price = Decimal(value)
-            listing.price = price
-        except Exception as e:
-            value = listing.price
-
-    listing.save()
-
-    return HttpResponse(value)
+    return render(request, 'listings/update.html', {
+        'listing': listing,
+        'form': form,
+    })
 
 
 @login_required

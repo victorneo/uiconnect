@@ -3,13 +3,19 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_delete
 from imagekit.models.fields import ImageSpecField
 from imagekit.processors import ResizeToFill
+from categories.models import Category
 
 
 class Listing(models.Model):
     user = models.ForeignKey(User, related_name='listings')
     name = models.CharField(max_length=150)
     description = models.TextField()
-    price = models.DecimalField(max_digits=9, decimal_places=2)
+    price = models.DecimalField(max_digits=9, decimal_places=2, help_text=u'Price in USD')
+    is_featured = models.BooleanField(default=False)
+    categories = models.ManyToManyField(Category, related_name="listings")
+
+    def __unicode__(self):
+        return self.name
 
 
 class ListingImage(models.Model):

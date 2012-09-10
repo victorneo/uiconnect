@@ -14,7 +14,9 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^categories/', include('categories.urls', namespace='categories')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^listings/', include('listings.urls', namespace='listings')),
+    url(r'^dashboard/$', 'listings.views.dashboard', name='dashboard'),
     url(r'^$', 'listings.views.index', name='index'),
 )

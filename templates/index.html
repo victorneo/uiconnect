@@ -1,21 +1,52 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
+{% block navbar_class %}large_navbar{% endblock %}
+
 {% block content %}
-  <div class="span10 offset1">
-    {% include 'messages.html' %}
-    {% if listings %}
-      {% for listing in listings %}
-      <div class="span3">
-        <h4>{{ listing.name }}</h4>
-        <a href="{% url 'listings:view' listing.id %}" class="thumbnail">
-          <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
-          <p>{{listing.description|truncatewords:10}}</p>
-        </a>
+    <div class="span12">
+      <h1>Featured</h1>
+    </div>
+
+    <div class="span2">
+      <ul id="categories_tab" class="nav nav-tabs nav-stacked">
+        {% for c in categories %}
+        <li{% if forloop.first %} class="active"{% endif %}><a href="#{{c.slug}}" data-toggle="tab">{{c.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="span10">
+      {% include 'messages.html' %}
+
+      <div id="tabContent" class="tab-content" style="min-height: 300px;">
+        {% for c in categories %}
+        <div class="tab-pane fade in {% if forloop.first %}active{% endif %}" id="{{c.slug}}">
+
+          <div id="{{c.slug}}Carousel" class="carousel slide">
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+            {% for listing in c.featured_listings %}
+            <div class="item {% if forloop.first %}active{% endif %}">
+              <img src="{{listing.images.all.0.image.url}}" style="margin-left: auto; margin-right: auto; height: 400px;" />
+            </div>
+            {% endfor %}
+            </div>
+            <!-- Carousel nav -->
+            <a class="carousel-control left" href="#{{c.slug}}Carousel" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#{{c.slug}}Carousel" data-slide="next">&rsaquo;</a>
+          </div>
+
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    {% else %}
-      <h3>No listings</h3>
-    {% endif %}
-  </div>
+    </div>
+{% endblock %}
+
+{% block js_footer %}
+<script>
+$(document).ready(function() {
+  $('#categories_tab a:first').tab('show');
+});
+</script>
 {% endblock %}

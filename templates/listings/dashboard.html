@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+  <div class="span2">
+    <h1>Dashboard</h1>
+    <ul class="nav nav-tabs nav-stacked">
+      <li><a href="#">My Listings</a></li>
+      <li><a href="#">Update Profile</a></li>
+    </ul>
+  </div>
+  <div class="span10">
+    <h1>&nbsp;</h1>
+    {% include 'messages.html' %}
+
+    <a href="{% url 'listings:add' %}" class="btn">Add Listing</a>
+
+    {% if listings %}
+      <div class="row">
+      {% for listing in listings %}
+      <div class="span3">
+        <h4>{{ listing.name }}</h4>
+        <a href="{% url 'listings:view' listing.id %}" class="thumbnail">
+          <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
+          <p>{{listing.description|truncatewords:10}}</p>
+        </a>
+      </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+{% endblock %}
+

@@ -1,4 +1,5 @@
 form>fieldset>legend{border: 0; display: none;}
+form>h3{font-weight: normal;}
 
 a.thumbnail{color: #000;}
 a.thumbnail:hover{text-decoration: none;}
@@ -12,3 +13,31 @@ div.listing-info dl>dt {width: 95px; margin-bottom: 20px; }
 div.listing-info dl>dd {margin-bottom: 20px;}
 
 .editable {background-color: #ddd;}
+
+.top-navbar, .top-navbar>.navbar-inner, .top-navbar>.navbar-inner>.container, .navbar-static-top{
+  background: none;
+  background-color: #40454F;
+}
+
+.navbar-inverse .brand, .navbar-inverse .nav > li > a{
+  color: #ddd;
+}
+
+.top-navbar>.navbar-inner>.container>a.brand{
+  font-family: 'Galdeano', sans-serif;
+  font-size: 1.5em;
+  color: #ccc;
+}
+
+.top-navbar>.navbar-inner>.container>a.brand:hover{
+  color: #fff;
+}
+
+.top-navbar>.navbar-inner>.container>a.brand:before{
+  content: "\00AB  ";
+  color: #ddd;
+}
+.top-navbar>.navbar-inner>.container>a.brand:after{
+  content: " \00BB";
+  color: #ddd;
+}
