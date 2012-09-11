@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
-{% block navbar_class %}large_navbar{% endblock %}
-
 {% block content %}
     <div class="span12">
       <h1>Featured</h1>
@@ -19,16 +17,22 @@
     <div class="span10">
       {% include 'messages.html' %}
 
-      <div id="tabContent" class="tab-content" style="min-height: 300px;">
+      <div id="tabContent" class="tab-content" style="min-height: 300px; padding-top: 0;">
         {% for c in categories %}
         <div class="tab-pane fade in {% if forloop.first %}active{% endif %}" id="{{c.slug}}">
 
-          <div id="{{c.slug}}Carousel" class="carousel slide">
+          <div id="{{c.slug}}Carousel" class="carousel slide" style=" border: 1px solid #ccc;">
             <!-- Carousel items -->
             <div class="carousel-inner">
             {% for listing in c.featured_listings %}
             <div class="item {% if forloop.first %}active{% endif %}">
-              <img src="{{listing.images.all.0.image.url}}" style="margin-left: auto; margin-right: auto; height: 400px;" />
+              <a href="{% url 'listings:view' listing.id %}" style="text-align: center;">
+              <img src="{{listing.images.all.0.image.url}}" style="display: block; margin-left: auto; margin-right: auto; height: 400px;" />
+              <div class="carousel-caption" style="position: relative; margin-top: 0;">
+                <h4>{{listing.name}} <small>by {{listing.user.first_name}}</small></h4>
+                <p>{{img.caption}}</p>
+              </div>
+              </a>
             </div>
             {% endfor %}
             </div>

@@ -6,8 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
-from .forms import AddListingForm, AddImageForm
-from .models import Listing, ListingImage
+from .forms import AddListingForm, AddImageForm, AddCollectionForm
+from .models import Listing, ListingImage, Collection
 
 
 def index(request):
@@ -117,3 +117,32 @@ def delete_image(request, listing_id, image_id):
             img.delete()
 
     return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing_id}))
+
+
+def view_collections(request):
+    col_type = request.GET.get('type', None)
+    qs = Collection.objects
+
+    if col_type =='new':
+        qs.order_by('-created_at')
+    else:
+        qs.filter(is_featured=True)
+
+    collections = qs.all()[:10]
+
+    return render(request, 'listings/view_collections.html', {
+        'type': col_type,
+        'collections': collections,
+    })
+
+
+@login_required
+def add_collection(request):
+    form = AddCollectionForm(request.POST or None)
+
+    if form.is_valid():
+        pass
+
+    return render(request, 'listings/add_collection.html', {
+        'form': form,
+    })

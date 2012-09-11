@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+    <div class="span12">
+      <h1>Collections</h1>
+    </div>
+
+    <div class="span2">
+      <ul id="categories_tab" class="nav nav-tabs nav-stacked">
+        <li{% if type == 'featured' or type == None %} class="active"{% endif %}><a href="{% url 'collections:index' %}?type=featured">Featured</a></li>
+        <li{% if type == 'new' %} class="active"{% endif %}><a href="{% url 'collections:index' %}?type=new">New</a></li>
+      </ul>
+    </div>
+
+    <div class="span10">
+      {% include 'messages.html' %}
+
+      <div id="tabContent" class="tab-content" style="min-height: 300px;">
+        {% for c in collections %}
+          <p>{{c.name}}</p>
+        {% endfor %}
+      </div>
+    </div>
+{% endblock %}
+
+{% block js_footer %}
+<script>
+$(document).ready(function() {
+  $('#categories_tab a:first').tab('show');
+});
+</script>
+{% endblock %}

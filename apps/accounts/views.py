@@ -11,11 +11,14 @@ from .forms import *
 
 
 def login(request):
+    if request.user.is_authenticated():
+        return reverse('dashboard')
+
     form = LoginForm(request.POST or None)
 
     if form.is_valid():
         user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-        url = request.GET.get('next', reverse('index'))
+        url = request.GET.get('next', reverse('dashboard'))
 
         if user:
             lgin(request, user)

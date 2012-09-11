@@ -82,7 +82,7 @@
     <div class="btn-toolbar" style="margin-bottom: 30px;">
       <div class="btn-group">
         <a class="btn btn-danger" href="#" data-target="#myModal" data-toggle="modal"><i class="icon-trash"></i> Delete Listing</a>
-        <a class="btn" href="#"><i class="icon-camera"></i> Manage Images</a>
+        <a class="btn" href="{% url 'listings:manage_images' listing.id %}"><i class="icon-camera"></i> Manage Images</a>
         <a class="btn" href="#"><i class="icon-pencil"></i> Edit Listing</a>
       </div>
     </div>
