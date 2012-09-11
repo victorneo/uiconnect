@@ -58,8 +58,8 @@
           <!-- Everything you want hidden at 940px or less, place within here -->
           <div class="nav">
             <ul class="nav">
-              <li><a href="#">Featured collections</a></li>
-              <li><a href="#">Hot new collections</a></li>
+              <li><a href="{% url 'collections:index' %}">Featured collections</a></li>
+              <li><a href="{% url 'collections:index' %}?type=new">New collections</a></li>
             </ul>
           </div>
           <form class="navbar-form pull-right">

@@ -13,6 +13,9 @@ class Listing(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, help_text=u'Price in USD')
     is_featured = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category, related_name="listings")
+    likes = models.IntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.name
@@ -34,6 +37,17 @@ class ListingImage(models.Model):
         format='JPEG',
         options={'quality': 80}
     )
+
+
+class Collection(models.Model):
+    listings = models.ManyToManyField(Listing, related_name='collections')
+    user = models.ForeignKey(User, related_name='collections')
+    name = models.CharField(max_length=150)
+    description = models.TextField()
+    likes = models.IntegerField(default=0)
+    is_featured = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 def delete_thumbnail_images(sender, instance, **kwargs):
