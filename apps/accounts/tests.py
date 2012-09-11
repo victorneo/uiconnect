@@ -37,7 +37,7 @@ class AccountsViewTest(TestCase):
 
     def test_login_valid(self):
         response = self.c.post(LOGIN_URL, {'username': self.user.username, 'password': '1234'})
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, reverse('dashboard'))
 
     def test_login_invalid(self):
         response = self.c.post(LOGIN_URL, {'username': self.user.username, 'password': 'password'})
