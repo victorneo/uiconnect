@@ -54,6 +54,7 @@ class AccountsViewTest(TestCase):
 
     def test_register_valid(self):
         data = {
+            'name': 'New User',
             'username': 'newuser',
             'password': '12345',
             'password2': '12345',
@@ -73,6 +74,7 @@ class AccountsViewTest(TestCase):
 
     def test_register_invalid(self):
         data = {
+            'name': 'New User',
             'username': 'newuser',
             'password': '12345',
             'password2': '1234',
@@ -89,6 +91,7 @@ class AccountsViewTest(TestCase):
     def test_register_username_taken(self):
         UserFactory(username='takenuser')
         data = {
+            'name': 'Taken User',
             'username': 'takenuser',
             'password': '12345',
             'password2': '12345',

@@ -49,6 +49,9 @@ def register(request):
                 password = form.cleaned_data['password'],
                 email = form.cleaned_data['email'],
             )
+            user.first_name = form.cleaned_data['name']
+            user.save()
+
             user.get_profile().bio = form.cleaned_data['bio']
             user.get_profile().avatar = form.cleaned_data['avatar']
             user.get_profile().save()

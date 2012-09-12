@@ -43,6 +43,7 @@ class LoginForm(forms.Form):
 
 
 class RegistrationForm(forms.Form):
+    name = forms.CharField(max_length=100)
     username = forms.CharField(max_length=75, required=True)
     email = forms.EmailField(required=True)
     password = forms.CharField(max_length=200, required=True, widget=forms.PasswordInput)
@@ -62,6 +63,7 @@ class RegistrationForm(forms.Form):
         self.helper.layout = Layout(
             Fieldset(
                 '',
+                Field('name', css_class='span6'),
                 Field('username', css_class='span6'),
                 Field('email', css_class='span6'),
                 Field('password', css_class='span6'),
