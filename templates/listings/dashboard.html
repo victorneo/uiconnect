@@ -5,15 +5,14 @@
   <div class="span2">
     <h1>Dashboard</h1>
     <ul class="nav nav-tabs nav-stacked">
-      <li><a href="#">My Listings</a></li>
-      <li><a href="#">Update Profile</a></li>
+      <li><a href="{% url 'dashboard' %}">My Listings</a></li>
+      <li><a href="{% url 'listings:add' %}">Add Listing</a></li>
     </ul>
   </div>
   <div class="span10">
     <h1>&nbsp;</h1>
+    {% block dashboard_content %}
     {% include 'messages.html' %}
-
-    <a href="{% url 'listings:add' %}" class="btn">Add Listing</a>
 
     {% if listings %}
       <div class="row">
@@ -28,6 +27,8 @@
       {% endfor %}
       </div>
     {% endif %}
+
+  {% endblock %}
 
   </div>
 {% endblock %}

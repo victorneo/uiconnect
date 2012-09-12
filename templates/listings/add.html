@@ -1,9 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'listings/dashboard.html' %}
 {% load url from future %}
 
-{% block content %}
-  <div class="span8 offset2">
+{% block dashboard_content %}
     {% include 'form.html' with legend='Add Listing' %}
-  </div>
 {% endblock %}
 
