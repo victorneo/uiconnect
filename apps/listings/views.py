@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
-from .forms import AddListingForm, AddImageForm, AddCollectionForm
+from .forms import (AddListingForm, AddImageForm,
+        AddCollectionForm, AddCollectionListingsForm)
 from .models import Listing, ListingImage, Collection
 
 
@@ -22,7 +23,7 @@ def index(request):
 
 def view(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
-    return render(request, 'listings/view.html', {
+    return render(request, 'listings/view2.html', {
         'listing': listing,
     })
 
@@ -30,8 +31,10 @@ def view(request, listing_id):
 @login_required
 def dashboard(request):
     listings = Listing.objects.filter(user=request.user).all()
+    collections = Collection.objects.filter(user=request.user).all()
     return render(request, 'listings/dashboard.html', {
         'listings': listings,
+        'collections': collections,
     })
 
 
@@ -130,9 +133,36 @@ def view_collections(request):
 
     collections = qs.all()[:10]
 
-    return render(request, 'listings/view_collections.html', {
+    return render(request, 'collections/collections.html', {
         'type': col_type,
         'collections': collections,
+    })
+
+
+@login_required
+def add_collection_listings(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+    form = AddCollectionListingsForm(request.POST or None, instance=collection)
+
+    if form.is_valid():
+        existing_listings = set(collection.listings.all())
+        curr_listings = set(form.cleaned_data['listings'])
+
+        # delete invalid listings
+        for l in existing_listings.difference(curr_listings):
+            collection.listings.remove(l)
+
+        # add new listings
+        for l in curr_listings.difference(existing_listings):
+            collection.listings.add(l)
+
+        collection.save()
+        form = AddCollectionListingsForm(instance=collection)
+
+        messages.success(request, u'Changes saved!')
+
+    return render(request, 'collections/add_listings.html', {
+        'form': form,
     })
 
 
@@ -141,8 +171,15 @@ def add_collection(request):
     form = AddCollectionForm(request.POST or None)
 
     if form.is_valid():
-        pass
+        collection = form.save(commit=False)
+        collection.user = request.user
+        collection.save()
 
-    return render(request, 'listings/add_collection.html', {
+        messages.success(request, u'Collection added. Add your listings to it!')
+        return redirect(reverse('collections:add_listings', kwargs={
+            'collection_id': collection.id,
+        }))
+
+    return render(request, 'collections/add.html', {
         'form': form,
     })

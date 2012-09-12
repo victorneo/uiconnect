@@ -5,8 +5,9 @@
   <div class="span2">
     <h1>Dashboard</h1>
     <ul class="nav nav-tabs nav-stacked">
-      <li><a href="{% url 'dashboard' %}">My Listings</a></li>
+      <li><a href="{% url 'dashboard' %}">My listing and collections</a></li>
       <li><a href="{% url 'listings:add' %}">Add Listing</a></li>
+      <li><a href="{% url 'collections:add' %}">Add Collection</a></li>
     </ul>
   </div>
   <div class="span10">
@@ -15,6 +16,7 @@
     {% include 'messages.html' %}
 
     {% if listings %}
+      <h2>Listings</h2>
       <div class="row">
       {% for listing in listings %}
       <div class="span3">
@@ -23,6 +25,17 @@
           <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
           <p>{{listing.description|truncatewords:10}}</p>
         </a>
+      </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if collections %}
+      <h2>Collections</h2>
+      <div class="row">
+      {% for c in collections %}
+      <div class="span3">
+        <h4>{{ c.name }}</h4>
       </div>
       {% endfor %}
       </div>
