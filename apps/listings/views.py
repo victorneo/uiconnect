@@ -23,7 +23,7 @@ def index(request):
 
 def view(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
-    return render(request, 'listings/view2.html', {
+    return render(request, 'listings/view.html', {
         'listing': listing,
     })
 
@@ -137,6 +137,15 @@ def view_collections(request):
         'type': col_type,
         'collections': collections,
     })
+
+
+def view_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+
+    return render(request, 'collections/view.html', {
+        'collection': collection,
+    })
+
 
 
 @login_required

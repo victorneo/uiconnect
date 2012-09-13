@@ -13,7 +13,7 @@ class Listing(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, help_text=u'Price in USD')
     is_featured = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category, related_name="listings")
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name='liked_listings')
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -44,8 +44,8 @@ class Collection(models.Model):
     user = models.ForeignKey(User, related_name='collections')
     name = models.CharField(max_length=150)
     description = models.TextField()
-    likes = models.IntegerField(default=0)
     is_featured = models.BooleanField(default=False)
+    likes = models.ManyToManyField(User, related_name='liked_collections')
 
     created_at = models.DateTimeField(auto_now_add=True)
 
