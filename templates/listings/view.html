@@ -12,6 +12,9 @@
       {% endif %}
       <p>{{ listing.user.first_name }}</p>
       <blockquote><small>{{ listing.user.get_profile.bio|truncatewords:15 }}</small></blockquote>
+
+      {% include 'follow/follow.html' with viewed_user=listing.user %}
+
     </p>
 
     {% if user == listing.user or user.is_staff %}
@@ -133,4 +136,7 @@ $(document).ready(function() {
 
 });
 </script>
+
+{% include 'follow/follow_js.html' with viewed_user=listing.user %}
+
 {% endblock %}

@@ -1,3 +1,4 @@
+import json
 import os
 import binascii
 from django.core.mail import send_mail
@@ -6,6 +7,7 @@ from django.contrib.auth import authenticate, login as lgin, logout as lgout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import *
 
@@ -130,3 +132,26 @@ def forgot_password(request):
     return render(request, 'accounts/forgot_password.html', {
         'form': form,
     })
+
+
+@login_required
+def follow(request, user_id):
+    data = {'success': True}
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        data['success'] = False
+    else:
+        if user != request.user:
+            profile = user.get_profile()
+            if profile in request.user.get_profile().following.all():
+                profile.followers.remove(request.user.get_profile())
+            else:
+                profile.followers.add(request.user.get_profile())
+
+            profile.save()
+        else:
+            data['success'] = False
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')

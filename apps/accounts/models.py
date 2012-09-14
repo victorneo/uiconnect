@@ -10,6 +10,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     avatar = ProcessedImageField([ResizeToFill(100, 100),], upload_to='avatars', format='PNG', null=True, default=None)
     bio = models.TextField(max_length=500, null=True, blank=True)
+    following = models.ManyToManyField('self', related_name='followers', symmetrical=False)
 
     def __unicode__(self):
         return self.user.first_name
