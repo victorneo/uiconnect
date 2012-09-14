@@ -63,10 +63,10 @@
         <span style="margin-right: 20px;"><span id="span_likes">{{listing.likes.count}}</span> likes this.</span>
         {% if user.is_authenticated %}
         <button id="btn_like" class="btn btn-small" style="margin-top: -5px;">
-          {% if user not in listing.likes.all %}
-          <i class="icon-heart"></i> Like it
-          {% else %}
+          {% if user in listing.likes.all %}
           <i class="icon-remove"></i> Unlike
+          {% else %}
+          <i class="icon-heart"></i> Like it
           {% endif %}
         </button>
         {% endif %}
@@ -78,9 +78,13 @@
 
         <dt>Collections</dt>
         <dd>
-          <a class="label label-info" href="#">back to school</a>
-          <a class="label label-info" href="#">student essentials</a>
-          <a class="label label-info" href="#">good student</a>
+        {% if listing.collections.all %}
+        {% for c in listing.collections.all %}
+          <a class="label label-info" href="{% url 'collections:view' c.id %}">{{c.name}}</a>
+        {% endfor %}
+        {% else %}
+          Not part of any collections.
+        {% endif %}
         </dd>
 
         <dt>Description </dt>
@@ -103,9 +107,6 @@
 {% endblock %}
 
 {% block js_footer %}
-{% if user == listing.user %}
-<script src="{{STATIC_URL}}js/jquery.jeditable.mini.js"></script>
-
 <script>
 $(document).ready(function() {
   var likes = {{listing.likes.count}};
@@ -122,12 +123,14 @@ $(document).ready(function() {
       btn_text = '<i class="icon-heart"></i> Like this';
     }
 
+    $.get('{% url 'listings:like' listing.id %}', function(data) {
+      console.log('Liked.');
+    });
+
     $('#span_likes').html(likes);
     $('#btn_like').html(btn_text);
-
   });
 
 });
 </script>
-{% endif %}
 {% endblock %}

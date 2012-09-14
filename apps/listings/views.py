@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -84,6 +85,25 @@ def update(request, listing_id):
 
 
 @login_required
+def like(request, listing_id):
+    data = {'success': True}
+    try:
+        listing = Listing.objects.get(id=listing_id)
+    except Listing.DoesNotExist:
+        data['success'] = False
+    else:
+        if listing in request.user.liked_listings.all():
+            listing.likes.remove(request.user)
+        else:
+            listing.likes.add(request.user)
+
+        listing.save()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
+
+
+@login_required
 def manage_images(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
 
@@ -147,6 +167,23 @@ def view_collection(request, collection_id):
     })
 
 
+@login_required
+def like_collection(request, collection_id):
+    data = {'success':  True}
+    try:
+        collection = Collection.objects.get(pk=collection_id)
+    except Collection.DoesNotExist:
+        data['success'] = False
+    else:
+        if collection in request.user.liked_collections.all():
+            collection.likes.remove(request.user)
+        else:
+            collection.likes.add(request.user)
+
+        collection.save()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
 
 @login_required
 def add_collection_listings(request, collection_id):

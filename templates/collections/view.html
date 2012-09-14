@@ -19,6 +19,19 @@
   <div class="span10">
     <h1>{{collection.name}}</h1>
 
+    <div class="social" style="text-align: right;">
+      <span style="margin-right: 20px;"><span id="span_likes">{{collection.likes.count}}</span> likes this.</span>
+      {% if user.is_authenticated %}
+      <button id="btn_like" class="btn btn-small" style="margin-top: -5px;">
+        {% if user in collection.likes.all %}
+        <i class="icon-remove"></i> Unlike
+        {% else %}
+        <i class="icon-heart"></i> Like this collection
+        {% endif %}
+      </button>
+      {% endif %}
+    </div>
+
     {% for l in collection.listings.all %}
 
     <div>
@@ -40,4 +53,33 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block js_footer %}
+<script>
+$(document).ready(function() {
+  var likes = {{collection.likes.count}};
+
+  $('#btn_like').click(function(){
+    var text = $('#btn_like').html();
+    var btn_text = '';
+    if (text.indexOf("Unlike") == -1){
+      likes += 1;
+      btn_text = '<i class="icon-remove"></i> Unlike';
+    }
+    else{
+      likes -= 1;
+      btn_text = '<i class="icon-heart"></i> Like this';
+    }
+
+    $.get('{% url 'collections:like' collection.id %}', function(data) {
+      console.log('Liked.');
+    });
+
+    $('#span_likes').html(likes);
+    $('#btn_like').html(btn_text);
+  });
+
+});
+</script>
 {% endblock %}
