@@ -59,15 +59,32 @@
     <div class="pull-left listing-info">
       <h1>{{listing.name}}</h1>
 
+      <div class="social" style="text-align: right;">
+        <span style="margin-right: 20px;"><span id="span_likes">{{listing.likes.count}}</span> likes this.</span>
+        {% if user.is_authenticated %}
+        <button id="btn_like" class="btn btn-small" style="margin-top: -5px;">
+          {% if user in listing.likes.all %}
+          <i class="icon-remove"></i> Unlike
+          {% else %}
+          <i class="icon-heart"></i> Like it
+          {% endif %}
+        </button>
+        {% endif %}
+      </div>
+
       <dl class="span7 dl-horizontal">
         <dt>Selling for</dt>
         <dd>USD {{listing.price}}</dd>
 
         <dt>Collections</dt>
         <dd>
-          <a class="label label-info" href="#">back to school</a>
-          <a class="label label-info" href="#">student essentials</a>
-          <a class="label label-info" href="#">good student</a>
+        {% if listing.collections.all %}
+        {% for c in listing.collections.all %}
+          <a class="label label-info" href="{% url 'collections:view' c.id %}">{{c.name}}</a>
+        {% endfor %}
+        {% else %}
+          Not part of any collections.
+        {% endif %}
         </dd>
 
         <dt>Description </dt>
@@ -90,27 +107,30 @@
 {% endblock %}
 
 {% block js_footer %}
-{% if user == listing.user %}
-<script src="{{STATIC_URL}}js/jquery.jeditable.mini.js"></script>
-
 <script>
 $(document).ready(function() {
-  var url = "{% url 'listings:update' listing.id %}";
-  $('.edit').editable(url, {
-    submit: 'OK',
-  });
-  $('.desc').editable(url, {
-    type    : 'textarea',
-    rows    : 15,
-    cols    : 40,
-    submit  : 'OK',
-    data: function(value, settings) {
-      /* Convert <br> to newline. */
-      var retval = value.replace(/<br[\s\/]?>/gi, '\n');
-      return retval;
+  var likes = {{listing.likes.count}};
+
+  $('#btn_like').click(function(){
+    var text = $('#btn_like').html();
+    var btn_text = '';
+    if (text.indexOf("Unlike") == -1){
+      likes += 1;
+      btn_text = '<i class="icon-remove"></i> Unlike';
     }
+    else{
+      likes -= 1;
+      btn_text = '<i class="icon-heart"></i> Like this';
+    }
+
+    $.get('{% url 'listings:like' listing.id %}', function(data) {
+      console.log('Liked.');
+    });
+
+    $('#span_likes').html(likes);
+    $('#btn_like').html(btn_text);
   });
+
 });
 </script>
-{% endif %}
 {% endblock %}

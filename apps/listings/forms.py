@@ -36,6 +36,42 @@ class AddImageForm(forms.Form):
 
 
 class AddCollectionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                Field('name', css_class='span6'),
+                Field('description', css_class='span6'),
+            ),
+            FormActions(
+                Submit('submit', 'Add', css_class='btn btn-primary')
+            )
+        )
+        super(AddCollectionForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = Collection
-        exclude = ('user', 'listings')
+        exclude = ('user', 'listings', 'likes', 'created_at', 'is_featured')
+
+
+
+class AddCollectionListingsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                Field('listings', css_class='span6'),
+            ),
+            FormActions(
+                Submit('submit', 'Add', css_class='btn btn-primary')
+            )
+        )
+        super(AddCollectionListingsForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Collection
+        fields = ('listings', )

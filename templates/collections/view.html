@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+  <div class="span2">
+    <p>
+      <small>collection by</small><br />
+      {% if collection.user.get_profile.avatar %}
+      <img src="{{ collection.user.get_profile.avatar.url }}" />
+      {% else %}
+      <img src="http://placehold.it/100x100" />
+      {% endif %}
+      <p>{{ collection.user.first_name }}</p>
+      <blockquote><small>{{ collection.user.get_profile.bio|truncatewords:15 }}</small></blockquote>
+    </p>
+
+  </div>
+
+  <div class="span10">
+    <h1>{{collection.name}}</h1>
+
+    <div class="social" style="text-align: right;">
+      <span style="margin-right: 20px;"><span id="span_likes">{{collection.likes.count}}</span> likes this.</span>
+      {% if user.is_authenticated %}
+      <button id="btn_like" class="btn btn-small" style="margin-top: -5px;">
+        {% if user in collection.likes.all %}
+        <i class="icon-remove"></i> Unlike
+        {% else %}
+        <i class="icon-heart"></i> Like this collection
+        {% endif %}
+      </button>
+      {% endif %}
+    </div>
+
+    {% for l in collection.listings.all %}
+
+    <div>
+      <h3><a href="{% url 'listings:view' l.id %}">{{l.name}}</a></h3>
+      <p>{{l.description}}</p>
+      <p>USD {{l.price}}</p>
+    </div>
+
+    {% endfor %}
+
+
+    <h5>Owner's menu</h5>
+
+    <div class="btn-toolbar" style="margin-bottom: 30px;">
+      <div class="btn-group">
+        <a class="btn btn-danger" href="#" data-target="#myModal" data-toggle="modal"><i class="icon-trash"></i> Delete Collection</a>
+        <a class="btn" href="#"><i class="icon-camera"></i> Manage Images</a>
+        <a class="btn" href="#"><i class="icon-pencil"></i> Edit Collection</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js_footer %}
+<script>
+$(document).ready(function() {
+  var likes = {{collection.likes.count}};
+
+  $('#btn_like').click(function(){
+    var text = $('#btn_like').html();
+    var btn_text = '';
+    if (text.indexOf("Unlike") == -1){
+      likes += 1;
+      btn_text = '<i class="icon-remove"></i> Unlike';
+    }
+    else{
+      likes -= 1;
+      btn_text = '<i class="icon-heart"></i> Like this';
+    }
+
+    $.get('{% url 'collections:like' collection.id %}', function(data) {
+      console.log('Liked.');
+    });
+
+    $('#span_likes').html(likes);
+    $('#btn_like').html(btn_text);
+  });
+
+});
+</script>
+{% endblock %}

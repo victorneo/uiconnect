@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,7 +7,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
-from .forms import AddListingForm, AddImageForm, AddCollectionForm
+from .forms import (AddListingForm, AddImageForm,
+        AddCollectionForm, AddCollectionListingsForm)
 from .models import Listing, ListingImage, Collection
 
 
@@ -30,8 +32,10 @@ def view(request, listing_id):
 @login_required
 def dashboard(request):
     listings = Listing.objects.filter(user=request.user).all()
+    collections = Collection.objects.filter(user=request.user).all()
     return render(request, 'listings/dashboard.html', {
         'listings': listings,
+        'collections': collections,
     })
 
 
@@ -78,6 +82,25 @@ def update(request, listing_id):
     return render(request, 'listings/update.html', {
         'listing': listing,
     })
+
+
+@login_required
+def like(request, listing_id):
+    data = {'success': True}
+    try:
+        listing = Listing.objects.get(id=listing_id)
+    except Listing.DoesNotExist:
+        data['success'] = False
+    else:
+        if listing in request.user.liked_listings.all():
+            listing.likes.remove(request.user)
+        else:
+            listing.likes.add(request.user)
+
+        listing.save()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
 
 
 @login_required
@@ -130,9 +153,62 @@ def view_collections(request):
 
     collections = qs.all()[:10]
 
-    return render(request, 'listings/view_collections.html', {
+    return render(request, 'collections/collections.html', {
         'type': col_type,
         'collections': collections,
+    })
+
+
+def view_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+
+    return render(request, 'collections/view.html', {
+        'collection': collection,
+    })
+
+
+@login_required
+def like_collection(request, collection_id):
+    data = {'success':  True}
+    try:
+        collection = Collection.objects.get(pk=collection_id)
+    except Collection.DoesNotExist:
+        data['success'] = False
+    else:
+        if collection in request.user.liked_collections.all():
+            collection.likes.remove(request.user)
+        else:
+            collection.likes.add(request.user)
+
+        collection.save()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
+
+@login_required
+def add_collection_listings(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+    form = AddCollectionListingsForm(request.POST or None, instance=collection)
+
+    if form.is_valid():
+        existing_listings = set(collection.listings.all())
+        curr_listings = set(form.cleaned_data['listings'])
+
+        # delete invalid listings
+        for l in existing_listings.difference(curr_listings):
+            collection.listings.remove(l)
+
+        # add new listings
+        for l in curr_listings.difference(existing_listings):
+            collection.listings.add(l)
+
+        collection.save()
+        form = AddCollectionListingsForm(instance=collection)
+
+        messages.success(request, u'Changes saved!')
+
+    return render(request, 'collections/add_listings.html', {
+        'form': form,
     })
 
 
@@ -141,8 +217,15 @@ def add_collection(request):
     form = AddCollectionForm(request.POST or None)
 
     if form.is_valid():
-        pass
+        collection = form.save(commit=False)
+        collection.user = request.user
+        collection.save()
 
-    return render(request, 'listings/add_collection.html', {
+        messages.success(request, u'Collection added. Add your listings to it!')
+        return redirect(reverse('collections:add_listings', kwargs={
+            'collection_id': collection.id,
+        }))
+
+    return render(request, 'collections/add.html', {
         'form': form,
     })
