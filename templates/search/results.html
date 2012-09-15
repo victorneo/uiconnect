@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load url from future %}
+
+{% block content %}
+  <div class="span12">
+    <h1>Results for "{{query}}"</h1>
+
+    {% include 'form.html' %}
+
+    {% if listings %}
+      <h2>Listings</h2>
+      <div class="row">
+      {% for listing in listings %}
+      <div class="span3">
+        <h4>{{ listing.name }}</h4>
+        <a href="{% url 'listings:view' listing.id %}" class="thumbnail">
+          <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
+          <p>{{listing.description|truncatewords:10}}</p>
+        </a>
+      </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if collections %}
+      <h2>Collections</h2>
+      <div class="row">
+      {% for c in collections %}
+      <div class="span3">
+        <a href="{% url 'collections:view' c.id %}">{{c.name}}</a>
+      </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if not collections and not listings %}
+      <h4>No results. Try another query?</h4>
+    {% endif %}
+
+  </div>
+{% endblock %}
