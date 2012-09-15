@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
-from .forms import (AddListingForm, AddImageForm,
+from .forms import (ListingForm, AddImageForm,
         AddCollectionForm, AddCollectionListingsForm)
 from .models import Listing, ListingImage, Collection
 
@@ -41,7 +41,7 @@ def dashboard(request):
 
 @login_required
 def add(request):
-    form = AddListingForm(request.POST or None)
+    form = ListingForm(request.POST or None)
 
     if form.is_valid():
         listing = form.save(commit=False)
@@ -79,8 +79,16 @@ def update(request, listing_id):
     if listing.user != request.user:
         return redirect(reverse('listings:view', kwargs={'listing_id': listing_id}))
 
+    form = ListingForm(request.POST or None, instance=listing, submit_name=u'Update')
+
+    if form.is_valid():
+        listing = form.save()
+        messages.success(request, u'Listing updated.')
+        return redirect(reverse('listings:view', kwargs={'listing_id': listing.id}))
+
     return render(request, 'listings/update.html', {
         'listing': listing,
+        'form': form,
     })
 
 
