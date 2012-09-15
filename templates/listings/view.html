@@ -36,6 +36,8 @@
   </div>
 
   <div class="span10">
+    {% include 'messages.html' %}
+
     <div class="pull-left">
       <div id="listingCarousel" class="carousel slide" data-interval="0" style="width: 200px; height: 430px;">
         <div class="carousel-inner">
@@ -97,15 +99,19 @@
     </div>
 
     <div class="clearfix">&nbsp;</div>
+
+    {% if user == listing.user %}
     <h5>Owner's menu</h5>
 
     <div class="btn-toolbar" style="margin-bottom: 30px;">
       <div class="btn-group">
         <a class="btn btn-danger" href="#" data-target="#myModal" data-toggle="modal"><i class="icon-trash"></i> Delete Listing</a>
         <a class="btn" href="{% url 'listings:manage_images' listing.id %}"><i class="icon-camera"></i> Manage Images</a>
-        <a class="btn" href="#"><i class="icon-pencil"></i> Edit Listing</a>
+        <a class="btn" href="{% url 'listings:update' listing.id %}"><i class="icon-pencil"></i> Edit Listing</a>
       </div>
     </div>
+    {% endif %}
+
   </div>
 {% endblock %}
 

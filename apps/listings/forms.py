@@ -5,7 +5,7 @@ from crispy_forms.bootstrap import FormActions
 from .models import Listing, Collection
 
 
-class AddListingForm(forms.ModelForm):
+class ListingForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -19,10 +19,10 @@ class AddListingForm(forms.ModelForm):
                 Field('categories', css_class='span6'),
             ),
             FormActions(
-                Submit('submit', 'Add', css_class='btn btn-primary')
+                Submit('submit', kwargs.pop('submit_name', u'Add'), css_class='btn btn-primary')
             )
         )
-        super(AddListingForm, self).__init__(*args, **kwargs)
+        super(ListingForm, self).__init__(*args, **kwargs)
 
 
     class Meta:
