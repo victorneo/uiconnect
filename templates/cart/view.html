@@ -1,0 +1,13 @@
+{% extends 'listings/dashboard.html' %}
+{% load url from future %}
+
+{% block dashboard_content %}
+  <h3>Shopping card</h3>
+  {% if cart.items.count == 0 %}
+  <p>No items in shopping cart.</p>
+  {% else %}
+  {% for item in cart.items.all %}
+  <p>Lalala</p>
+  {% endfor %}
+  {% endif %}
+{% endblock %}
