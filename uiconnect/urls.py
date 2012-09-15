@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^listings/', include('listings.urls', namespace='listings')),
     url(r'^collections/', include('listings.urls_collections', namespace='collections')),
+    url(r'^search/', include('search.urls', namespace='search')),
     url(r'^dashboard/$', 'listings.views.dashboard', name='dashboard'),
     url(r'^$', 'listings.views.index', name='index'),
 )
