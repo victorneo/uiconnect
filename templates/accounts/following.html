@@ -1,0 +1,37 @@
+{% extends 'listings/dashboard.html' %}
+{% load url from future %}
+
+{% block dashboard_content %}
+  <h3>Users you are following</h3>
+
+  {% include 'messages.html' %}
+
+  {% if not following_users %}
+  <p>You are currently not following any users.</p>
+  {% else %}
+  <table class="span10">
+    <thead style="text-align: left;">
+      <tr>
+        <th>User</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+  {% for profile in following_users %}
+  <tr>
+    <td class="span2">
+      <img src="{{ profile.avatar.url }}" />
+      <p>{{ profile.user.first_name }}</p>
+    </td>
+    <td class="span7">
+      <p class="span6" style="text-align: justify;">{{ profile.bio }}</p>
+    </td>
+    <td class="span2">
+      <a class="btn btn-small" href="{% url 'accounts:unfollow' profile.user.id %}" style="margin-top: -15px;">Unfollow</a>
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
+
+  {% endif %}
+{% endblock %}
+

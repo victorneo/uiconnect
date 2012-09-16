@@ -155,3 +155,25 @@ def follow(request, user_id):
 
     return HttpResponse(json.JSONEncoder().encode(data),
                         content_type='application/json')
+
+
+@login_required
+def following(request):
+    following_users = request.user.get_profile().following.all()
+
+    return render(request, 'accounts/following.html', {
+        'following_users': following_users,
+    })
+
+
+@login_required
+def unfollow(request, user_id):
+    try:
+        profile = User.objects.get(id=user_id).get_profile()
+    except User.DoesNotExist:
+        pass
+    else:
+        request.user.get_profile().following.remove(profile)
+        request.user.get_profile().save()
+
+    return redirect(reverse('accounts:following'))
