@@ -14,7 +14,6 @@
       <blockquote><small>{{ listing.user.get_profile.bio|truncatewords:15 }}</small></blockquote>
 
       {% include 'follow/follow.html' with viewed_user=listing.user %}
-
     </p>
 
     {% if user == listing.user or user.is_staff %}
@@ -95,7 +94,20 @@
         <dt>Description </dt>
         <dd>{{listing.description}}</dd>
 
+        <dt>&nbsp;</dt>
+        <dd>
+          {% if listing in user.cart.added_listings %}
+          Already in your shopping cart.
+          {% else %}
+          <form action="{% url 'cart:add' listing.id %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1" />
+            <input type="submit" class="btn btn-info btn-large" href="{% url 'cart:add' listing.id %}" style="display: block;" value="Add Item to Cart" />
+          </form>
+          {% endif %}
+        </dd>
       </dl>
+
     </div>
 
     <div class="clearfix">&nbsp;</div>
