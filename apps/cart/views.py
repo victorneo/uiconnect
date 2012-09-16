@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
+from paypal.standard.forms import PayPalPaymentsForm
 from listings.models import Listing
 from .forms import AddItemForm
 from .models import Cart, Item
@@ -15,8 +16,20 @@ def view(request):
         cart = Cart(user=request.user)
         cart.save()
 
+    paypal_dict = {
+        "business": "seller_1347808967_biz@gmail.com",
+        "amount": str(cart.total),
+        "item_name": "Payment for UIConnect items",
+        "invoice": "12345",
+        "return_url": "http://127.0.0.1:8000/payment/pdt",
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+
     return render(request, 'cart/view.html', {
         'cart': cart,
+        'form': form,
     })
 
 

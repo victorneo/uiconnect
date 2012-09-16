@@ -1,0 +1,33 @@
+{% extends 'listings/dashboard.html' %}
+{% load url from future %}
+
+{% block dashboard_content %}
+  <h3>Your Payments</h3>
+
+  {% include 'messages.html' %}
+
+  {% if not payments %}
+  <p>No items in shopping cart.</p>
+  {% else %}
+  <table class="span10">
+    <thead style="text-align: left;">
+      <tr>
+        <th>Transaction Id</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+  {% for p in payments %}
+  <tr>
+    <td class="span6">
+      <p>{{ p.transaction_id }}</p>
+    </td>
+    <td class="span4">
+      <p>USD {{ p.amount }}</p>
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
+
+  {% endif %}
+{% endblock %}
+
