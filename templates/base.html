@@ -39,6 +39,7 @@
               {% endif %}
               <li><a href="{% url 'accounts:profile' %}">{{user.username}}</a></li>
               <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li><a href="{% url 'cart:view' %}">Shopping Cart</a></li>
               <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
               {% else %}
               <li><a href="{% url 'accounts:login' %}">Login</a></li>
