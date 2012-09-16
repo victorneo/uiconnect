@@ -6,5 +6,7 @@ urlpatterns = patterns('accounts.views',
     url(r'^profile/', 'profile', name='profile'),
     url(r'^logout/', 'logout', name='logout'),
     url(r'^register/', 'register', name='register'),
+    url(r'^following/', 'following', name='following'),
     url(r'^follow/(?P<user_id>[\d]+)/$', 'follow', name='follow'),
+    url(r'^unfollow/(?P<user_id>[\d]+)/$', 'unfollow', name='unfollow'),
 )
