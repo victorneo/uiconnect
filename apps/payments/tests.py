@@ -1,7 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
-from mock import Mock, patch
 from accounts.factories import UserFactory, UserProfileFactory
 from listings.factories import ListingFactory, CollectionFactory
 from listings.models import Listing

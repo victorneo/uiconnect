@@ -11,7 +11,10 @@ django-jenkins==0.13.0
 factory-boy==1.2.0
 logilab-astng==0.24.0
 logilab-common==0.58.1
+nose==1.2.1
 pycrypto==2.6
 pylint==0.25.2
+selenium==2.25.0
 ssh==1.7.14
+unittest2==0.5.1
 wsgiref==0.1.2
