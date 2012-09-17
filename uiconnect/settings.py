@@ -129,11 +129,13 @@ INSTALLED_APPS = (
     'crispy_forms',
     'endless_pagination',
     'django_jenkins',
+    'paypal.standard.pdt',
     'accounts',
     'listings',
     'categories',
     'cart',
     'search',
+    'payments',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -187,6 +189,9 @@ JENKINS_TASKS = (
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+PAYPAL_RECEIVER_EMAIL = 'seller_1347808967_biz@gmail.com'
+PAYPAL_IDENTITY_TOKEN = "wW9IcqvvXDJbK1DK_NSzQY0KdOHltev0LSYQ35qYqdM6N5xcLUQLtjudaS0"
 
 
 try:

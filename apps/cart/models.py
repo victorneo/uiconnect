@@ -25,6 +25,11 @@ class Cart(models.Model):
 
         return listings
 
+    def clear(self):
+        for i in self.items.all():
+            i.delete()
+
+
 class Item(models.Model):
     cart = models.ForeignKey(Cart, related_name='items')
     listing = models.ForeignKey(Listing)

@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^collections/', include('listings.urls_collections', namespace='collections')),
     url(r'^cart/', include('cart.urls', namespace='cart')),
     url(r'^search/', include('search.urls', namespace='search')),
+    url(r'^payments/', include('payments.urls', namespace='payments')),
     url(r'^dashboard/$', 'listings.views.dashboard', name='dashboard'),
     url(r'^$', 'listings.views.index', name='index'),
 )
