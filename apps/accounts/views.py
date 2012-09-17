@@ -14,7 +14,7 @@ from .forms import *
 
 def login(request):
     if request.user.is_authenticated():
-        return reverse('dashboard')
+        return redirect(reverse('dashboard'))
 
     form = LoginForm(request.POST or None)
 

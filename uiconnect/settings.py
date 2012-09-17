@@ -180,7 +180,7 @@ ENDLESS_PAGINATION_PER_PAGE = 15
 
 
 # Jenkins Configuration
-PROJECT_APPS = ('accounts', 'listings')
+PROJECT_APPS = ('accounts', 'listings', 'cart', 'categories', 'listings', 'payments', 'search')
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.with_coverage',

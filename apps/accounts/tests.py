@@ -1,4 +1,5 @@
 import os
+import json
 from django.core import mail
 from django.core.files import File
 from django.core.urlresolvers import reverse
@@ -15,6 +16,7 @@ LOGOUT_URL = reverse('accounts:logout')
 REGISTER_URL = reverse('accounts:register')
 PROFILE_URL = reverse('accounts:profile')
 FORGOT_PASSWORD_URL = reverse('accounts:forgot_password')
+FOLLOWING_URL = reverse('accounts:following')
 
 
 class AccountsViewTest(TestCase):
@@ -29,6 +31,10 @@ class AccountsViewTest(TestCase):
         self.user.get_profile().save()
         f.close()
 
+        self.user2 = UserFactory.build()
+        self.user2.set_password('1234')
+        self.user2.save()
+
         mail.outbox = []
 
     def test_login_template(self):
@@ -38,10 +44,17 @@ class AccountsViewTest(TestCase):
     def test_login_valid(self):
         response = self.c.post(LOGIN_URL, {'username': self.user.username, 'password': '1234'})
         self.assertRedirects(response, reverse('dashboard'))
+        self.c.logout()
 
     def test_login_invalid(self):
         response = self.c.post(LOGIN_URL, {'username': self.user.username, 'password': 'password'})
         self.assertTemplateUsed(response, 'accounts/login.html')
+
+    def test_login_already_logged_in(self):
+        self.c.login(username=self.user.username, password='1234')
+        response = self.c.get(LOGIN_URL)
+        self.assertRedirects(response, reverse('dashboard'))
+        self.c.logout()
 
     def test_logout(self):
         self.c.login(username=self.user.username, password='1234')
@@ -134,13 +147,31 @@ class AccountsViewTest(TestCase):
         self.assertEquals(data['bio'], u.get_profile().bio)
         self.assertTrue(authenticate(username=self.user.username, password=data['password']))
 
-    def test_profile_invalid_update(self):
+    def test_profile_valid_update_clear_avatar(self):
         self.c.login(username=self.user.username, password='1234')
 
         data = {
             'name': 'New Name',
             'password': 'abcd',
             'password2': 'abcd',
+            'email': 'asd@asd.com',
+            'bio': 'New Bio for New Name',
+            'avatar': '',
+            'avatar-clear': True,
+        }
+
+        response = self.c.post(PROFILE_URL, data)
+        u = User.objects.get(username=self.user.username)
+
+        self.assertEquals(u'', u.get_profile().avatar.name)
+
+    def test_profile_invalid_update(self):
+        self.c.login(username=self.user.username, password='1234')
+
+        data = {
+            'name': 'New Name',
+            'password': 'abcd',
+            'password2': 'abc',
             'email': '',
             'bio': 'New Bio for New Name',
             'avatar': '',
@@ -168,3 +199,57 @@ class AccountsViewTest(TestCase):
         self.assertRedirects(response, LOGIN_URL)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, u'Your temporary password')
+
+    def test_follow(self):
+        url = reverse('accounts:follow', kwargs={'user_id': self.user2.id})
+        self.c.login(username=self.user.username, password='1234')
+
+        response = self.c.get(url)
+        self.assertTrue(json.loads(response.content)['success'])
+        self.assertEquals(1, self.user2.get_profile().followers.count())
+
+        response = self.c.get(url)
+        self.assertEquals(0, self.user2.get_profile().followers.count())
+
+    def test_follow_ownself(self):
+        url = reverse('accounts:follow', kwargs={'user_id': self.user.id})
+        self.c.login(username=self.user.username, password='1234')
+
+        response = self.c.get(url)
+        self.assertFalse(json.loads(response.content)['success'])
+        self.assertEquals(0, self.user.get_profile().followers.count())
+
+    def test_follow_invalid_user(self):
+        url = reverse('accounts:follow', kwargs={'user_id': 9999})
+        self.c.login(username=self.user.username, password='1234')
+
+        response = self.c.get(url)
+        self.assertFalse(json.loads(response.content)['success'])
+
+    def test_following_template(self):
+        self.c.login(username=self.user.username, password='1234')
+
+        self.user2.get_profile().followers.add(self.user.get_profile())
+        self.user2.get_profile().save()
+
+        response = self.c.get(FOLLOWING_URL)
+        self.assertTemplateUsed(response, 'accounts/following.html')
+        self.assertEquals(1, response.context['following_users'].count())
+
+    def test_unfollow(self):
+        url = reverse('accounts:unfollow', kwargs={'user_id': self.user2.id})
+        self.c.login(username=self.user.username, password='1234')
+
+        self.user2.get_profile().followers.add(self.user.get_profile())
+        self.user2.get_profile().save()
+
+        response = self.c.get(url)
+        self.assertEquals(0, self.user2.get_profile().followers.count())
+        self.assertRedirects(response, FOLLOWING_URL)
+
+    def test_unfollow_invalid_user(self):
+        url = reverse('accounts:unfollow', kwargs={'user_id': 9999})
+        self.c.login(username=self.user.username, password='1234')
+
+        response = self.c.get(url)
+        self.assertRedirects(response, FOLLOWING_URL)

@@ -1,4 +1,5 @@
 import os
+import json
 from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -6,8 +7,8 @@ from django.test.client import Client
 from uiconnect import settings
 from accounts.factories import UserFactory, UserProfileFactory
 from categories.factories import CategoryFactory
-from .factories import ListingFactory, ListingImageFactory
-from .models import Listing, ListingImage
+from listings.factories import ListingFactory, ListingImageFactory
+from listings.models import Listing, ListingImage
 
 
 INDEX_URL = reverse('index')
@@ -34,6 +35,7 @@ class ListingViewTest(TestCase):
         self.c.login(username=self.user.username, password='1234')
 
     def test_index_template(self):
+        category = CategoryFactory()
         response = self.c.get(INDEX_URL)
         self.assertTemplateUsed(response, 'index.html')
         self.assertTrue(response.context['categories'] != None)
@@ -139,9 +141,49 @@ class ListingViewTest(TestCase):
         response = self.c.get(url)
         self.assertRedirects(response, reverse('listings:manage_images', kwargs={'listing_id': self.l.id}))
 
-    def test_update(self):
+    def test_update_template(self):
         url = reverse('listings:update', kwargs={'listing_id': self.l.id})
         response = self.c.get(url)
+        self.assertTemplateUsed(response, 'listings/update.html')
+
+    def test_update_valid(self):
+        category = CategoryFactory()
+        l2 = ListingFactory(user=self.user)
+        l2.categories.add(category)
+        l2.save()
+
+        data = {
+            'name': 'Update Listing',
+            'description': 'Desc for Update listing',
+            'price': 222.0,
+            'categories': '%d' % category.id,
+        }
+
+        url = reverse('listings:update', kwargs={'listing_id': l2.id})
+        response = self.c.post(url, data)
+        l2 = Listing.objects.get(id=l2.id)
+
+        self.assertRedirects(response, reverse('listings:view', kwargs={'listing_id': l2.id}))
+        self.assertEquals(data['name'], l2.name)
+        self.assertEquals(data['description'], l2.description)
+        self.assertEquals(data['price'], l2.price)
+
+    def test_update_invalid(self):
+        category = CategoryFactory()
+        l2 = ListingFactory(user=self.user)
+        l2.categories.add(category)
+        l2.save()
+
+        data = {
+            'name': '',
+            'description': 'Desc for Update listing',
+            'price': 222.0,
+            'categories': '%d' % category.id,
+        }
+
+        url = reverse('listings:update', kwargs={'listing_id': l2.id})
+        response = self.c.post(url, data)
+
         self.assertTemplateUsed(response, 'listings/update.html')
 
     def test_update_invalid_user(self):
@@ -168,3 +210,24 @@ class ListingViewTest(TestCase):
 
         response = self.c.get(url)
         self.assertRedirects(response, reverse('listings:view', kwargs={'listing_id': self.l.id}))
+
+    def test_like(self):
+        url = reverse('listings:like', kwargs={'listing_id': self.l.id})
+        self.c.login(username=self.user.username, password='1234')
+
+        response = self.c.get(url)
+        self.assertTrue(json.loads(response.content)['success'])
+        self.assertEquals(1, self.l.likes.count())
+
+        response = self.c.get(url)
+        self.assertTrue(json.loads(response.content)['success'])
+        self.assertEquals(0, self.l.likes.count())
+
+    def test_like_invalid_listing(self):
+        url = reverse('listings:like', kwargs={'listing_id': 9999})
+        self.c.login(username=self.user.username, password='1234')
+
+        response = self.c.get(url)
+        self.assertFalse(json.loads(response.content)['success'])
+
+

@@ -142,8 +142,7 @@ def delete_image(request, listing_id, image_id):
         try:
             img = listing.images.get(id=image_id)
         except ListingImage.DoesNotExist as e:
-            print('Attmpted to delete non existant image')
-            print e
+            pass
         else:
             img.delete()
 
@@ -155,9 +154,9 @@ def view_collections(request):
     qs = Collection.objects
 
     if col_type =='new':
-        qs.order_by('-created_at')
+        qs = qs.order_by('-created_at')
     else:
-        qs.filter(is_featured=True)
+        qs = qs.filter(is_featured=True)
 
     collections = qs.all()[:10]
 
