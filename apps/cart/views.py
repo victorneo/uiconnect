@@ -10,7 +10,11 @@ from .models import Cart, Item
 
 @login_required
 def view(request):
-    cart = request.user.cart
+    try:
+        cart = request.user.cart
+    except Cart.DoesNotExist:
+        cart = Cart(user=request.user)
+        cart.save()
 
     paypal_dict = {
         "business": "seller_1347808967_biz@gmail.com",
