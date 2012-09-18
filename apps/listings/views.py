@@ -51,7 +51,7 @@ def add(request):
             listing.categories.add(c)
 
         listing.save()
-        messages.success(request, u'Your listing has been created. Upload some images!')
+        messages.success(request, u'Your item has been created. Upload some images!')
         return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing.id}))
 
     return render(request, 'listings/add.html', {
@@ -67,7 +67,7 @@ def delete(request, listing_id):
         return redirect(reverse('listings:view', kwargs={'listing_id': listing_id}))
 
     listing.delete()
-    messages.success(request, u'Listing has been deleted.')
+    messages.success(request, u'Item has been deleted.')
 
     return redirect(reverse('index'))
 
@@ -83,7 +83,7 @@ def update(request, listing_id):
 
     if form.is_valid():
         listing = form.save()
-        messages.success(request, u'Listing updated.')
+        messages.success(request, u'Item updated.')
         return redirect(reverse('listings:view', kwargs={'listing_id': listing.id}))
 
     return render(request, 'listings/update.html', {
@@ -228,7 +228,7 @@ def add_collection(request):
         collection.user = request.user
         collection.save()
 
-        messages.success(request, u'Collection added. Add your listings to it!')
+        messages.success(request, u'Collection added. Add your items to it!')
         return redirect(reverse('collections:add_listings', kwargs={
             'collection_id': collection.id,
         }))
