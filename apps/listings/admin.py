@@ -3,7 +3,7 @@ from .models import Listing, ListingImage, Collection
 
 
 class ListingAdmin(admin.ModelAdmin):
-    pass
+    exclude = ('likes',)
 
 
 class ListingImageAdmin(admin.ModelAdmin):

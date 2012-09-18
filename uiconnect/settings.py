@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'paypal.standard.pdt',
     'accounts',
     'listings',
+    'rewards',
     'categories',
     'cart',
     'search',
