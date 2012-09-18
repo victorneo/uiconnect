@@ -12,6 +12,8 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=500, null=True, blank=True)
     following = models.ManyToManyField('self', related_name='followers', symmetrical=False)
 
+    points = models.IntegerField(default=0)
+
     def __unicode__(self):
         return self.user.first_name
 

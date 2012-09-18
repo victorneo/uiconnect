@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+  <div class="span12">
+    <h1>Rewards</h1>
+
+    {% if not rewards %}
+      <h4>No rewards</h4>
+    {% else %}
+      <div class="row">
+      {% for r in rewards %}
+      <div class="span3">
+        <h4>{{ r.name }}</h4>
+      </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+{% endblock %}
+
