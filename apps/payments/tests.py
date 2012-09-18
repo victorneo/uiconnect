@@ -43,3 +43,11 @@ class PaymentsUnitTest(TestCase):
 
     def test_transaction_id(self):
         self.assertEquals(123, self.payment.transaction_id)
+
+    def test_points_earned(self):
+        self.assertEquals(33, self.payment.points_earned)
+
+    def test_allocate_points(self):
+        points = self.user.get_profile().points
+        self.payment.allocate_points()
+        self.assertEquals(points+self.payment.points_earned, self.user.get_profile().points)
