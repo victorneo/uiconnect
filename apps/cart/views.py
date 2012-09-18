@@ -21,7 +21,7 @@ def view(request):
         "amount": str(cart.total),
         "item_name": "Payment for UIConnect items",
         "invoice": "12345",
-        "return_url": "http://127.0.0.1:8000/payment/pdt",
+        "return_url": "http://127.0.0.1:8000/payments/pdt",
     }
 
     # Create the instance.
