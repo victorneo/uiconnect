@@ -15,3 +15,12 @@ class Payment(models.Model):
     @property
     def transaction_id(self):
         return self.pdt.txn_id
+
+    @property
+    def points_earned(self):
+        return self.amount / 10
+
+    def allocate_points(self):
+        profile = self.user.get_profile()
+        profile.points += self.points_earned
+        profile.save()

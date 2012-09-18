@@ -5,13 +5,31 @@
   <div class="span12">
     <h1>Rewards</h1>
 
+    {% include 'messages.html' %}
+
+    {% if user.is_authenticated %}
+    <p>You have {{ user.get_profile.points }} points.</p>
+    {% endif %}
+
+    {% if user.redeemed_rewards.all %}
+    <h4>You have redeemed the following:</h4>
+    {% for r in user.redeemed_rewards.all %}
+    <p>{{ r.name }}</p>
+    {% endfor %}
+    {% endif %}
+
     {% if not rewards %}
       <h4>No rewards</h4>
     {% else %}
+      <h4>All rewards</h4>
       <div class="row">
       {% for r in rewards %}
-      <div class="span3">
+      <div class="span3 well">
         <h4>{{ r.name }}</h4>
+        <p>Points needed: {{ r.points_required }}</p>
+        {% if user.is_authenticated and user.get_profile.points >= r.points_required %}
+          <a class="btn btn-small" href="{% url 'rewards:redeem' r.id %}">Redeem</a>
+        {% endif %}
       </div>
       {% endfor %}
       </div>
