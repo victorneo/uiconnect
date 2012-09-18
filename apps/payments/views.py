@@ -59,6 +59,11 @@ def pdt(request):
 
                     # clear shopping cart
                     request.user.cart.clear()
+
+                    # calculate points earned
+                    payment.allocate_points()
+                    context['payment'] = payment
+
     else:
         pass # we ignore any PDT requests that don't have a transaction id
 

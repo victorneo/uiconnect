@@ -16,3 +16,16 @@ class Reward(models.Model):
         options={'quality': 90}
     )
     redeemed_by = models.ManyToManyField(User, related_name='redeemed_rewards')
+
+    def redeem(self, profile):
+        if profile.points < self.points_required:
+            raise Exception('Insufficient Points')
+
+        self.redeemed_by.add(profile.user)
+        self.save()
+
+        profile.points -= self.points_required
+        profile.save()
+
+    def __unicode__(self):
+        return u'%s (%d points)' % (self.name, self.points_required)
