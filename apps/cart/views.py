@@ -17,11 +17,10 @@ def view(request):
         cart.save()
 
     paypal_dict = {
-        "business": "seller_1347808967_biz@gmail.com",
-        "amount": str(cart.total),
-        "item_name": "Payment for UIConnect items",
-        "invoice": "12345",
-        "return_url": "http://127.0.0.1:8000/payments/pdt",
+        'business': 'seller_1347808967_biz@gmail.com',
+        'amount': str(cart.total),
+        'item_name': 'UIConnect items',
+        'return_url': 'http://127.0.0.1:8000/payments/pdt',
     }
 
     # Create the instance.
@@ -36,8 +35,10 @@ def view(request):
 @login_required
 def add(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
-
     cart = request.user.cart
+
+    if listing.user == request.user:
+        return redirect(reverse('listings:view', kwargs={'listing_id': listing_id}))
 
     try:
         item = cart.items.get(listing=listing)

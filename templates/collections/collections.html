@@ -18,7 +18,7 @@
 
       <div id="tabContent" class="tab-content" style="min-height: 300px;">
         {% for c in collections %}
-          <p>{{c.name}}</p>
+        <h3><a href="{% url 'collections:view' c.id %}">{{c.name}} ({{c.listings.count}} items)</a></h3>
         {% endfor %}
       </div>
     </div>

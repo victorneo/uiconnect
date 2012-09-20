@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
 from .forms import (ListingForm, AddImageForm,
-        AddCollectionForm, AddCollectionListingsForm)
+        CollectionForm, AddCollectionListingsForm)
 from .models import Listing, ListingImage, Collection
 
 
@@ -69,7 +69,7 @@ def delete(request, listing_id):
     listing.delete()
     messages.success(request, u'Item has been deleted.')
 
-    return redirect(reverse('index'))
+    return redirect(reverse('dashboard'))
 
 
 @login_required
@@ -213,6 +213,7 @@ def add_collection_listings(request, collection_id):
         form = AddCollectionListingsForm(instance=collection)
 
         messages.success(request, u'Changes saved!')
+        return redirect(reverse('collections:view', kwargs={'collection_id': collection.id}))
 
     return render(request, 'collections/add_listings.html', {
         'form': form,
@@ -221,7 +222,7 @@ def add_collection_listings(request, collection_id):
 
 @login_required
 def add_collection(request):
-    form = AddCollectionForm(request.POST or None)
+    form = CollectionForm(request.POST or None)
 
     if form.is_valid():
         collection = form.save(commit=False)
@@ -236,3 +237,40 @@ def add_collection(request):
     return render(request, 'collections/add.html', {
         'form': form,
     })
+
+
+@login_required
+def update_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+
+    if collection.user != request.user:
+        return redirect(reverse('dashboard'))
+
+    form = CollectionForm(request.POST or None, instance=collection)
+
+    if form.is_valid():
+        collection = form.save(commit=False)
+        collection.user = request.user
+        collection.save()
+
+        messages.success(request, u'Collection Updated.')
+        return redirect(reverse('collections:view', kwargs={
+            'collection_id': collection.id,
+        }))
+
+    return render(request, 'collections/update.html', {
+        'form': form,
+    })
+
+
+@login_required
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id)
+
+    if collection.user != request.user:
+        return redirect(reverse('collections:view', kwargs={'collection_id': collection_id}))
+
+    collection.delete()
+    messages.success(request, u'Collection has been deleted.')
+
+    return redirect(reverse('dashboard'))
