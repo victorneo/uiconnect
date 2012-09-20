@@ -35,7 +35,7 @@ class AddImageForm(forms.Form):
     caption = forms.CharField(max_length=1000, required=False)
 
 
-class AddCollectionForm(forms.ModelForm):
+class CollectionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -49,7 +49,7 @@ class AddCollectionForm(forms.ModelForm):
                 Submit('submit', 'Add', css_class='btn btn-primary')
             )
         )
-        super(AddCollectionForm, self).__init__(*args, **kwargs)
+        super(CollectionForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Collection

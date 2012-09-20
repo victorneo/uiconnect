@@ -200,7 +200,7 @@ class ListingViewTest(TestCase):
         url = reverse('listings:delete', kwargs={'listing_id': l.id})
 
         response = self.c.get(url)
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, reverse('dashboard'))
 
     def test_delete_invalid_user(self):
         self.c.logout()

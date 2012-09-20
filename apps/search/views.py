@@ -8,6 +8,7 @@ def results(request):
     form = SearchForm(request.POST)
     listings = None
     collections = None
+    query = None
 
     if form.is_valid():
         search_type = form.cleaned_data['search_type']
@@ -24,5 +25,6 @@ def results(request):
         'form': form,
         'listings': listings,
         'collections': collections,
+        'query': query,
     })
 

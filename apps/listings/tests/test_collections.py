@@ -100,11 +100,18 @@ class CollectionViewTest(TestCase):
         self.c.login(username=self.user.username, password='1234')
 
         response = self.c.post(url, {'listings': '%d' %(self.l.id)})
-        self.assertTemplateUsed(response, 'collections/add_listings.html')
+        self.assertRedirects(response, reverse('collections:view', kwargs={'collection_id': self.c1.id}))
         self.assertEquals(1, self.c1.listings.count())
         self.assertEquals(self.l.id, self.c1.listings.get().id)
 
         response = self.c.post(url, {'listings': '%d' %(self.l2.id)})
-        self.assertTemplateUsed(response, 'collections/add_listings.html')
+        self.assertRedirects(response, reverse('collections:view', kwargs={'collection_id': self.c1.id}))
         self.assertEquals(1, self.c1.listings.count())
         self.assertEquals(self.l2.id, self.c1.listings.get().id)
+
+    def test_update_collection_template(self):
+        self.c.login(username=self.user.username, password='1234')
+        data = {'name': '', 'description': 'Desc 1'}
+        response = self.c.post(ADD_URL, data)
+
+        self.assertTemplateUsed(response, 'collections/add.html')
