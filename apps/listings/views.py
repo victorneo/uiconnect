@@ -244,14 +244,12 @@ def update_collection(request, collection_id):
     collection = get_object_or_404(Collection, pk=collection_id)
 
     if collection.user != request.user:
-        return redirect(reverse('dashboard'))
+        return redirect(reverse('collections:view', kwargs={'collection_id': collection_id}))
 
     form = CollectionForm(request.POST or None, instance=collection)
 
     if form.is_valid():
-        collection = form.save(commit=False)
-        collection.user = request.user
-        collection.save()
+        collection = form.save()
 
         messages.success(request, u'Collection Updated.')
         return redirect(reverse('collections:view', kwargs={
