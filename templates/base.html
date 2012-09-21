@@ -37,7 +37,7 @@
               {% if user.get_profile.avatar %}
               <li><img src="{{MEDIA_URL}}{{user.get_profile.avatar}}" width="30" style="margin-top: 4px; border-radius: 5px;" /></li>
               {% endif %}
-              <li><a href="{% url 'accounts:profile' %}">{{user.username}}</a></li>
+              <li><a href="{% url 'accounts:profile' %}">{{user.first_name}}</a></li>
               <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
               <li><a href="{% url 'cart:view' %}">Shopping Cart</a></li>
               <li><a href="{% url 'accounts:logout' %}">Logout</a></li>

@@ -9,11 +9,13 @@ django-endless-pagination==1.1
 django-imagekit==2.0.1
 django-jenkins==0.13.0
 factory-boy==1.2.0
+facebook-sdk==0.3.2
 logilab-astng==0.24.0
 logilab-common==0.58.1
 nose==1.2.1
 pycrypto==2.6
 pylint==0.25.2
+requests==0.14.0
 selenium==2.25.0
 ssh==1.7.14
 unittest2==0.5.1

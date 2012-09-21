@@ -1,6 +1,7 @@
+import binascii
 import json
 import os
-import binascii
+import urlparse
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login as lgin, logout as lgout
@@ -9,7 +10,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+import facebook
+import requests
 from .forms import *
+from .models import UserProfile
 
 
 def login(request):
@@ -177,3 +181,35 @@ def unfollow(request, user_id):
         request.user.get_profile().save()
 
     return redirect(reverse('accounts:following'))
+
+
+def facebook_login(request):
+    if request.user.is_authenticated() or \
+            request.GET.get('code', None) is None:
+        return redirect(reverse('index'))
+
+    code = request.GET['code']
+
+    response = requests.get('https://graph.facebook.com/oauth/access_token?client_id=536337693059624&redirect_uri=http://127.0.0.1:8000/accounts/facebook-login&client_secret=c933b8b99034657f9365b64031acc640&code=%s' % code)
+
+    # get access token
+    access_token = urlparse.parse_qs(response.text)['access_token'][0]
+    graph = facebook.GraphAPI(access_token)
+    user_info = graph.get_object('me')
+    fb_id = user_info['id']
+
+    try:
+        user = UserProfile.objects.get(fb_id=fb_id).user
+    except UserProfile.DoesNotExist:
+        user = User.objects.create_user(username=fb_id,
+                                       password='',
+                                       email=user_info['email'])
+        user.first_name = user_info['name']
+        user.save()
+        user.get_profile().fb_id = fb_id
+        user.get_profile().save()
+
+    user = authenticate(fb_id=fb_id)
+    lgin(request, user)
+
+    return redirect(reverse('dashboard'))
