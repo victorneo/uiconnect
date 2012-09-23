@@ -9,16 +9,40 @@
     {% include 'messages.html' %}
 
     {% if listing.images.all %}
-    <ul class="thumbnails">
       {% for img in listing.images.all %}
-      <li>
-        <img class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="">
-        <div class="caption" style="margin-top: 10px">
-          <p><a class="btn btn-danger btn-small" href="{% url 'listings:delete_image' listing.id img.id %}"><i class="icon-trash"></i> Delete</a></p>
+      <div class="row">
+      <div class="span2">
+        <img class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
+      </div>
+      <div class="span4">
+        <form class="form-inline">
+          <textarea id="caption_{{img.id}}" class="span4" rows="5">{{ img.caption }}</textarea>
+        </form>
+        <p>
+          <a class="btn btn-danger btn-small" href="#" data-target="#myModal_{{img.id}}" data-toggle="modal"><i class="icon-trash"></i> Delete</a>
+          <a class="btn btn-small" href="#" onclick="updateCaption('{% url 'listings:update_image_caption' listing.id img.id %}', {{img.id}});"><i class="icon-edit"></i> Update Caption</a>
+          <span id="success_{{img.id}}" class="label label-success" style="display: none;">Saved</span>
+        </p>
+      </div>
+      <div class="span1">
+        <div class="modal hide" id="myModal_{{img.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Are you sure you want to delete this image?</h3>
+          </div>
+          <div class="modal-body">
+            <img class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="">
+            <p>You will not be able to recover this image in future.</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <a class="btn btn-danger" href="{% url 'listings:delete_image' listing.id img.id %}">Yes, delete</a>
+          </div>
         </div>
-      </li>
+
+      </div>
+      </div>
       {% endfor %}
-    </ul>
     {% else %}
       <p>No images yet!</p>
     {% endif %}
@@ -60,5 +84,19 @@
 {% block js_footer %}
 <script>
   $('.fileupload').fileupload();
+</script>
+<script>
+  function updateCaption(url, image_id){
+    console.log(image_id);
+    var content = $('#caption_'+image_id).val();
+    console.log(content);
+
+    $.post(url, { "caption": content },
+      function(data){
+        console.log(data.success);
+        $('#success_'+image_id).show();
+        $('#success_'+image_id).delay(2000).fadeToggle(2000, 'linear');
+      }, "json");
+    }
 </script>
 {% endblock %}
