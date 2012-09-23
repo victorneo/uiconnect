@@ -22,6 +22,10 @@ class CollectionViewTest(TestCase):
         self.user.set_password('1234')
         self.user.save()
 
+        self.user2 = UserFactory.build()
+        self.user2.set_password('1234')
+        self.user2.save()
+
         self.l = ListingFactory(user=self.user)
         self.l2 = ListingFactory(user=self.user)
         self.c.login(username=self.user.username, password='1234')
@@ -111,7 +115,50 @@ class CollectionViewTest(TestCase):
 
     def test_update_collection_template(self):
         self.c.login(username=self.user.username, password='1234')
-        data = {'name': '', 'description': 'Desc 1'}
-        response = self.c.post(ADD_URL, data)
+        url = reverse('collections:update', kwargs={'collection_id': self.c1.id})
+        response = self.c.get(url)
+        self.assertTemplateUsed(response, 'collections/update.html')
 
-        self.assertTemplateUsed(response, 'collections/add.html')
+    def test_update_collection_valid(self):
+        data = {'name': 'new name', 'description': 'new desc'}
+        url = reverse('collections:update', kwargs={'collection_id': self.c1.id})
+        response = self.c.post(url, data)
+        c1 = Collection.objects.get(id=self.c1.id)
+
+        self.assertRedirects(response, reverse('collections:view', kwargs={'collection_id': c1.id}))
+        self.assertEquals(data['name'], c1.name)
+        self.assertEquals(data['description'], c1.description)
+
+    def test_update_collection_invalid(self):
+        data = {'name': '', 'description': 'new desc'}
+        url = reverse('collections:update', kwargs={'collection_id': self.c1.id})
+        response = self.c.post(url, data)
+
+        self.assertTemplateUsed(response, 'collections/update.html')
+
+    def test_update_collection_invalid_collection(self):
+        url = reverse('collections:update', kwargs={'collection_id': 9999})
+        response = self.c.get(url)
+        self.assertEquals(404, response.status_code)
+
+    def test_update_collection_invalid_user(self):
+        self.c.login(username=self.user2.username, password='1234')
+        url = reverse('collections:update', kwargs={'collection_id': self.c1.id})
+        response = self.c.get(url)
+        self.assertRedirects(response, reverse('collections:view', kwargs={'collection_id': self.c1.id}))
+
+    def test_delete_collection_valid(self):
+        url = reverse('collections:delete', kwargs={'collection_id': self.c1.id})
+        response = self.c.get(url)
+        self.assertRedirects(response, reverse('dashboard'))
+
+    def test_delete_collection_invalid_collection(self):
+        url = reverse('collections:delete', kwargs={'collection_id': 9999})
+        response = self.c.get(url)
+        self.assertEquals(404, response.status_code)
+
+    def test_delete_collection_invalid_user(self):
+        self.c.login(username=self.user2.username, password='1234')
+        url = reverse('collections:delete', kwargs={'collection_id': self.c1.id})
+        response = self.c.get(url)
+        self.assertRedirects(response, reverse('collections:view', kwargs={'collection_id': self.c1.id}))

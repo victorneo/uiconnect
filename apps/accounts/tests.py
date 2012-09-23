@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
 from uiconnect import settings
+from .backends import FacebookBackend
 from .factories import UserFactory, UserProfileFactory
 
 
@@ -253,3 +254,28 @@ class AccountsViewTest(TestCase):
 
         response = self.c.get(url)
         self.assertRedirects(response, FOLLOWING_URL)
+
+
+class AccountsUnitTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory.build()
+        self.user.set_password('1234')
+        self.user.save()
+
+        p = self.user.get_profile()
+        p.fb_id = '1234567'
+        p.save()
+
+        self.backend = FacebookBackend()
+
+    def test_authenticate_valid(self):
+        self.assertEquals(self.user, self.backend.authenticate(fb_id='1234567'))
+
+    def test_authenticate_invalid(self):
+        self.assertEquals(None, self.backend.authenticate(fb_id='asd'))
+
+    def test_get_user_valid(self):
+        self.assertEquals(self.user, self.backend.get_user(user_id=self.user.id))
+
+    def test_get_user_invalid(self):
+        self.assertEquals(None, self.backend.get_user(user_id=1234))

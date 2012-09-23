@@ -47,6 +47,13 @@ class CartViewTest(TestCase):
         response = self.c.post(url, {'quantity': 1})
         self.assertEquals(404, response.status_code)
 
+    def test_add_own_item(self):
+        self.c.login(username=self.user2.username, password='1234')
+        count = self.user2.cart.items.count()
+        url = reverse('cart:add', kwargs={'listing_id': self.l.id})
+        response = self.c.post(url, {'quantity': 1})
+        self.assertEquals(count, self.user2.cart.items.count())
+
     def test_remove_valid(self):
         l2 = ListingFactory(user=self.user2)
         item = ItemFactory(cart=self.user.cart, listing=l2)
