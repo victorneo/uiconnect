@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
+{% block meta_tags %}
+<meta property="og:title" content="UIConnect - {{ collection.name }}"/>
+{% endblock %}
+
 {% block content %}
   <div class="span2">
     <p>

@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
+{% block meta_tags %}
+<meta property="og:title" content="UIConnect - {{ listing.name }}"/>
+{% endblock %}
+
 {% block content %}
   <div class="span2">
     <p>
@@ -57,7 +61,13 @@
         <a class="left carousel-control" href="#listingCarousel" data-slide="prev">&lsaquo;</a>
         <a class="right carousel-control" href="#listingCarousel" data-slide="next">&rsaquo;</a>
         {% endif %}
+
+
+      <div style="margin-top: 20px;" class="fb-like" data-layout="button_count" data-width="200" data-show-faces="false" data-action="recommend" data-font="arial"></div>
       </div><!-- end carousel -->
+
+
+
     </div>
 
     <div class="pull-left listing-info">

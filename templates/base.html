@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <title>UIConnect - {% block title %}Welcome!{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:site_name" content="UIConnect"/>
+
+    {% block meta_tags %}{% endblock %}
 
     <!-- Le styles -->
     <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
@@ -93,6 +96,15 @@
     <script src="{{STATIC_URL}}js/jquery-1.8.0.min.js"></script>
     <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL}}js/bootstrap-fileupload.js"></script>
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=536337693059624";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
 
     {% block js_footer %}{% endblock %}
   </body>
