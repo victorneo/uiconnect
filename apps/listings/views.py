@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
 from .forms import (ListingForm, AddImageForm,
-        CollectionForm, AddCollectionListingsForm)
+        CollectionForm, AddCollectionListingsForm,
+        CaptionForm)
 from .models import Listing, ListingImage, Collection
 
 
@@ -147,6 +148,29 @@ def delete_image(request, listing_id, image_id):
             img.delete()
 
     return redirect(reverse('listings:manage_images', kwargs={'listing_id': listing_id}))
+
+
+@csrf_exempt
+@login_required
+def update_image_caption(request, listing_id, image_id):
+    listing = get_object_or_404(Listing, pk=listing_id)
+    data = {'success': False}
+    try:
+        img = listing.images.get(id=image_id)
+    except ListingImage.DoesNotExist:
+        img = None
+
+    if img is None or listing.user != request.user:
+        return redirect(reverse('dashboard'))
+
+    form = CaptionForm(request.POST, instance=img)
+
+    if form.is_valid():
+        form.save()
+        data['success'] = True
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
 
 
 def view_collections(request):

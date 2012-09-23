@@ -2,7 +2,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Button, Field
 from crispy_forms.bootstrap import FormActions
-from .models import Listing, Collection
+from .models import Listing, ListingImage, Collection
 
 
 class ListingForm(forms.ModelForm):
@@ -33,6 +33,12 @@ class ListingForm(forms.ModelForm):
 class AddImageForm(forms.Form):
     img = forms.ImageField()
     caption = forms.CharField(max_length=1000, required=False)
+
+
+class CaptionForm(forms.ModelForm):
+    class Meta:
+        model = ListingImage
+        fields = ('caption',)
 
 
 class CollectionForm(forms.ModelForm):

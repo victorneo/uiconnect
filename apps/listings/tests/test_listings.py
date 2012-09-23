@@ -230,4 +230,23 @@ class ListingViewTest(TestCase):
         response = self.c.get(url)
         self.assertFalse(json.loads(response.content)['success'])
 
+    def test_update_image_caption_valid(self):
+        url = reverse('listings:update_image_caption', kwargs={'listing_id': self.l.id, 'image_id': self.img.id})
+        data = {'caption': 'new image caption'}
+        response = self.c.post(url, data)
 
+        img = ListingImage.objects.get(id=self.img.id)
+        self.assertEquals(data['caption'], img.caption)
+
+    def test_update_image_caption_invalid_image(self):
+        url = reverse('listings:update_image_caption', kwargs={'listing_id': self.l.id, 'image_id': 9999})
+        data = {'caption': 'new image caption'}
+        response = self.c.post(url, data)
+        self.assertRedirects(response, reverse('dashboard'))
+
+    def test_update_image_caption_invalid_user(self):
+        self.c.login(username=self.user2.username, password='1234')
+        url = reverse('listings:update_image_caption', kwargs={'listing_id': self.l.id, 'image_id': self.img.id})
+        data = {'caption': 'new image caption'}
+        response = self.c.post(url, data)
+        self.assertRedirects(response, reverse('dashboard'))
