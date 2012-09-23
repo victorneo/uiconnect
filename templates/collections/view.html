@@ -7,18 +7,8 @@
 
 {% block content %}
   <div class="span2">
-    <p>
-      <small>collection by</small><br />
-      {% if collection.user.get_profile.avatar %}
-      <img src="{{ collection.user.get_profile.avatar.url }}" />
-      {% else %}
-      <img src="http://placehold.it/100x100" />
-      {% endif %}
-      <p>{{ collection.user.first_name }}</p>
-      <blockquote><small>{{ collection.user.get_profile.bio|truncatewords:15 }}</small></blockquote>
 
-      {% include 'follow/follow.html' with viewed_user=collection.user %}
-    </p>
+    {% include 'user_side.html' with user=collection.user %}
 
     {% if user == collection.user or user.is_staff %}
     <div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -77,7 +67,7 @@
     <div class="btn-toolbar" style="margin-bottom: 30px;">
       <div class="btn-group">
         <a class="btn btn-danger" href="#" data-target="#myModal" data-toggle="modal"><i class="icon-trash"></i> Delete Collection</a>
-        <a class="btn" href="{% url 'collections:add_listings' collection.id %}"><i class="icon-camera"></i> Manage Listings</a>
+        <a class="btn" href="{% url 'collections:add_listings' collection.id %}"><i class="icon-camera"></i> Manage Items</a>
         <a class="btn" href="{% url 'collections:update' collection.id %}"><i class="icon-pencil"></i> Edit Collection</a>
       </div>
     </div>

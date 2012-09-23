@@ -8,7 +8,7 @@ class SearchForm(forms.Form):
     SEARCH_TYPE_CHOICES = (
         ('all', 'All'),
         ('collection', 'Collections only'),
-        ('listing', 'Listings only'),
+        ('listing', 'Items only'),
     )
 
     query = forms.CharField(max_length=200, required=True)

@@ -220,6 +220,7 @@ def like_collection(request, collection_id):
 def add_collection_listings(request, collection_id):
     collection = get_object_or_404(Collection, pk=collection_id)
     form = AddCollectionListingsForm(request.POST or None, instance=collection)
+    form.fields['listings'].queryset = Listing.objects.filter(user=request.user)
 
     if form.is_valid():
         existing_listings = set(collection.listings.all())
