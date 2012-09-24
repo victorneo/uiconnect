@@ -17,7 +17,7 @@ class LoginAllempty(unittest.TestCase):
         driver.find_element_by_link_text("Login").click()
         driver.find_element_by_id("submit-id-submit").click()
         
-        try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
+        try: self.assertEqual("Login or", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))        
         try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_username > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))

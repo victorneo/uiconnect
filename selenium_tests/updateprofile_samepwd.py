@@ -14,9 +14,10 @@ class UpdateprofileSamepwd(unittest.TestCase):
     
     def test_updateprofile_samepwd(self):
         driver = self.driver      
-        login(driver, self, "zgal", "asd")
-        
-        driver.find_element_by_link_text("Mabel").click()
+        #login(driver, self, "zgal", "asd")
+        login(driver, self, "asd", "asd")
+        driver.find_element_by_link_text("asd").click()
+        #driver.find_element_by_link_text("Mabel").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_password").clear()
@@ -30,9 +31,10 @@ class UpdateprofileSamepwd(unittest.TestCase):
         self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)         
         driver.find_element_by_link_text("Logout").click()
         
-        login(driver, self, "zgal", "123")
-        
-        driver.find_element_by_link_text("Mabel").click()
+        #login(driver, self, "zgal", "123")
+        login(driver, self, "asd", "123")
+        driver.find_element_by_link_text("asd").click()
+        #driver.find_element_by_link_text("Mabel").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_password").clear()

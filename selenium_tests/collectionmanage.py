@@ -18,6 +18,8 @@ class Collectionmanage(unittest.TestCase):
         addcollection(driver, self)
         
         driver.find_element_by_link_text("Manage Items").click()
+        try: self.assertEqual("Add Items to Collection", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))         
         select = Select(driver.find_element_by_id("id_listings"))        
         select.deselect_all()
         select.select_by_visible_text("6-inch Black Heel")

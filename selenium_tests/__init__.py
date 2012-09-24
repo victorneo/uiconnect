@@ -1,4 +1,7 @@
+#Victor sample case
 from registration_header import *
+
+#Mabel test cases (comment alway if want to use this file for 'nosetests')
 from login_allempty import *
 from login_invalid import *
 from updateprofile_validnameandemail import *
@@ -16,8 +19,11 @@ from itemedit_allempty import *
 from itemedit_invalidprice import *
 from itemmanage import *
 from itemdelete import *
+from collectiondetail_others import *
+from collectiondetail_own import *
 from collectionadd_allempty import *
 from collectionedit_normal import *
 from collectionedit_allempty import *
 from collectionmanage import *
 from collectiondelete import *
+from usersfollowed import *

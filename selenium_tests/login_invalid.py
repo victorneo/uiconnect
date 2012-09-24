@@ -15,7 +15,7 @@ class LoginInvalid(unittest.TestCase):
         driver = self.driver      
         driver.get(self.base_url)
         driver.find_element_by_link_text("Login").click()
-        try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
+        try: self.assertEqual("Login or", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_username").clear()
         driver.find_element_by_id("id_username").send_keys("test")
@@ -23,7 +23,7 @@ class LoginInvalid(unittest.TestCase):
         driver.find_element_by_id("id_password").send_keys("asd")
         driver.find_element_by_id("submit-id-submit").click()
         
-        try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
+        try: self.assertEqual("Login or", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("Invalid login." in driver.find_element_by_tag_name("body").text)             
     
