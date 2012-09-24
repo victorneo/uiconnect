@@ -195,6 +195,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 PAYPAL_RECEIVER_EMAIL = 'seller_1347808967_biz@gmail.com'
 PAYPAL_IDENTITY_TOKEN = "wW9IcqvvXDJbK1DK_NSzQY0KdOHltev0LSYQ35qYqdM6N5xcLUQLtjudaS0"
 
+FB_CODE = ''
+FB_SECRET = ''
 
 try:
     from local_settings import *
