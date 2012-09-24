@@ -8,6 +8,6 @@
     <p><a href="{% url 'accounts:forgot_password' %}">Forgot your password?</a></p>
 
     <h5>or</h5>
-    <a href="https://www.facebook.com/dialog/oauth?client_id=536337693059624&redirect_uri=http://127.0.0.1:8000/accounts/facebook-login&scope=email"><img src="{{ STATIC_URL }}img/fb_connect.png" /></a>
+    <a href="https://www.facebook.com/dialog/oauth?client_id=536337693059624&redirect_uri={{ server_url }}accounts/facebook-login&scope=email"><img src="{{ STATIC_URL }}img/fb_connect.png" /></a>
   </div>
 {% endblock %}

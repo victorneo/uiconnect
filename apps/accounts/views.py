@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login as lgin, logout as lgout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -32,7 +33,12 @@ def login(request):
         else:
             messages.error(request, u'Invalid login.')
 
-    return render(request, 'accounts/login.html', {'form': form})
+    server_url = 'http://%s/' % Site.objects.get(id=1).domain
+
+    return render(request, 'accounts/login.html', {
+        'form': form,
+        'server_url': server_url,
+    })
 
 
 def logout(request):
