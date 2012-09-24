@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 import facebook
 import requests
+from uiconnect import settings
 from .forms import *
 from .models import UserProfile
 
@@ -48,6 +49,7 @@ def logout(request):
 
 def register(request):
     form = RegistrationForm(request.POST or None, request.FILES or None)
+    server_url = 'http://%s/' % Site.objects.get(id=1).domain
 
     if form.is_valid():
         try:
@@ -74,7 +76,10 @@ def register(request):
         else:
             messages.error(request, u'Username has been taken.')
 
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'accounts/register.html', {
+        'form': form,
+        'server_url': server_url,
+    })
 
 
 @login_required
@@ -88,6 +93,9 @@ def profile(request):
         'avatar': profile.avatar,
     }
     form = ProfileForm(request.POST or None, request.FILES or None, initial=initial)
+
+    if profile.fb_id:
+        form.hide_password()
 
     if form.is_valid():
         user.first_name = form.cleaned_data['name']
@@ -197,7 +205,8 @@ def facebook_login(request):
     code = request.GET['code']
 
     server_url = 'http://%s/' % Site.objects.get(id=1).domain
-    response = requests.get('https://graph.facebook.com/oauth/access_token?client_id=536337693059624&redirect_uri=%saccounts/facebook-login&client_secret=c933b8b99034657f9365b64031acc640&code=%s' % (server_url, code))
+    response = requests.get('https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%saccounts/facebook-login&client_secret=%s&code=%s' 
+            % (settings.FB_CODE, server_url, settings.FB_SECRET, code))
 
     # get access token
     access_token = urlparse.parse_qs(response.text)['access_token'][0]

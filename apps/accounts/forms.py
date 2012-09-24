@@ -146,3 +146,7 @@ class ProfileForm(forms.Form):
 
         # Always return the full collection of cleaned data.
         return cleaned_data
+
+    def hide_password(self):
+        self.fields['password'] = forms.CharField(required=False, widget=forms.widgets.HiddenInput())
+        self.fields['password2'] = forms.CharField(required=False, widget=forms.widgets.HiddenInput())
