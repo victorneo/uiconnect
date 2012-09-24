@@ -196,7 +196,8 @@ def facebook_login(request):
 
     code = request.GET['code']
 
-    response = requests.get('https://graph.facebook.com/oauth/access_token?client_id=536337693059624&redirect_uri=http://127.0.0.1:8000/accounts/facebook-login&client_secret=c933b8b99034657f9365b64031acc640&code=%s' % code)
+    server_url = 'http://%s/' % Site.objects.get(id=1).domain
+    response = requests.get('https://graph.facebook.com/oauth/access_token?client_id=536337693059624&redirect_uri=%saccounts/facebook-login&client_secret=c933b8b99034657f9365b64031acc640&code=%s' % (server_url, code))
 
     # get access token
     access_token = urlparse.parse_qs(response.text)['access_token'][0]
