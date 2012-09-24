@@ -25,7 +25,11 @@
       <div class="span3">
         <h4>{{ listing.name }}</h4>
         <a href="{% url 'listings:view' listing.id %}" class="thumbnail">
+          {% if listing.images.all.0.thumbnail %}
           <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
+          {% else %}
+          <span class="default-thumbnail-dashboard">{{ listing.name|slice:":4" }}</span>
+          {% endif %}
           <p>{{listing.description|truncatewords:10}}</p>
         </a>
       </div>

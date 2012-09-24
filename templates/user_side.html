@@ -1,15 +1,15 @@
     <p>
       <small>listed by</small><br />
-      {% if user.get_profile.avatar %}
-      <img src="{{ user.get_profile.avatar.url }}" />
+      {% if viewed_user.get_profile.avatar %}
+      <img src="{{ viewed_user.get_profile.avatar.url }}" />
       {% else %}
-      <span style="display: block; width: 100px; height: 60px; background-color: #aaa; color: #fff; font-size: 5em; text-align: center; padding-top: 40px;">{{ user.first_name|slice:":1" }}</span>
+      <span class="default-avatar">{{ viewed_user.first_name|slice:":1" }}</span>
       {% endif %}
-      <p>{{ user.first_name }}</p>
+      <p>{{ viewed_user.first_name }}</p>
 
-      {% if user.get_profile.bio %}
-      <blockquote><small>{{ user.get_profile.bio|truncatewords:15 }}</small></blockquote>
+      {% if viewed_user.get_profile.bio %}
+      <blockquote><small>{{ viewed_user.get_profile.bio|truncatewords:15 }}</small></blockquote>
       {% endif %}
 
-      {% include 'follow/follow.html' with viewed_user=user %}
+      {% include 'follow/follow.html' with viewed_user=viewed_user %}
     </p>

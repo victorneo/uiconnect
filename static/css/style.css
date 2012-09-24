@@ -41,3 +41,30 @@ div.listing-info dl>dd {margin-bottom: 20px;}
   content: " \00BB";
   color: #ddd;
 }
+
+.default-avatar{
+  width: 100px;
+  height: 60px;
+  font-size: 5em;
+}
+
+.default-thumbnail{
+  width: 200px;
+  height: 100px;
+  font-size: 5em;
+}
+
+.default-thumbnail-dashboard{
+  width: 200px;
+  height: 70px;
+  padding-top: 80px;
+  font-size: 5em;
+}
+
+.default-avatar, .default-thumbnail, .default-thumbnail-dashboard{
+  display: block;
+  background-color: #aaa;
+  color: #fff;
+  text-align: center;
+  padding-top: 40px;
+}

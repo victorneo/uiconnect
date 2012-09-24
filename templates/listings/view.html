@@ -8,7 +8,7 @@
 {% block content %}
   <div class="span2">
 
-    {% include 'user_side.html' with user=listing.user %}
+    {% include 'user_side.html' with viewed_user=listing.user %}
 
     {% if user == listing.user or user.is_staff %}
     <div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -49,7 +49,7 @@
           {% else %}
 
           <div class="item active">
-            <span style="display: block; width: 200px; height: 100px; background-color: #aaa; color: #fff; font-size: 5em; text-align: center; padding-top: 40px;">{{ listing.name|slice:":4" }}</span>
+            <span class="default-thumbnail">{{ listing.name|slice:":4" }}</span>
             <div class="carousel-caption" style="position: relative; margin-top: 0;">
               <p>No images for this item.</p>
             </div>
