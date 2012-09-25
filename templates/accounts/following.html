@@ -19,7 +19,11 @@
   {% for profile in following_users %}
   <tr>
     <td class="span2">
-      <img src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}http://placehold.it/100x100{% endif %}" />
+      {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}" />
+      {% else %}
+      <span class="default-avatar">{{ profile.user.first_name|slice:":1" }}</span>
+      {% endif %}
       <p>{{ profile.user.first_name }}</p>
     </td>
     <td class="span7">
