@@ -72,7 +72,7 @@ def register(request):
 
             user = authenticate(username=user.username, password=form.cleaned_data['password'])
             lgin(request, user)
-            return redirect(reverse('index'))
+            return redirect(reverse('dashboard'))
         else:
             messages.error(request, u'Username has been taken.')
 
