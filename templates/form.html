@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 <form class="form-horizontal" method="POST" enctype="multipart/form-data" action="{{ form_action }}">
-  <h3>{{legend}}{% if facebook %} <span style="font-size:0.8em;">or</a> <a href="https://www.facebook.com/dialog/oauth?client_id=536337693059624&redirect_uri={{ server_url }}accounts/facebook-login&scope=email"><img src="{{ STATIC_URL }}img/fb_connect.png" /></a>{% endif %}</h3>
+  <h3>{{legend}}</h3>
       {% include 'messages.html' %}
   {% crispy form %}
 </form>

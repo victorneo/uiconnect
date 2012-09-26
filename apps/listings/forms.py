@@ -52,7 +52,7 @@ class CollectionForm(forms.ModelForm):
                 Field('description', css_class='span6'),
             ),
             FormActions(
-                Submit('submit', 'Add', css_class='btn btn-primary')
+                Submit('submit', kwargs.pop('submit_name', u'Add'), css_class='btn btn-primary')
             )
         )
         super(CollectionForm, self).__init__(*args, **kwargs)

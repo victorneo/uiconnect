@@ -2,6 +2,8 @@
 
 {% block content %}
   <div class="span8 offset2">
-    {% include 'form.html' with legend='Register' facebook=1 %}
+    {% include 'form.html' with legend='Register' %}
+
+    or <a href="https://www.facebook.com/dialog/oauth?client_id=536337693059624&redirect_uri={{ server_url }}accounts/facebook-login&scope=email"><img src="{{ STATIC_URL }}img/fb_connect.png" /></a>
   </div>
 {% endblock %}
