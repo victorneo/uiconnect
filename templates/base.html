@@ -26,7 +26,8 @@
   </head>
 
   <body>
-    <div class="navbar navbar-inverse navbar-static-top top-navbar">
+    <div id="nav-wrapper">
+    <div class="navbar navbar-inverse top-navbar navbar-fixed-top bottom-shadow">
       <div class="navbar-inner">
         <div class="container">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -43,7 +44,9 @@
               {% endif %}
               <li><a href="{% url 'accounts:profile' %}">{{user.first_name}}</a></li>
               <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-              <li><a href="{% url 'cart:view' %}">Shopping Cart</a></li>
+              <li>
+                <a href="{% url 'cart:view' %}">Shopping Cart {% if user.cart.items.count > 0 %}<span class="label label-success">{{ user.cart.items.count }}</span>{% endif %}</a>
+              </li>
               <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
               {% else %}
               <li><a href="{% url 'accounts:login' %}">Login</a></li>
@@ -56,11 +59,10 @@
       </div>
     </div>
 
-    <div class="container mid-navbar" style="">
-      <div class="navbar">
+    <div class="container">
+      <div class="navbar mid-navbar">
         <div class="navbar-inner">
         <div class="container">
-          <!-- Everything you want hidden at 940px or less, place within here -->
           <div class="nav">
             <ul class="nav">
               <li><a href="{% url 'collections:index' %}">Featured collections</a></li>
@@ -77,20 +79,25 @@
         </div>
       </div>
     </div>
+    </div>
 
     {% block pre_container %}{% endblock %}
-    <div class="container" id="main-container">
+
+    <div id="container-wrapper">
+    <div class="container">
       <div class="row">
         {% block content %}{% endblock %}
       </div>
 
+    </div> <!-- /container -->
+    </div>
+    <div class="container">
       <hr />
-
       <footer>
         <p>&copy; UIConnect 2012</p>
       </footer>
 
-    </div> <!-- /container -->
+    </div>
 
     <!-- Le javascript
     ================================================== -->

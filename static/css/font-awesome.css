@@ -79,7 +79,6 @@ li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
 .icon-music:before                { content: "\f001"; }
 .icon-search:before               { content: "\f002"; }
 .icon-envelope:before             { content: "\f003"; }
-.icon-heart:before                { content: "\f004"; }
 .icon-star:before                 { content: "\f005"; }
 .icon-star-empty:before           { content: "\f006"; }
 .icon-user:before                 { content: "\f007"; }
@@ -88,14 +87,12 @@ li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
 .icon-th:before                   { content: "\f00a"; }
 .icon-th-list:before              { content: "\f00b"; }
 .icon-ok:before                   { content: "\f00c"; }
-.icon-remove:before               { content: "\f00d"; }
 .icon-zoom-in:before              { content: "\f00e"; }
 
 .icon-zoom-out:before             { content: "\f010"; }
 .icon-off:before                  { content: "\f011"; }
 .icon-signal:before               { content: "\f012"; }
 .icon-cog:before                  { content: "\f013"; }
-.icon-trash:before                { content: "\f014"; }
 .icon-home:before                 { content: "\f015"; }
 .icon-file:before                 { content: "\f016"; }
 .icon-time:before                 { content: "\f017"; }
