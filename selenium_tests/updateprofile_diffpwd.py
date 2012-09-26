@@ -14,10 +14,9 @@ class UpdateprofileDiffpwd(unittest.TestCase):
     
     def test_updateprofile_diffpwd(self):
         driver = self.driver          
-        #login(driver, self, "zgal", "asd")
-        login(driver, self, "asd", "asd")
-        driver.find_element_by_link_text("asd").click()
-        #driver.find_element_by_link_text("Mabel").click()
+        login(driver, self, "zgal", "asd")
+        
+        driver.find_element_by_link_text("Mabel").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_password").clear()

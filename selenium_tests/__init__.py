@@ -1,5 +1,5 @@
 #Victor sample case
-from registration_header import *
+#from registration_header import *
 
 #Mabel test cases (comment alway if want to use this file for 'nosetests')
 from login_allempty import *

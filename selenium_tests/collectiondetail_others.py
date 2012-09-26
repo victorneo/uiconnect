@@ -49,8 +49,8 @@ class CollectiondetailOthers(unittest.TestCase):
         try: self.assertEqual("0 followers.", driver.find_element_by_css_selector("div.follow > p").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
-        driver.find_element_by_link_text("Harry Potter And The Philosophers").click()
-        try: self.assertEqual("Harry Potter And The Philosophers", driver.find_element_by_css_selector("h1").text)
+        driver.find_element_by_link_text("Harry Potter and the Philosophers Stone").click()
+        try: self.assertEqual("Harry Potter and the Philosophers Stone", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("Harry Potter Book Series").click()
            

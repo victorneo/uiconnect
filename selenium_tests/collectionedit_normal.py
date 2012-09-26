@@ -29,7 +29,7 @@ class CollectioneditNormal(unittest.TestCase):
         try: self.assertEqual("testcollection!", driver.find_element_by_css_selector("h1").text) 
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("Collection Updated." in driver.find_element_by_tag_name("body").text)  
-        #self.assertTrue("testing collection 123!" in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("testing collection 123!" in driver.find_element_by_tag_name("body").text)
         
         deletecollection(driver, self)              
         driver.find_element_by_link_text("Logout").click()       
