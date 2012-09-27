@@ -7,8 +7,12 @@ from .models import Reward
 
 def index(request):
     rewards = Reward.objects.all()
+    template = 'rewards/index.html'
 
-    return render(request, 'rewards/index.html', {
+    if not request.user.is_authenticated:
+        template = 'rewards/public.html'
+
+    return render(request, template, {
         'rewards': rewards,
     })
 

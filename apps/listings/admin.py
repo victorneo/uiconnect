@@ -11,7 +11,7 @@ class ListingImageAdmin(admin.ModelAdmin):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    pass
+    exclude = ('likes',)
 
 
 admin.site.register(Listing, ListingAdmin)

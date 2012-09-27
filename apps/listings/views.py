@@ -24,6 +24,24 @@ def index(request):
     })
 
 
+def categories(request):
+    categories = Category.objects.all()
+    for c in categories:
+        c.display_listings = c.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()[:4]
+
+    return render(request, 'listings/categories.html', {
+        'categories': categories,
+    })
+
+def category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    category.display_listings = category.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()
+
+    return render(request, 'listings/category.html', {
+        'category': category,
+    })
+
+
 def view(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
     return render(request, 'listings/view.html', {
