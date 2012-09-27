@@ -6,6 +6,11 @@
 {% endblock %}
 
 {% block content %}
+  <div class="row">
+    <div class="span12">
+      <h1>{{listing.name}}</h1>
+    </div>
+  </div>
   <div class="span2">
 
     {% include 'user_side.html' with viewed_user=listing.user %}
@@ -32,13 +37,13 @@
     {% include 'messages.html' %}
 
     <div class="pull-left">
-      <div id="listingCarousel" class="carousel slide" data-interval="0" style="width: 200px; height: 430px;">
-        <div class="carousel-inner">
+      <div id="listingCarousel" class="carousel slide" data-interval="0" style="width: 300px; height: 430px;">
+        <div class="carousel-inner" style="background-color: #ccc;">
 
           {% if listing.images.all %}
           {% for img in listing.images.all %}
 
-          <div class="item{% if forloop.first %} active{% endif %}">
+          <div class="item{% if forloop.first %} active{% endif %}" style="text-align: center;">
             <a href="{{ img.image.url }}" rel="lightbox[thumbnails]" title="{{ img.caption }}"><img src="{{ img.formatted_image.url }}" alt="" /></a>
             <div class="carousel-caption" style="position: relative; margin-top: 0;">
               <p>{{img.caption}}</p>
@@ -68,11 +73,10 @@
       </div><!-- end carousel -->
     </div>
 
-    <div class="pull-left listing-info">
-      <h1>{{listing.name}}</h1>
+    <div class="pull-left listing-info" style="width: 200px;">
 
       <div class="social" style="text-align: right;">
-        <span style="margin-right: 20px;"><span id="span_likes">{{listing.likes.count}}</span> likes this.</span>
+        <span style="margin-right: 20px;"><span id="span_likes">{{listing.likes.count}}</span> likes this item.</span>
         {% if user.is_authenticated %}
         <button id="btn_like" class="btn btn-small" style="margin-top: -5px;">
           {% if user in listing.likes.all %}
@@ -115,23 +119,21 @@
 
         <dt>&nbsp;</dt>
         <dd>
-          {% if listing in user.cart.added_listings %}
+        {% if listing in user.cart.added_listings %}
           Already in your shopping cart.
-          {% else %}
+        {% else %}
           <form action="{% url 'cart:add' listing.id %}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="quantity" value="1" />
             {% if listing.user != user %}
-            <input type="submit" class="btn btn-info btn-large" href="{% url 'cart:add' listing.id %}" style="display: block;" value="Add Item to Cart" />
+            <input type="submit" class="btn btn-large" href="{% url 'cart:add' listing.id %}" style="display: block;" value="Add to Cart" />
             {% endif %}
           </form>
-          {% endif %}
+        {% endif %}
         </dd>
+
       </dl>
 
-    </div>
-
-    <div class="clearfix">&nbsp;</div>
 
     {% if user == listing.user %}
     <h5>Owner's menu</h5>
@@ -144,6 +146,34 @@
       </div>
     </div>
     {% endif %}
+
+    </div>
+
+    <div class="clearfix">&nbsp;</div>
+
+    <div class="span8">
+      <h4>Comments</h4>
+      <div class="">
+        <p class="bubble">Woo, love this!</p>
+        <p>
+          {% if listing.user.get_profile.avatar %}
+          <img src="{{ listing.user.get_profile.avatar.url }}" width="32" style="margin-right: 10px;" />
+          {% endif %}
+          Victor commented 10 hours ago.
+        </p>
+      </div>
+      <div class="clearfix">&nbsp;</div>
+
+      <div class="">
+        <p class="bubble-owner">Glad you liked it!</p>
+        <p style="text-align: right;">
+          {% if listing.user.get_profile.avatar %}
+          <img src="{{ listing.user.get_profile.avatar.url }}" width="32" style="margin-right: 10px;" />
+          {% endif %}
+          (Item owner)<br />Victor commented 10 hours ago.
+        </p>
+      </div>
+    </div>
 
   </div>
 {% endblock %}
