@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -32,7 +33,7 @@ def view(request, listing_id):
 
 @login_required
 def dashboard(request):
-    listings = Listing.objects.filter(user=request.user).all()
+    listings = Listing.objects.filter(user=request.user).annotate(num_likes=Count('likes')).order_by('-num_likes').all()
     collections = Collection.objects.filter(user=request.user).all()
     return render(request, 'listings/dashboard.html', {
         'listings': listings,
