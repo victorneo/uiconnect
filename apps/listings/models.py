@@ -20,6 +20,13 @@ class Listing(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def last_liked_user(self):
+        if self.likes.count() > 0:
+            return self.likes.order_by('-id').all()[0].first_name
+        else:
+            return None
+
 
 class ListingImage(models.Model):
     listing = models.ForeignKey(Listing, related_name='images')

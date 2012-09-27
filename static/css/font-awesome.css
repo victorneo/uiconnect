@@ -140,7 +140,6 @@ li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
 .icon-map-marker:before           { content: "\f041"; }
 .icon-adjust:before               { content: "\f042"; }
 .icon-tint:before                 { content: "\f043"; }
-.icon-edit:before                 { content: "\f044"; }
 .icon-share:before                { content: "\f045"; }
 .icon-check:before                { content: "\f046"; }
 .icon-move:before                 { content: "\f047"; }
