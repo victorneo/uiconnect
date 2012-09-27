@@ -30,6 +30,7 @@
                 <!-- Carousel items -->
                 <div class="carousel-inner">
                 {% for listing in c.featured_listings %}
+                {% if listing.images.all.0.image %}
                 <div class="item {% if forloop.first %}active{% endif %}">
                   <a href="{% url 'listings:view' listing.id %}" style="text-align: center;">
                   <img class="listing-image" src="{{listing.images.all.0.image.url}}" />
@@ -42,6 +43,7 @@
                   </div>
                   </a>
                 </div>
+                {% endif %}
                 {% endfor %}
                 </div>
                 <!-- Carousel nav -->

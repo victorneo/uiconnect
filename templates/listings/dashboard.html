@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% block content %}
-  <div class="span2">
+  <div class="span3">
     <h1>Dashboard</h1>
     <ul class="nav nav-tabs nav-stacked">
       <li><a href="{% url 'dashboard' %}">My items and collections</a></li>
@@ -13,13 +13,13 @@
       <li><a href="{% url 'payments:index' %}">Payments</a></li>
     </ul>
   </div>
-  <div class="span10">
+  <div class="span9">
     <h1>&nbsp;</h1>
     {% block dashboard_content %}
     {% include 'messages.html' %}
 
     {% if listings %}
-      <h2>Items</h2>
+      <h3>My items</h3>
       <div class="row">
       {% for listing in listings %}
       <div class="span3">
@@ -38,7 +38,7 @@
     {% endif %}
 
     {% if collections %}
-      <h2>Collections</h2>
+      <h3>My Collections</h3>
       <div class="row">
       {% for c in collections %}
       <div class="span3">

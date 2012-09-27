@@ -19,9 +19,9 @@ a.btn>i{
 }
 
 .bottom-shadow{
-  -moz-box-shadow:    0 4px 4px -2px #ccc;
-  -webkit-box-shadow: 0 4px 4px -2px #ccc;
-  box-shadow:         0 4px 4px -2px #ccc;
+  -moz-box-shadow:    0 4px 4px -2px #eee;
+  -webkit-box-shadow: 0 4px 4px -2px #eee;
+  box-shadow:         0 4px 4px -2px #eee;
 }
 
 div#nav-wrapper{
@@ -83,7 +83,7 @@ div.listing-info dl>dd {margin-bottom: 20px;}
   text-transform: none;
 }
 
-.mid-navbar { margin-bottom: 5px; }
+.mid-navbar { margin-bottom: 5px;}
 
 .mid-navbar,
 .mid-navbar>.navbar-inner,
