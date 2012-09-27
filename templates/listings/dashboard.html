@@ -5,12 +5,15 @@
   <div class="span3">
     <h1>Dashboard</h1>
     <ul class="nav nav-tabs nav-stacked">
+      <li><a href="#">News feed</a></li>
+      <li><a href="{% url 'rewards:index' %}">Rewards ({{ user.get_profile.points }} points)</a></li>
+      <li><a href="{% url 'accounts:following' %}">Users followed</a></li>
+      <li><a href="{% url 'payments:index' %}">Payments</a></li>
+    </ul>
+    <ul class="nav nav-tabs nav-stacked">
       <li><a href="{% url 'dashboard' %}">My items and collections</a></li>
       <li><a href="{% url 'listings:add' %}">Add Item</a></li>
       <li><a href="{% url 'collections:add' %}">Add Collection</a></li>
-      <li><a href="{% url 'rewards:index' %}">Rewards</a></li>
-      <li><a href="{% url 'accounts:following' %}">Users followed</a></li>
-      <li><a href="{% url 'payments:index' %}">Payments</a></li>
     </ul>
   </div>
   <div class="span9">
@@ -51,12 +54,16 @@
 
     {% if collections %}
       <h3>My Collections</h3>
-      <div class="row">
       {% for c in collections %}
-      <div class="span3">
-        <a href="{% url 'collections:view' c.id %}">{{c.name}}</a>
-      </div>
-      {% endfor %}
+        <div class="collection-preview">
+          <a href="{% url 'collections:view' c.id %}">
+          <div class="collection-preview-image" {% if c.image %}style="background-image: url('{{ c.image.url }}')"{% endif %}>
+            <h3>{{ c.name }}</h3>
+            <p>{{ c.listings.count }} items in this collection.</p>
+          </div>
+          </a>
+        </div>
+        {% endfor %}
       </div>
     {% endif %}
 

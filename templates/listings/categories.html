@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+  <h1>All Categories <small>sorted by popularity</small></h1>
+
+  {% for c in categories %}
+    <h3>{{ c.name }} <small>(<a href="{% url 'listings:category' c.slug %}">see all items under {{ c.name }}</a>)</small></h3>
+    <ul class="thumbnails">
+      {% for listing in c.display_listings %}
+      <li class="span3">
+        <div class="thumbnail">
+          <a href="{% url 'listings:view' listing.id %}">
+          <div class="thumbnail-wrapper">
+            {% if listing.images.all.0.image %}
+            <img src="{{ listing.images.all.0.image.url }}" alt="" >
+            {% else %}
+            <p>No image for this item.</p>
+            {% endif %}
+          </div>
+          <h5>{{ listing.name }}</h5>
+          </a>
+          <div class="thumbnail-info-wrapper" style="padding: 10px;">
+            <p class="pull-left">
+              USD {{ listing.price }}
+            </p>
+            <p class="pull-right">
+              <a {% if listing.likes.count > 0  %} data-placement="top" rel="tooltip" href="#" data-original-title="Most recently liked by {{ listing.last_liked_user }}" {% endif %}><i class="icon-heart"></i> {{ listing.likes.count }} Likes</a>
+            </p>
+          </div>
+        </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+  {% endfor %}
+{% endblock %}
+
+{% block js_footer %}
+<script type="text/javascript">
+    $("[rel=tooltip]").tooltip();
+</script>
+{% endblock %}

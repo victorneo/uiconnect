@@ -162,12 +162,13 @@ def follow(request, user_id):
     else:
         if user != request.user:
             profile = user.get_profile()
-            if profile in request.user.get_profile().following.all():
-                profile.followers.remove(request.user.get_profile())
-            else:
-                profile.followers.add(request.user.get_profile())
 
-            profile.save()
+            if profile in request.user.get_profile().following.all():
+                request.user.get_profile().remove_relationship(profile)
+            else:
+                request.user.get_profile().add_relationship(profile)
+
+            request.user.get_profile().save()
         else:
             data['success'] = False
 
@@ -178,9 +179,11 @@ def follow(request, user_id):
 @login_required
 def following(request):
     following_users = request.user.get_profile().following.all()
+    users_following = request.user.get_profile().followers.all()
 
     return render(request, 'accounts/following.html', {
         'following_users': following_users,
+        'users_following': users_following,
     })
 
 
@@ -191,7 +194,7 @@ def unfollow(request, user_id):
     except User.DoesNotExist:
         pass
     else:
-        request.user.get_profile().following.remove(profile)
+        request.user.get_profile().remove_relationship(profile)
         request.user.get_profile().save()
 
     return redirect(reverse('accounts:following'))

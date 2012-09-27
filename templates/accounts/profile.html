@@ -1,8 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'listings/dashboard.html' %}
 
-{% block content %}
-  <div class="span8 offset2">
-    {% include 'form.html' with legend='Profile' %}
-  </div>
+{% block dashboard_content %}
+  {% include 'form.html' with legend='Profile' %}
 {% endblock %}
 

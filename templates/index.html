@@ -9,7 +9,7 @@
         <div class="span12">
 
           <ul id="categories_tab" class="nav nav-pills ">
-            <li style="margin-right: 20px;"><h3 style="display: inline;">featured</h3></li>
+            <li style="margin-right: 20px;"><h3 style="display: inline;">featured items</h3></li>
             {% for c in categories %}
             <li{% if forloop.first %} class="active"{% endif %}><a href="#{{c.slug}}" data-toggle="tab">{{c.name}}</a></li>
             {% endfor %}
