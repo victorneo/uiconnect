@@ -30,7 +30,7 @@
 
   <div id="listing-images" class="row">
     <div class="span8 offset2">
-      <div id="listing-carousel" class="carousel slide" data-interval="0" style="height: 400px; overflow: hidden;">
+      <div id="listing-carousel" class="carousel slide" data-interval="0" style="margin-left: -20px; height: 400px; overflow: hidden;">
         <div class="carousel-inner">
 
           {% if listing.images.all %}
@@ -66,7 +66,7 @@
       <div class="row">
         <div class="span4">
           <div class="follow">
-            {% if user.is_authenticated and user != viewed_user %}
+            {% if user.is_authenticated and user != listing.user %}
             <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">
               {% if user.get_profile in viewed_user.get_profile.followers.all %}
               <i class="icon-remove"></i> Unfollow
@@ -74,6 +74,8 @@
               <i class="icon-user"></i> Follow this user
               {% endif %}
             </button>
+            {% else %}
+            &nbsp;
             {% endif %}
           </div>
         </div>
@@ -98,12 +100,9 @@
   </div> <!-- end images -->
 
   <div id="listing-info" class="row">
-    <div class="span3">
+    <div class="span4 offset2">
       <h6>owner</h6>
-      <p>
-        {{ listing.user.first_name }}
-      </p>
-
+      <p>{{ listing.user.first_name }}</p>
 
       {% if listing.collections.count > 0 %}
       <h6>part of the following collection{% if listing.collections.count > 1 %}s{% endif %}</h6>
@@ -156,8 +155,9 @@
       </div>
       {% endif %}
     </div>
-
-    <div class="span5">
+  </div>
+  <div class="row">
+    <div class="span8 offset2">
       <h6>comments</h6>
       <div class="">
         <p class="bubble">Woo, love this!</p>
