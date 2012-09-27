@@ -62,13 +62,53 @@ ul.thumbnails div.thumbnail-wrapper img{ margin-top: -5em; }
 ul.thumbnails div.thumbnail-wrapper p{ display: block; text-align: center; width: 100%;}
 ul.thumbnails div.thumbnail-wrapper p>a:hover{ text-decoration: underline; }
 
+/* Collections page */
 
-/* Listing page */
+div.collection-preview-image {
+  width: 100%;
+  height: 120px;
+  background-image: url('../img/collection_bg.png');
+  position: relative;
+  margin-bottom: 20px;
+  -moz-box-shadow:    0 4px 4px 2px #ddd;
+  -webkit-box-shadow: 0 4px 4px 2px #ddd;
+  box-shadow:         0 4px 4px 2px #ddd;
+}
 
-div#listing-title { text-align: center; }
-div#listing-user { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 5px 5px 5px; }
-div#listing-user-stats { text-align: right; margin-top: 5px; }
-div#listing-images { margin: 20px 0 20px 0; }
+
+div.collection-preview-image:hover {
+  -moz-box-shadow:    0 4px 4px 2px #aaa;
+  -webkit-box-shadow: 0 4px 4px 2px #aaa;
+  box-shadow:         0 4px 4px 2px #aaa;
+}
+
+div.collection-preview-image h3, div.collection-preview-image p{
+  position: absolute;
+  color: #333;
+  text-align: right;
+  background-color:rgba(255,255,255,0.7);
+  padding: 5px;
+}
+
+div.collection-preview-image h3{
+  top: 10px;
+  right: 10px;
+}
+
+div.collection-preview-image p{
+  bottom: 10px;
+  right: 10px;
+}
+
+/* Listing and Collection page */
+
+div#collection-image>div.span10 {border: 8px solid #eee;}
+div#collection-description p {text-align: center; margin-left: -20px; }
+
+div#collection-title, div#collection-listings-title, div#listing-title { text-align: center; }
+div#collection-user, div#listing-user { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 5px 5px 5px; }
+div#collection-image, div#listing-user-stats { text-align: right; margin-top: 5px; }
+div#collection-description, div#listing-images { margin: 20px 0 20px 0; }
 div#listing-images div#listing-carousel { box-shadow: 0 4px 4px 3px #ccc; }
 
 div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter; }

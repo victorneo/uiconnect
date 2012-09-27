@@ -50,6 +50,7 @@ class CollectionForm(forms.ModelForm):
                 '',
                 Field('name', css_class='span6'),
                 Field('description', css_class='span6'),
+                Field('image', css_class='span6'),
             ),
             FormActions(
                 Submit('submit', kwargs.pop('submit_name', u'Add'), css_class='btn btn-primary')

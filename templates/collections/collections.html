@@ -18,7 +18,14 @@
 
       <div id="tabContent" class="tab-content" style="min-height: 300px;">
         {% for c in collections %}
-        <h3><a href="{% url 'collections:view' c.id %}">{{c.name}} ({{c.listings.count}} items)</a></h3>
+        <div class="collection-preview">
+          <a href="{% url 'collections:view' c.id %}">
+          <div class="collection-preview-image" {% if c.image %}style="background-image: url('{{ c.image.url }}')"{% endif %}>
+            <h3>{{ c.name }}</h3>
+            <p>{{ c.listings.count }} items in this collection.</p>
+          </div>
+          </a>
+        </div>
         {% endfor %}
       </div>
     </div>

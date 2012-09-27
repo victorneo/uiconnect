@@ -51,12 +51,16 @@
 
     {% if collections %}
       <h3>My Collections</h3>
-      <div class="row">
       {% for c in collections %}
-      <div class="span3">
-        <a href="{% url 'collections:view' c.id %}">{{c.name}}</a>
-      </div>
-      {% endfor %}
+        <div class="collection-preview">
+          <a href="{% url 'collections:view' c.id %}">
+          <div class="collection-preview-image" {% if c.image %}style="background-image: url('{{ c.image.url }}')"{% endif %}>
+            <h3>{{ c.name }}</h3>
+            <p>{{ c.listings.count }} items in this collection.</p>
+          </div>
+          </a>
+        </div>
+        {% endfor %}
       </div>
     {% endif %}
 

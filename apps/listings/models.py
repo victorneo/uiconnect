@@ -53,6 +53,7 @@ class Collection(models.Model):
     description = models.TextField()
     is_featured = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name='liked_collections')
+    image = models.ImageField(null=True, blank=True, upload_to='collections')
 
     created_at = models.DateTimeField(auto_now_add=True)
 

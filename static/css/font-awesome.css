@@ -115,7 +115,6 @@ li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
 .icon-qrcode:before               { content: "\f029"; }
 .icon-barcode:before              { content: "\f02a"; }
 .icon-tag:before                  { content: "\f02b"; }
-.icon-tags:before                 { content: "\f02c"; }
 .icon-book:before                 { content: "\f02d"; }
 .icon-bookmark:before             { content: "\f02e"; }
 .icon-print:before                { content: "\f02f"; }

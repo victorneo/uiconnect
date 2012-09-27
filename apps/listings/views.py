@@ -271,7 +271,7 @@ def update_collection(request, collection_id):
     if collection.user != request.user:
         return redirect(reverse('collections:view', kwargs={'collection_id': collection_id}))
 
-    form = CollectionForm(request.POST or None, instance=collection, submit_name=u'Update')
+    form = CollectionForm(request.POST or None, request.FILES or None, instance=collection, submit_name=u'Update')
 
     if form.is_valid():
         collection = form.save()
