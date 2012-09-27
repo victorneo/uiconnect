@@ -7,14 +7,8 @@ body{
 form>fieldset>legend{border: 0; display: none;}
 
 a { color: #f87242; }
-
-a.btn-small>i{
-  margin-top: 2px;
-}
-
-a.btn>i{
-  margin-top: 3px;
-}
+a.btn-small>i{margin-top: 2px;}
+a.btn>i{margin-top: 3px;}
 
 .bottom-shadow{
   -moz-box-shadow:    0 4px 4px -2px #eee;
@@ -71,10 +65,13 @@ ul.thumbnails div.thumbnail-wrapper p>a:hover{ text-decoration: underline; }
 
 /* Listing page */
 
-div.listing-info { margin-left: 10px; }
-div.listing-info dl { margin-left: -10px; }
-div.listing-info dl>dt {width: 95px; margin-bottom: 20px; }
-div.listing-info dl>dd {margin-bottom: 20px;}
+div#listing-title { text-align: center; }
+div#listing-user { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 5px 5px 5px; }
+div#listing-user-stats { text-align: right; margin-top: 5px; }
+div#listing-images { margin: 20px 0 20px 0; }
+div#listing-images div#listing-carousel { box-shadow: 0 4px 4px 3px #ccc; }
+
+div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter; }
 
 .top-navbar, .top-navbar>.navbar-inner, .top-navbar>.navbar-inner>.container, .navbar-static-top{
   background-color: #fff;

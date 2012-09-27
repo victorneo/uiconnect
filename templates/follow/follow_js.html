@@ -7,6 +7,7 @@ $(document).ready(function() {
   $('#btn_follow').click(function(){
     var text = $('#btn_follow').html();
     var btn_text = '';
+    var followers_text = ' followers';
     if (text.indexOf("Unfollow") == -1){
       followers += 1;
       btn_text = '<i class="icon-remove"></i> Unfollow';
@@ -20,8 +21,12 @@ $(document).ready(function() {
       console.log('followed');
     });
 
+    if (followers <= 1){
+      followers_text = ' follower';
+    }
 
-    $('#span_followers').html(followers);
+
+    $('#span_followers').html(followers + followers_text);
     $('#btn_follow').html(btn_text);
   });
 
