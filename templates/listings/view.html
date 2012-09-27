@@ -6,6 +6,192 @@
 {% endblock %}
 
 {% block content %}
+
+  <div id="listing-title" class="row">
+    <div class="span8 offset2">
+      <h1>{{ listing.name }}</h1>
+    </div>
+  </div>
+
+  <div id="listing-user" class="row">
+    <div class="span4 offset2">
+      {% if listing.user.get_profile.avatar %}
+      <img src="{{ listing.user.get_profile.avatar.url }}" style="width: 30px;" />
+      {% endif %}
+      {{ listing.user.first_name }}
+    </div>
+    <div id="listing-user-stats" class="span4">
+      <p>
+        <span id="span_followers">{{ listing.user.get_profile.followers.count }} follower{% if listing.user.get_profile.follwers.count > 1 %}s{% endif %}</span>,
+        {{ listing.user.listings.count }} items.
+      </p>
+    </div>
+  </div>
+
+  <div id="listing-images" class="row">
+    <div class="span8 offset2">
+      <div id="listing-carousel" class="carousel slide" data-interval="0" style="height: 400px; overflow: hidden;">
+        <div class="carousel-inner">
+
+          {% if listing.images.all %}
+          {% for img in listing.images.all %}
+
+          <div class="item{% if forloop.first %} active{% endif %}" style="text-align: center; height: 400px;">
+            <a href="{{ img.image.url }}" rel="lightbox[thumbnails]" title="{{ img.caption }}"><img src="{{ img.image.url }}" alt="" /></a>
+            <div class="carousel-caption" style="position: absolute; bottom: 0;">
+              <p>{{img.caption}}</p>
+            </div>
+          </div>
+
+          {% endfor %}
+          {% else %}
+
+          <div class="item active">
+            <span class="default-thumbnail">{{ listing.name|slice:":4" }}</span>
+            <div class="carousel-caption" style="position: relative; margin-top: 0;">
+              <p>No images for this item.</p>
+            </div>
+          </div>
+
+          {% endif %}
+
+        </div>
+        {% if listing.images.count > 1 %}
+        <a class="left carousel-control" href="#listing-carousel" data-slide="prev">&lsaquo;</a>
+        <a class="right carousel-control" href="#listing-carousel" data-slide="next">&rsaquo;</a>
+        {% endif %}
+
+      </div>
+
+      <div class="row">
+        <div class="span4">
+          <div class="follow">
+            {% if user.is_authenticated and user != viewed_user %}
+            <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">
+              {% if user.get_profile in viewed_user.get_profile.followers.all %}
+              <i class="icon-remove"></i> Unfollow
+              {% else %}
+              <i class="icon-user"></i> Follow this user
+              {% endif %}
+            </button>
+            {% endif %}
+          </div>
+        </div>
+        <div class="span4">
+
+          <div class="social" style="text-align: right;">
+            <span style="margin-right: 20px;"><span id="span_likes">{{listing.likes.count}}</span> likes this item.</span>
+            {% if user.is_authenticated %}
+            <button id="btn_like" class="btn btn-small" style="margin-top: -5px;">
+              {% if user in listing.likes.all %}
+              <i class="icon-remove"></i> Unlike
+              {% else %}
+              <i class="icon-heart"></i> Like it
+              {% endif %}
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div> <!-- end images -->
+
+  <div id="listing-info" class="row">
+    <div class="span3">
+      <h6>owner</h6>
+      <p>
+        {{ listing.user.first_name }}
+      </p>
+
+
+      {% if listing.collections.count > 0 %}
+      <h6>part of the following collection{% if listing.collections.count > 1 %}s{% endif %}</h6>
+      <p>
+        {% for c in listing.collections.all %}
+        <a href="{% url 'collections:view' c.id %}" class="label label-info">{{ c.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+      {% endif %}
+
+      <h6>categories</h6>
+      <p>
+        {% for c in listing.categories.all %}
+        <span class="label">{{ c.name }}</span>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+
+      {% if user.is_authenticated and listing.user != user %}
+        {% if listing in user.cart.added_listings %}
+          Already in your shopping cart.
+        {% else %}
+          <h6>interested?</h6>
+          <form action="{% url 'cart:add' listing.id %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1" />
+            {% if listing.user != user %}
+            <input type="submit" class="btn btn-large" href="{% url 'cart:add' listing.id %}" style="display: block;" value="Add to Cart" />
+            {% endif %}
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="span4">
+      <h6>price</h6>
+      <p>USD {{ listing.price }}</p>
+
+      <h6>description</h6>
+      <p>{{ listing.description }}</p>
+
+
+      {% if user == listing.user %}
+      <h6>Owner's menu</h6>
+
+      <div class="btn-toolbar" style="margin-bottom: 30px;">
+        <div class="btn-group">
+          <a class="btn btn-small btn-danger" href="#" data-target="#myModal" data-toggle="modal"><i class="icon-trash"></i> Delete Item</a>
+          <a class="btn btn-small" href="{% url 'listings:manage_images' listing.id %}"><i class="icon-camera"></i> Manage Images</a>
+          <a class="btn btn-small" href="{% url 'listings:update' listing.id %}"><i class="icon-pencil"></i> Edit Item</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="span5">
+      <h6>comments</h6>
+      <div class="">
+        <p class="bubble">Woo, love this!</p>
+        <p>
+          {% if listing.user.get_profile.avatar %}
+          <img src="{{ listing.user.get_profile.avatar.url }}" width="32" style="margin-right: 10px;" />
+          {% endif %}
+          Victor commented 10 hours ago.
+        </p>
+      </div>
+      <div class="clearfix">&nbsp;</div>
+
+      <div>
+        <p class="bubble-owner">Glad you liked it!</p>
+        <p style="text-align: right;">
+          {% if listing.user.get_profile.avatar %}
+          <img src="{{ listing.user.get_profile.avatar.url }}" width="32" style="margin-right: 10px;" />
+          {% endif %}
+          (Item owner)<br />Victor commented 10 hours ago.
+        </p>
+      </div>
+      <div class="clearfix">&nbsp;</div>
+
+      <form class="form-inline" style="text-align: right;">
+        {% csrf_token %}
+        <textarea style="width: 100%; margin-bottom: 5px;" name="comment"></textarea>
+        <input class="btn" style="margin-right: -15px;" type="submit" value="Comment" />
+      </form>
+
+    </div>
+  </div>
+
+
+  {% comment %}
   <div class="row">
     <div class="span12">
       <h1>{{listing.name}}</h1>
@@ -173,9 +359,11 @@
           (Item owner)<br />Victor commented 10 hours ago.
         </p>
       </div>
+      <div class="clearfix">&nbsp;</div>
     </div>
 
   </div>
+  {% endcomment %}
 {% endblock %}
 
 {% block js_footer %}
@@ -198,6 +386,7 @@ $(document).ready(function() {
     $.get('{% url 'listings:like' listing.id %}', function(data) {
       console.log('Liked.');
     });
+
 
     $('#span_likes').html(likes);
     $('#btn_like').html(btn_text);

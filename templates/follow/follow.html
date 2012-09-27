@@ -1,7 +1,6 @@
 {% load url from future %}
 
 <div class="follow">
-  <p><span id="span_followers">{{viewed_user.get_profile.followers.count}}</span> followers.</span></p>
   {% if user.is_authenticated and user != viewed_user %}
   <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">
     {% if user.get_profile in viewed_user.get_profile.followers.all %}
