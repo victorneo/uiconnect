@@ -47,7 +47,7 @@
           <div class="follow">
             {% if user.is_authenticated and user != collection.user %}
             <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">
-              {% if user.get_profile in viewed_user.get_profile.followers.all %}
+              {% if collection.user.get_profile in user.get_profile.following.all %}
               <i class="icon-remove"></i> Unfollow
               {% else %}
               <i class="icon-user"></i> Follow this user

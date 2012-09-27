@@ -251,6 +251,16 @@ div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter;
   padding-top: 40px;
 }
 
+.default-avatar-small{
+  width: 30px;
+  height: 20px;
+  font-size: 1em;
+  padding-top: 5px;
+  display: block;
+}
+
+.following-avatar img{ width: 30px; }
+
 /* social buttons */
 iframe.twitter-share-button { margin-top: 10px; }
 

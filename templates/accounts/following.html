@@ -8,26 +8,27 @@
 
   {% if not following_users %}
   <p>You are currently not following any users.</p>
+  <p>Following users let's you stay updated on the latest items for sale by them!</p>
   {% else %}
   <table class="span10">
     <thead style="text-align: left;">
       <tr>
         <th>User</th>
-        <th>Description</th>
+        <th>Bio</th>
       </tr>
     </thead>
   {% for profile in following_users %}
   <tr>
-    <td class="span2">
+    <td class="span2 following-avatar">
       {% if profile.avatar %}
       <img src="{{ profile.avatar.url }}" />
       {% else %}
-      <span class="default-avatar">{{ profile.user.first_name|slice:":1" }}</span>
+      <span class="default-avatar default-avatar-small">{{ profile.user.first_name|slice:":1" }}</span>
       {% endif %}
       <p>{{ profile.user.first_name }}</p>
     </td>
     <td class="span7">
-      <p class="span6" style="text-align: justify;">{{ profile.bio }}</p>
+      <p class="span6" style="text-align: justify;">{{ profile.bio|truncatewords:"20" }}</p>
     </td>
     <td class="span2">
       <a class="btn btn-small" href="{% url 'accounts:unfollow' profile.user.id %}" style="margin-top: -15px;">Unfollow</a>
@@ -35,7 +36,35 @@
   </tr>
   {% endfor %}
   </table>
+  {% endif %}
 
+  <h3>Users following you</h3>
+  {% if not users_following %}
+  <p>No one is currently following you :(</p>
+  {% else %}
+  <table class="span10">
+    <thead style="text-align: left;">
+      <tr>
+        <th>User</th>
+        <th>Bio</th>
+      </tr>
+    </thead>
+  {% for profile in users_following %}
+  <tr>
+    <td class="span2 following-avatar">
+      {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}" />
+      {% else %}
+      <span class="default-avatar default-avatar-small">{{ profile.user.first_name|slice:":1" }}</span>
+      {% endif %}
+      <p>{{ profile.user.first_name }}</p>
+    </td>
+    <td class="span9">
+      <p class="span6" style="text-align: justify;">{{ profile.bio|truncatewords:"20" }}</p>
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
   {% endif %}
 {% endblock %}
 
