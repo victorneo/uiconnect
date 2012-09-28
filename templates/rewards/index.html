@@ -7,47 +7,61 @@
     {% include 'messages.html' %}
 
     {% if user.is_authenticated %}
-    <p>You have {{ user.get_profile.points }} points.</p>
+    <p>You have {{ user.get_profile.points }} points. <small>(<a href="#" data-target="#redeemHelp" data-toggle="modal">How do I earn points?</a>)</small></p>
     {% endif %}
 
-    {% if user.redeemed_rewards.all %}
-    <h4>You have redeemed the following:</h4>
-    {% for r in user.redeemed_rewards.all %}
-    <p>{{ r.name }}</p>
-    {% endfor %}
-    {% endif %}
-
-    {% if not rewards %}
-      <h4>No rewards</h4>
-    {% else %}
-      <h4>All rewards</h4>
-      <div class="row">
+    <ul class="thumbnails">
       {% for r in rewards %}
-      <div class="span3 well">
-        <h4>{{ r.name }}</h4>
-        <p>Points needed: {{ r.points_required }}</p>
-        {% if user.is_authenticated and user.get_profile.points >= r.points_required %}
-          <a class="btn btn-small" href="#" data-target="#redeemModal_{{ r.id }}" data-toggle="modal">Redeem</a>
+      <li class="span4">
+        <div class="thumbnail">
+          {% if r.formatted_image %}
+          <img src="{{ r.formatted_image.url }}" />
+          {% endif %}
+          <h5>{{ r.name }}</h5>
+          <div class="thumbnail-info-wrapper" style="padding: 10px;">
+            <p class="pull-left">
+              Points required: {{ r.points_required }}
+            </p>
+            <p class="pull-right">
 
-          <div class="modal hide" id="redeemModal_{{ r.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h3 id="myModalLabel">Are you sure you want to redeem this voucher?</h3>
-            </div>
-            <div class="modal-body">
-              <p>You will receive an email from us with the voucher code.</p>
-            </div>
-            <div class="modal-footer">
-              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              <a class="btn btn-success" href="{% url 'rewards:redeem' r.id %}">Yes, redeem</a>
-            </div>
+              {% if user.is_authenticated and user.get_profile.points >= r.points_required %}
+              <a class="btn btn-small" href="#" data-target="#redeemModal_{{ r.id }}" data-toggle="modal">Redeem</a>
+
+              <div class="modal hide" id="redeemModal_{{ r.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="myModalLabel">Are you sure you want to redeem this reward?</h3>
+                </div>
+                <div class="modal-body">
+                  <p>You will receive an email from us with the voucher code.</p>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                  <a class="btn btn-success" href="{% url 'rewards:redeem' r.id %}">Yes, redeem</a>
+                </div>
+              </div>
+              {% endif %}
+
+            </p>
           </div>
-
-
-        {% endif %}
-      </div>
+        </div>
+      </li>
       {% endfor %}
+    </ul>
+
+    <div class="modal hide" id="redeemHelp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">How do I earn points?</h3>
       </div>
-    {% endif %}
+      <div class="modal-body">
+        <p>Points are earned when you make purchases on our side - generally, 1 point equals 10 USD spent.</p>
+        <p>During festive seasons we will offer more points to reward you when you buy more, so start shopping now!</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Thanks, I've got it!</button>
+      </div>
+    </div>
+
 {% endblock %}
 

@@ -109,7 +109,11 @@ div#collection-title, div#collection-listings-title, div#listing-title { text-al
 div#collection-user, div#listing-user { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 5px 5px 5px; }
 div#collection-image, div#listing-user-stats { text-align: right; margin-top: 5px; }
 div#collection-description, div#listing-images { margin: 20px 0 20px 0; }
+
+div#listing-images div#listing-carousel { margin-left: -20px; height: 400px; overflow: hidden; }
 div#listing-images div#listing-carousel { box-shadow: 0 4px 4px 3px #ccc; }
+
+img.carousel-avatar { min-width: 1px; max-width: 30px; min-height: 30px; }
 
 div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter; }
 

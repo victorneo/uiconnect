@@ -36,10 +36,8 @@
                   <img class="listing-image" src="{{listing.images.all.0.image.url}}" />
                   <div class="carousel-caption" style="position: relative; margin-top: 0;">
                     <h4>{{listing.name}}</h4>
-                      {% if listing.user.get_profile.avatar %}
-                      <img src="{{ listing.user.get_profile.avatar.url }}" width="30" />
-                      {% endif %}
-                      {{ listing.user.first_name }}
+                    <img class="carousel-avatar" src="{% if listing.user.get_profile.avatar %}{{ listing.user.get_profile.avatar.url }}{% else %}{{ STATIC_URL }}img/transparent.gif{% endif %}" />
+                    {{ listing.user.first_name }}
                   </div>
                   </a>
                 </div>

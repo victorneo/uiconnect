@@ -1,0 +1,12 @@
+{% load url from future %}
+
+  {% for c in collections %}
+  <div class="collection-preview">
+    <a href="{% url 'collections:view' c.id %}">
+    <div class="collection-preview-image" {% if c.image %}style="background-image: url('{{ c.image.url }}')"{% endif %}>
+      <h3>{{ c.name }}</h3>
+      <p>{{ c.listings.count }} items in this collection.</p>
+    </div>
+    </a>
+  </div>
+  {% endfor %}
