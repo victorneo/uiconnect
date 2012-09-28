@@ -9,29 +9,13 @@
     {% include 'form.html' %}
 
     {% if listings %}
-      <h2>Items</h2>
-      <div class="row">
-      {% for listing in listings %}
-      <div class="span3">
-        <h4>{{ listing.name }}</h4>
-        <a href="{% url 'listings:view' listing.id %}" class="thumbnail">
-          <img src="{{listing.images.all.0.thumbnail.url}}" alt="">
-          <p>{{listing.description|truncatewords:10}}</p>
-        </a>
-      </div>
-      {% endfor %}
-      </div>
+      <h3>Items</h3>
+      {% include 'listings/thumbnails.html' with listings=listings %}
     {% endif %}
 
     {% if collections %}
-      <h2>Collections</h2>
-      <div class="row">
-      {% for c in collections %}
-      <div class="span3">
-        <a href="{% url 'collections:view' c.id %}">{{c.name}}</a>
-      </div>
-      {% endfor %}
-      </div>
+      <h3>Collections</h3>
+      {% include 'collections/preview.html' with collections=collections %}
     {% endif %}
 
     {% if not collections and not listings %}

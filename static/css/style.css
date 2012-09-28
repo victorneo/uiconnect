@@ -265,6 +265,23 @@ div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter;
 
 .following-avatar img{ width: 30px; }
 
+/* shopping cart */
+
+table#shopping-cart { margin-left: 0; text-align: center; }
+table#shopping-cart th{ text-align: center; }
+table#shopping-cart td { padding: 10px; }
+
+table#shopping-cart, table#shopping-cart tr, table#shopping-cart td{
+  border: 1px solid #ddd;
+}
+
+textarea.delivery-address { height: 60px; }
+input.btn-checkout { margin-left: 10px; }
+
+/* payment */
+
+div#payment-info { margin-top: 20px; margin-bottom: 30px; }
+
 /* social buttons */
 iframe.twitter-share-button { margin-top: 10px; }
 

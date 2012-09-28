@@ -21,7 +21,7 @@ def pdt(request, item_check_callable=None, template="pdt/pdt.html", context=None
         except PayPalPDT.DoesNotExist:
             # This is a new transaction so we continue processing PDT request
             pass
-        
+
         if pdt_obj is None:
             form = PayPalPDTForm(request.GET)
             if form.is_valid():
@@ -33,13 +33,13 @@ def pdt(request, item_check_callable=None, template="pdt/pdt.html", context=None
             else:
                 error = form.errors
                 failed = True
-            
+
             if failed:
                 pdt_obj = PayPalPDT()
                 pdt_obj.set_flag("Invalid form. %s" % error)
-            
+
             pdt_obj.initialize(request)
-        
+
             if not failed:
                 # The PDT object gets saved during verify
                 pdt_obj.verify(item_check_callable)

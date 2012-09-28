@@ -1,27 +1,34 @@
 {% extends "listings/dashboard.html" %}
+{% load url from future %}
+
 {% block dashboard_content %}
 
-{% ifequal pdt_obj.st 'SUCCESS' %}
-<h1>Transaction complete</h1>
-<p>Thank you for your payment</p>
-<p>Please print this page for your records.</p>
+<h3>Payment complete</h3>
 
-<div>
-  <table>
-  <tr><td>Payer:</td><td>{{ pdt_obj.first_name }} {{ pdt_obj.last_name }} </td></tr>
-  <tr><td>Payer Email:</td><td>{{ pdt_obj.payer_email }}</td></tr>
-  <tr><td>Amount:</td><td>{{ pdt_obj.mc_currency }} {{ pdt_obj.mc_gross }}</td></tr>
-  <tr><td>Reference:</td><td>{{ pdt_obj.txn_id }}</td></tr>
-  <tr><td>Points earned:</td><td>{{ payment.points_earned }}</td></tr>
-  </table>
-</div>
+{% include 'cart/steps.html' with step3=1 %}
+
+{% ifequal pdt_obj.st 'SUCCESS' %}
+  <h5>Thank you for your payment!</h5>
+  <p>Please print this page for your records.</p>
+
+  <div id="payment-info">
+    <table>
+      <tr><td>Your name:</td><td>{{ pdt_obj.first_name }} {{ pdt_obj.last_name }} </td></tr>
+      <tr><td>Your Email:</td><td>{{ pdt_obj.payer_email }}</td></tr>
+      <tr><td>Amount:</td><td>{{ pdt_obj.mc_currency }} {{ pdt_obj.mc_gross }}</td></tr>
+      <tr><td>Reference no.:</td><td>{{ pdt_obj.txn_id }}</td></tr>
+      <tr><td>Points earned:</td><td>{{ payment.points_earned }}</td></tr>
+    </table>
+  </div>
+
+  <p>For enquires, please email <a href="mailto:payment@uiconnect.com">payment@uiconnect.com</a>. Kindly quote the reference number in your email.</p>
+
+  <a class="btn btn-info" href="{% url 'payments:index' %}">View your payment records</a>
 
 {% else %}
-<h1>Transaction Failed</h1>
-<p>Sorry transaction failed, please try a different form of payment</p>
+<h3>Transaction Failed</h3>
+<p>Sorry transaction failed, please try a different form of payment.</p>
+<p>Please contact <a href="mailto:support@uiconnect.com">support@uiconnect.com</a> for assistance.</p>
 {% endifequal %}
 
 {% endblock %}
-
-
-
