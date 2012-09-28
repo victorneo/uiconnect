@@ -26,12 +26,14 @@ class UpdateprofileValidnameandemail(unittest.TestCase):
         driver.find_element_by_id("submit-id-submit").click()
         
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))        
+        except AssertionError as e: self.verificationErrors.append(str(e)) 
+        self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)        
         try: self.assertEqual("tester", driver.find_element_by_id("id_name").get_attribute("value"))
         except AssertionError as e: self.verificationErrors.append(str(e))
         try: self.assertEqual("test@test.com", driver.find_element_by_id("id_email").get_attribute("value"))
         except AssertionError as e: self.verificationErrors.append(str(e))
-              
+          
+        #manual revert/cleanup#
         driver.find_element_by_id("id_name").clear()
         driver.find_element_by_id("id_name").send_keys("Mabel")
         driver.find_element_by_id("id_email").clear()
@@ -42,7 +44,7 @@ class UpdateprofileValidnameandemail(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e)) 
         self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)
         
-        driver.find_element_by_link_text("Logout").click()
+        driver.find_element_by_link_text("LOGOUT").click()
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

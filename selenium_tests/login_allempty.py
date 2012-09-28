@@ -15,6 +15,8 @@ class LoginAllempty(unittest.TestCase):
         driver = self.driver      
         driver.get(self.base_url)
         driver.find_element_by_link_text("Login").click()
+        try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))   
         driver.find_element_by_id("submit-id-submit").click()
         
         try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)

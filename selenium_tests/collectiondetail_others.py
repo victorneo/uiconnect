@@ -54,7 +54,7 @@ class CollectiondetailOthers(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("Harry Potter Book Series").click()
            
-        driver.find_element_by_link_text("Logout").click()       
+        driver.find_element_by_link_text("LOGOUT").click()       
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

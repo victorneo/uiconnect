@@ -28,10 +28,12 @@ class UpdateprofileSamepwd(unittest.TestCase):
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)         
-        driver.find_element_by_link_text("Logout").click()
-        
+        driver.find_element_by_link_text("LOGOUT").click()
+        try: self.assertEqual("featured items", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
         login(driver, self, "zgal", "123")
         
+        #manual revert/cleanup#
         driver.find_element_by_link_text("Mabel").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
@@ -44,7 +46,7 @@ class UpdateprofileSamepwd(unittest.TestCase):
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)         
-        driver.find_element_by_link_text("Logout").click()
+        driver.find_element_by_link_text("LOGOUT").click()
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

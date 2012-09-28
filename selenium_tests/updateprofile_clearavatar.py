@@ -26,10 +26,12 @@ class UpdateprofileClearavatar(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)
         self.assertTrue("Clear" not in driver.find_element_by_tag_name("body").text)
+        
+        #manual revert/clean up#
         driver.find_element_by_id("id_avatar").send_keys(os.path.abspath("C:\Users\hp\Desktop\CSC303\Images\munwahkopi.jpg"))
         driver.find_element_by_id("submit-id-submit").click()
         
-        driver.find_element_by_link_text("Logout").click()     
+        driver.find_element_by_link_text("LOGOUT").click()     
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

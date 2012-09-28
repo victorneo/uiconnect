@@ -15,14 +15,17 @@ class Itemdelete(unittest.TestCase):
     def test_itemdelete(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
-        additem(driver, self)                        
+        
+        #insert a test item#
+        additem(driver, self)
+        
         driver.find_element_by_link_text("Delete Item").click()        
         self.assertTrue("Are you sure you want to delete this item?" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_css_selector("div.modal-footer > button.btn").click()        
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         deleteitem(driver,self)
-        driver.find_element_by_link_text("Logout").click()
+        driver.find_element_by_link_text("LOGOUT").click()
         
     
     def is_element_present(self, how, what):

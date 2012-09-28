@@ -15,23 +15,25 @@ class ItemdetailOwn(unittest.TestCase):
     def test_itemdetail_own(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")       
+        
+        #insert a test item#
         additem(driver, self) 
         
-        try: self.assertEqual("0 likes this.", driver.find_element_by_css_selector("div.social > span").text)
+        try: self.assertEqual("0 likes this item.", driver.find_element_by_css_selector("div.social > span").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("btn_like").click()
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))  
-        try: self.assertEqual("1 likes this.", driver.find_element_by_css_selector("div.social > span").text)
+        try: self.assertEqual("1 likes this item.", driver.find_element_by_css_selector("div.social > span").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("btn_like").click()
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))  
-        try: self.assertEqual("0 likes this.", driver.find_element_by_css_selector("div.social > span").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("0 likes this item.", driver.find_element_by_css_selector("div.social > span").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))        
                 
         driver.find_element_by_link_text("Manage Images").click()
-        try: self.assertEqual("Current Images for test", driver.find_element_by_css_selector("h1").text)
+        try: self.assertEqual("Images for test", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("Go back").click()        
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
@@ -44,9 +46,9 @@ class ItemdetailOwn(unittest.TestCase):
         driver.find_element_by_css_selector("span.default-thumbnail-dashboard").click()
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))  
-        
+               
         deleteitem(driver,self)        
-        driver.find_element_by_link_text("Logout").click()
+        driver.find_element_by_link_text("LOGOUT").click()
         
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
