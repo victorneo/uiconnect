@@ -83,7 +83,7 @@ def register(request):
 
 
 @login_required
-def profile(request):
+def update_profile(request):
     user = request.user
     profile = user.get_profile()
     initial = {
@@ -122,6 +122,14 @@ def profile(request):
         return redirect(reverse('accounts:profile'))
 
     return render(request, 'accounts/profile.html', {'form': form})
+
+
+def view_profile(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    return render(request, 'accounts/view.html', {
+        'viewed_user': user,
+    })
 
 
 def forgot_password(request):
