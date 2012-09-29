@@ -1,0 +1,28 @@
+{% extends 'listings/dashboard.html' %}
+{% load url from future %}
+
+{% block dashboard_content %}
+
+    <h3>My items</h3>
+    {% include 'messages.html' %}
+
+    {% if listings %}
+      {% include 'listings/thumbnails.html' with listings=listings %}
+    {% else %}
+      <p>You have not added any items for sale yet. <a href="{% url 'listings:add' %}">Add one?</a></p>
+    {% endif %}
+
+    <h3>My Collections</h3>
+    {% if collections %}
+      {% include 'collections/preview.html' with collections=collections %}
+    {% else %}
+    <p>You have not created any collections yet. Collections allow you to group items related to a certain theme.</p>
+    {% endif %}
+
+{% endblock %}
+
+{% block js_footer %}
+<script type="text/javascript">
+    $("[rel=tooltip]").tooltip();
+</script>
+{% endblock %}

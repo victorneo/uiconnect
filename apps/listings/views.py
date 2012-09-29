@@ -51,9 +51,22 @@ def view(request, listing_id):
 
 @login_required
 def dashboard(request):
+    listings = []
+    following_users = request.user.get_profile().following.all()
+    if following_users.count > 0:
+        listings = Listing.objects.filter(user__in=following_users).order_by('-created_at').all()[:20]
+
+    return render(request, 'listings/dashboard.html', {
+        'listings': listings,
+    })
+
+
+@login_required
+def items_and_collections(request):
     listings = Listing.objects.filter(user=request.user).annotate(num_likes=Count('likes')).order_by('-num_likes').all()
     collections = Collection.objects.filter(user=request.user).all()
-    return render(request, 'listings/dashboard.html', {
+
+    return render(request, 'listings/items_and_collections.html', {
         'listings': listings,
         'collections': collections,
     })
@@ -89,7 +102,7 @@ def delete(request, listing_id):
     listing.delete()
     messages.success(request, u'Item has been deleted.')
 
-    return redirect(reverse('dashboard'))
+    return redirect(reverse('items_and_collections'))
 
 
 @login_required
@@ -180,7 +193,7 @@ def update_image_caption(request, listing_id, image_id):
         img = None
 
     if img is None or listing.user != request.user:
-        return redirect(reverse('dashboard'))
+        return redirect(reverse('items_and_collections'))
 
     form = CaptionForm(request.POST, instance=img)
 
