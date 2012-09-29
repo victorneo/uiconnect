@@ -23,6 +23,10 @@ class Payment(models.Model):
     def points_earned(self):
         return int(self.amount / 10)
 
+    @property
+    def payment_date(self):
+        return self.pdt.payment_date
+
     def allocate_points(self):
         profile = self.user.get_profile()
         profile.points += self.points_earned

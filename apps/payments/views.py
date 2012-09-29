@@ -59,8 +59,6 @@ def pdt(request):
                     payment.pdt = pdt_obj
                     payment.save()
 
-                    print payment.id, pdt_obj.invoice
-
                     # clear shopping cart
                     request.user.cart.clear()
 

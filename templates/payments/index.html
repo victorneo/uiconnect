@@ -9,24 +9,35 @@
   {% if not payments %}
   <p>You have not bought anything from us.</p>
   {% else %}
-  <table class="span10">
-    <thead style="text-align: left;">
-      <tr>
-        <th>Transaction Id</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-  {% for p in payments %}
-  <tr>
-    <td class="span6">
-      <p>{{ p.transaction_id }}</p>
-    </td>
-    <td class="span4">
-      <p>USD {{ p.amount }}</p>
-    </td>
-  </tr>
-  {% endfor %}
-  </table>
+
+  <p>Click on each payment for more information.</p>
+
+  <p>For enquires, please email <a href="mailto:payment@uiconnect.com">payment@uiconnect.com</a>. Kindly quote the reference number in your email.</p>
+
+  <div class="accordion" id="accordion2">
+
+    {% for p in payments %}
+    <div class="accordion-group">
+      <div class="accordion-heading payment-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ p.id }}">
+          <strong>Transaction Reference {{ p.transaction_id }}</strong>, USD {{ p.amount }} paid on {{ p.payment_date }}
+        </a>
+      </div>
+      <div id="collapse{{ p.id }}" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <h4>Delivery Address</h4>
+          <p>
+            Items will be delivered to:<br />
+            {{ p.address }}
+          </p>
+          <h4>Items bought</h4>
+          {% include 'listings/thumbnails.html' with listings=p.listings.all %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
 
   {% endif %}
 {% endblock %}

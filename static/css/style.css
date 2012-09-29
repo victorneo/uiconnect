@@ -282,6 +282,8 @@ input.btn-checkout { margin-left: 10px; }
 
 div#payment-info { margin-top: 20px; margin-bottom: 30px; }
 
+div.payment-heading a { color: #333; }
+
 /* social buttons */
 iframe.twitter-share-button { margin-top: 10px; }
 

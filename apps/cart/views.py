@@ -22,8 +22,8 @@ def view(request):
         payment.user = request.user
         payment.save()
 
-        for l in cart.listings.all():
-            payment.listings.add(l)
+        for l in cart.items.all():
+            payment.listings.add(l.listing)
 
         payment.save()
 
