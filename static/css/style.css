@@ -100,6 +100,25 @@ div.collection-preview-image p{
   right: 10px;
 }
 
+/* Newsfeed */
+
+div.news-item{
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+ul.newsfeed-thumbnails{
+  width: 100%;
+  display: block;
+}
+
+ul.newsfeed-thumbnails>li{
+  width: 300px;
+  margin-left: 200px;
+}
+
 /* Listing and Collection page */
 
 div#collection-image>div.span10 {border: 8px solid #eee;}
@@ -239,13 +258,6 @@ div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter;
   margin-left: auto;
   margin-right: auto;
   display: block;
-}
-
-.default-thumbnail-dashboard{
-  width: 200px;
-  height: 70px;
-  padding-top: 80px;
-  font-size: 5em;
 }
 
 .default-avatar, .default-thumbnail {

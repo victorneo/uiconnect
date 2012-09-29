@@ -200,7 +200,7 @@ class ListingViewTest(TestCase):
         url = reverse('listings:delete', kwargs={'listing_id': l.id})
 
         response = self.c.get(url)
-        self.assertRedirects(response, reverse('dashboard'))
+        self.assertRedirects(response, reverse('items_and_collections'))
 
     def test_delete_invalid_user(self):
         self.c.logout()
@@ -242,11 +242,11 @@ class ListingViewTest(TestCase):
         url = reverse('listings:update_image_caption', kwargs={'listing_id': self.l.id, 'image_id': 9999})
         data = {'caption': 'new image caption'}
         response = self.c.post(url, data)
-        self.assertRedirects(response, reverse('dashboard'))
+        self.assertRedirects(response, reverse('items_and_collections'))
 
     def test_update_image_caption_invalid_user(self):
         self.c.login(username=self.user2.username, password='1234')
         url = reverse('listings:update_image_caption', kwargs={'listing_id': self.l.id, 'image_id': self.img.id})
         data = {'caption': 'new image caption'}
         response = self.c.post(url, data)
-        self.assertRedirects(response, reverse('dashboard'))
+        self.assertRedirects(response, reverse('items_and_collections'))

@@ -18,7 +18,7 @@
             USD {{ listing.price }}
           </p>
           <p class="pull-right">
-            <a {% if listing.likes.count > 0  %} data-placement="top" rel="tooltip" href="#" data-original-title="Most recently liked by {{ listing.last_liked_user }}" {% endif %}><i class="icon-heart"></i> {{ listing.likes.count }} Likes</a>
+          <a {% if listing.likes.count > 0  %} data-placement="top" rel="tooltip" href="#" data-original-title="{% if user.is_authenticated and user in listing.likes.all %}You liked this.{% endif %}" {% endif %}><i class="icon-heart"></i> {{ listing.likes.count }} Likes</a>
           </p>
         </div>
       </div>

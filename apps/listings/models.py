@@ -23,7 +23,7 @@ class Listing(models.Model):
     @property
     def last_liked_user(self):
         if self.likes.count() > 0:
-            return self.likes.order_by('-id').all()[0].first_name
+            return self.likes.all()[self.likes.count()-1]
         else:
             return None
 

@@ -22,5 +22,6 @@ urlpatterns = patterns('',
     url(r'^rewards/', include('rewards.urls', namespace='rewards')),
     url(r'^payments/', include('payments.urls', namespace='payments')),
     url(r'^dashboard/$', 'listings.views.dashboard', name='dashboard'),
+    url(r'^my-items-and-collections/$', 'listings.views.items_and_collections', name='items_and_collections'),
     url(r'^$', 'listings.views.index', name='index'),
 )
