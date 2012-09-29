@@ -33,7 +33,7 @@ class Collectionmanage(unittest.TestCase):
         self.assertTrue("Samsung Galaxy Camera" in driver.find_element_by_tag_name("body").text)
         
         deletecollection(driver, self)              
-        driver.find_element_by_link_text("Logout").click()       
+        driver.find_element_by_link_text("LOGOUT").click()       
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

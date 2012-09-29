@@ -15,6 +15,8 @@ class Itemedit_normal(unittest.TestCase):
     def test_itemedit_normal(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")
+        
+        #insert a test item#
         additem(driver, self)       
         driver.find_element_by_link_text("Edit Item").click()        
         
@@ -34,8 +36,9 @@ class Itemedit_normal(unittest.TestCase):
         self.assertTrue("testing123!" in driver.find_element_by_tag_name("body").text)       
         self.assertTrue("USD 10" in driver.find_element_by_tag_name("body").text)        
         
+        #manual revert/clear up#
         deleteitem(driver,self)        
-        driver.find_element_by_link_text("Logout").click()        
+        driver.find_element_by_link_text("LOGOUT").click()        
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

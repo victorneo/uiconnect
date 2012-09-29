@@ -16,7 +16,7 @@ class Collectionadd_Normal(unittest.TestCase):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
         addcollection(driver, self)
-        driver.find_element_by_link_text("Logout").click()       
+        driver.find_element_by_link_text("LOGOUT").click()       
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

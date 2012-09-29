@@ -15,6 +15,8 @@ class Itemedit_Invalidprice(unittest.TestCase):
     def test_itemedit_invalidprice(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
+        
+        #insert a test item#
         additem(driver, self)       
         driver.find_element_by_link_text("Edit Item").click()        
         
@@ -24,11 +26,12 @@ class Itemedit_Invalidprice(unittest.TestCase):
         driver.find_element_by_id("id_price").send_keys("asd")
         driver.find_element_by_id("submit-id-submit").click()
       
-        #try: self.assertEqual("Update Item", driver.find_element_by_css_selector("h3").text)
-        #except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("Update Item", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
         try: self.assertEqual("Enter a number.", driver.find_element_by_css_selector("#error_1_id_price > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
+        #manual revert/clean up#
         driver.find_element_by_link_text("My items and collections").click()
         try: self.assertEqual("Dashboard", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))   
@@ -37,7 +40,7 @@ class Itemedit_Invalidprice(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e))
         
         deleteitem(driver,self)
-        driver.find_element_by_link_text("Logout").click()
+        driver.find_element_by_link_text("LOGOUT").click()
         
     
     def is_element_present(self, how, what):

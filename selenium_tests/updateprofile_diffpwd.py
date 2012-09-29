@@ -30,7 +30,7 @@ class UpdateprofileDiffpwd(unittest.TestCase):
         try: self.assertEqual("Passwords are not the same.", driver.find_element_by_css_selector("#error_1_id_password > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
-        driver.find_element_by_link_text("Logout").click()
+        driver.find_element_by_link_text("LOGOUT").click()
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

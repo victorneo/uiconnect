@@ -230,8 +230,8 @@ class AccountsViewTest(TestCase):
     def test_following_template(self):
         self.c.login(username=self.user.username, password='1234')
 
-        self.user2.get_profile().followers.add(self.user.get_profile())
-        self.user2.get_profile().save()
+        self.user.get_profile().add_relationship(self.user2.get_profile())
+        self.user.get_profile().save()
 
         response = self.c.get(FOLLOWING_URL)
         self.assertTemplateUsed(response, 'accounts/following.html')
@@ -241,7 +241,7 @@ class AccountsViewTest(TestCase):
         url = reverse('accounts:unfollow', kwargs={'user_id': self.user2.id})
         self.c.login(username=self.user.username, password='1234')
 
-        self.user2.get_profile().followers.add(self.user.get_profile())
+        self.user2.get_profile().add_relationship(self.user.get_profile())
         self.user2.get_profile().save()
 
         response = self.c.get(url)

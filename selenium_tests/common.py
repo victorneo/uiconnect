@@ -2,7 +2,7 @@ from selenium.webdriver.support.ui import Select
 
 def login(driver, self, username, pwd):
     driver.get(self.base_url)
-    driver.find_element_by_link_text("Login").click()
+    driver.find_element_by_link_text("LOGIN").click()
     try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
     driver.find_element_by_id("id_username").clear()
@@ -29,11 +29,12 @@ def additem(driver, self):
     select.select_by_visible_text("Electronic & IT Gadget")
     driver.find_element_by_id("submit-id-submit").click()
     
-    try: self.assertEqual("Current Images for test", driver.find_element_by_css_selector("h1").text)
+    try: self.assertEqual("Images for test", driver.find_element_by_css_selector("h3").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
-    try: self.assertEqual("Upload a new image", driver.find_element_by_css_selector("h3").text)
+    try: self.assertEqual("Upload a new image", driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/div[2]/div/h3[2]").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
     self.assertTrue("Your item has been created. Upload some images!" in driver.find_element_by_tag_name("body").text)
+    self.assertTrue("No images yet!" in driver.find_element_by_tag_name("body").text)
     driver.find_element_by_link_text("Go back").click()
     try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
     except AssertionError as e: self.verificationErrors.append(str(e))  
