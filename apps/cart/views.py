@@ -1,34 +1,60 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from paypal.standard.forms import PayPalPaymentsForm
 from listings.models import Listing
-from .forms import AddItemForm
+from .forms import AddItemForm, PaymentForm
 from .models import Cart, Item
 
 
 @login_required
 def view(request):
-    try:
-        cart = request.user.cart
-    except Cart.DoesNotExist:
-        cart = Cart(user=request.user)
-        cart.save()
+    cart = request.user.cart
+    form = PaymentForm(request.POST or None, cancel_url=reverse('listings:categories'))
 
-    paypal_dict = {
-        'business': 'seller_1347808967_biz@gmail.com',
-        'amount': str(cart.total),
-        'item_name': 'UIConnect items',
-        'return_url': 'http://127.0.0.1:8000/payments/pdt',
-    }
+    if form.is_valid():
+        # delete any unpaid payments
+        request.user.payments.filter(is_paid=False).all().delete()
 
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
+        payment = form.save(commit=False)
+        payment.user = request.user
+        payment.save()
+
+        for l in cart.items.all():
+            payment.listings.add(l.listing)
+
+        payment.save()
+
+        return redirect(reverse('cart:checkout'))
 
     return render(request, 'cart/view.html', {
         'cart': cart,
         'form': form,
+    })
+
+
+@login_required
+def checkout(request):
+    cart = request.user.cart
+    payment = request.user.payments.get(is_paid=False)
+    domain = Site.objects.all()[0].domain
+
+    paypal_dict = {
+        'business': 'seller_1347808967_biz@gmail.com',
+        'amount': str(cart.total),
+        "invoice": "%d" % payment.id,
+        'item_name': 'UIConnect items',
+        'return_url': 'http://%s/payments/pdt' % domain,
+    }
+
+    paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+    return render(request, 'cart/checkout.html', {
+        'cart': cart,
+        'payment': payment,
+        'paypal_form': paypal_form,
     })
 
 

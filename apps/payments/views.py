@@ -54,7 +54,9 @@ def pdt(request):
                 pdt_obj.verify(item_check_callable)
 
                 if pdt_obj.id:
-                    payment = Payment(user=request.user, pdt=pdt_obj)
+                    payment = request.user.payments.get(is_paid=False)
+                    payment.is_paid = True
+                    payment.pdt = pdt_obj
                     payment.save()
 
                     # clear shopping cart

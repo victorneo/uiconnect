@@ -6,7 +6,10 @@ from listings.models import Listing
 
 class Payment(models.Model):
     user = models.ForeignKey(User, related_name='payments')
-    pdt = models.OneToOneField(PayPalPDT)
+    pdt = models.OneToOneField(PayPalPDT, blank=True, null=True)
+    is_paid = models.BooleanField(default=False)
+    address = models.TextField()
+    listings = models.ManyToManyField(Listing, related_name='payments')
 
     @property
     def amount(self):
@@ -18,7 +21,11 @@ class Payment(models.Model):
 
     @property
     def points_earned(self):
-        return self.amount / 10
+        return int(self.amount / 10)
+
+    @property
+    def payment_date(self):
+        return self.pdt.payment_date
 
     def allocate_points(self):
         profile = self.user.get_profile()
