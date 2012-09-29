@@ -278,7 +278,7 @@ def add_collection_listings(request, collection_id):
 
 @login_required
 def add_collection(request):
-    form = CollectionForm(request.POST or None)
+    form = CollectionForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
         collection = form.save(commit=False)
