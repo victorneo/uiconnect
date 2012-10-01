@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% block content %}
-  <h1>All Items in Apparel <small>sorted by popularity</small></h1>
+  <h1>All Items in {{ category.name }} <small>sorted by popularity</small></h1>
 
   <ul class="thumbnails">
     {% for listing in category.display_listings %}

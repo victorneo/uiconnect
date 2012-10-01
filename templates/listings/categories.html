@@ -5,10 +5,12 @@
   <h1>All Categories <small>sorted by popularity</small></h1>
 
   {% for c in categories %}
-    <h3>{{ c.name }} <small>(<a href="{% url 'listings:category' c.slug %}">see all items under {{ c.name }}</a>)</small></h3>
+  {% if c.display_listings %}
+    <h4>Top items under {{ c.name }} <small>(<a href="{% url 'listings:category' c.slug %}">see all items under {{ c.name }}</a>)</small></h4>
 
     {% include 'listings/thumbnails.html' with listings=c.display_listings %}
 
+  {% endif %}
   {% endfor %}
 {% endblock %}
 

@@ -20,7 +20,7 @@
       {% if collection.user.get_profile.avatar %}
       <img src="{{ collection.user.get_profile.avatar.url }}" style="width: 30px;" />
       {% endif %}
-      {{ collection.user.first_name }}
+      <a href="{% url 'accounts:view_profile' collection.user.id %}">{{ collection.user.first_name }}</a>
     </div>
     <div id="listing-user-stats" class="span5">
       <p>

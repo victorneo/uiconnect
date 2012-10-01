@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="span3">
+  {% if viewed_user.get_profile.avatar %}
+  <img src="{{ viewed_user.get_profile.avatar.url }}" />
+  {% endif %}
+
+  <h5>{{ viewed_user.first_name }}</h5>
+  <p>{{ viewed_user.get_profile.bio }}</p>
+
+  <p><small>{{ viewed_user.listings.count }} items, {{ viewed_user.collections.count }} collections.</small></p>
+  <p><small>Followed by {{ viewed_user.get_profile.followers.count }} user{% if viewed_user.get_profile.followers.count != 1 %}s{% endif %}.</small></p>
+
+  {% if user.is_authenticated and user != viewed_user %}
+  <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">
+    {% if user.get_profile in viewed_user.get_profile.followers.all %}
+    <i class="icon-remove"></i> Unfollow
+    {% else %}
+    <i class="icon-user"></i> Follow this user
+    {% endif %}
+  </button>
+  {% else %}
+  That's you!
+  {% endif %}
+</div>
+
+<div class="span9">
+  <h3>Items by {{ viewed_user.first_name }}</h3>
+  {% if viewed_user.listings.all %}
+  {% include 'listings/thumbnails.html' with listings=viewed_user.listings.all %}
+  {% else %}
+  <p>{{ viewed_user.first_name }} has yet to put an item up for sale.</p>
+  {% endif %}
+
+  <h3>Collections by {{ viewed_user.first_name }}</h3>
+  {% if viewed_user.collections.all %}
+  {% include 'collections/preview.html' with collections=viewed_user.collections.all %}
+  {% else %}
+  <p>{{ viewed_user.first_name }} has yet to create a collection.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block js_footer %}
+{% include 'follow/follow_js.html' with viewed_user=viewed_user %}
+{% endblock %}
