@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import facebook
 import requests
 from uiconnect import settings
@@ -83,7 +83,7 @@ def register(request):
 
 
 @login_required
-def profile(request):
+def update_profile(request):
     user = request.user
     profile = user.get_profile()
     initial = {
@@ -122,6 +122,14 @@ def profile(request):
         return redirect(reverse('accounts:profile'))
 
     return render(request, 'accounts/profile.html', {'form': form})
+
+
+def view_profile(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    return render(request, 'accounts/view.html', {
+        'viewed_user': user,
+    })
 
 
 def forgot_password(request):

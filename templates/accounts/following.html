@@ -25,7 +25,7 @@
       {% else %}
       <span class="default-avatar default-avatar-small">{{ profile.user.first_name|slice:":1" }}</span>
       {% endif %}
-      <p>{{ profile.user.first_name }}</p>
+      <a href="{% url 'accounts:view_profile' profile.user.id %}">{{ profile.user.first_name }}</a>
     </td>
     <td class="span7">
       <p class="span6" style="text-align: justify;">{{ profile.bio|truncatewords:"20" }}</p>
@@ -57,7 +57,7 @@
       {% else %}
       <span class="default-avatar default-avatar-small">{{ profile.user.first_name|slice:":1" }}</span>
       {% endif %}
-      <p>{{ profile.user.first_name }}</p>
+      <a href="{% url 'accounts:view_profile' profile.user.id %}">{{ profile.user.first_name }}</a>
     </td>
     <td class="span9">
       <p class="span6" style="text-align: justify;">{{ profile.bio|truncatewords:"20" }}</p>

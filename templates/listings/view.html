@@ -19,7 +19,7 @@
       {% if listing.user.get_profile.avatar %}
       <img src="{{ listing.user.get_profile.avatar.url }}" style="width: 30px;" />
       {% endif %}
-      {{ listing.user.first_name }}
+      <a href="{% url 'accounts:view_profile' listing.user.id %}">{{ listing.user.first_name }}</a>
     </div>
     <div id="listing-user-stats" class="span4">
       <p>
@@ -69,7 +69,7 @@
           <div class="follow">
             {% if user.is_authenticated and user != listing.user %}
             <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">
-              {% if user.get_profile in viewed_user.get_profile.followers.all %}
+              {% if user.get_profile in listing.user.get_profile.followers.all %}
               <i class="icon-remove"></i> Unfollow
               {% else %}
               <i class="icon-user"></i> Follow this user
