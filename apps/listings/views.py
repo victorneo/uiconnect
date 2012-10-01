@@ -53,7 +53,7 @@ def view(request, listing_id):
 def dashboard(request):
     listings = []
     following_users = request.user.get_profile().following.all()
-    if following_users.count > 0:
+    if following_users.count() > 0:
         listings = Listing.objects.filter(user__in=following_users).order_by('-created_at').all()[:20]
 
     return render(request, 'listings/dashboard.html', {
