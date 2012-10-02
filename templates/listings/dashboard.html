@@ -21,42 +21,61 @@
     <h3>Newsfeed</h3>
     {% include 'messages.html' %}
 
-    {% if not listings %}
+    {% if not updates %}
     <p>No items in your newsfeed. Follow users that you like to stay updated on their latest items for sale!</p>
     {% endif %}
 
-    {% for listing in listings %}
+    {% for update in updates %}
     <div class="news-item">
       <h5>
-        {% if listing.user.get_profile.avatar %}<img src="{{ listing.user.get_profile.avatar.url }}" width="30" />{% endif %}
-        {{ listing.user.first_name }} added "{{ listing.name }}" for sale.
-        <small>{{ listing.created_at|timesince }} ago.</small>
+        {% if update.user.get_profile.avatar %}<img src="{{ update.user.get_profile.avatar.url }}" width="30" />{% endif %}
+        {{ update.user.first_name }} added
+        {% if update.update_type == 'Listing' %}
+        "{{ update.name }}" for sale.
+        {% else %}
+        the collection "{{ update.name }}"
+        {% endif %}
+        <small>{{ update.created_at|timesince }} ago.</small>
       </h5>
+
+      {% if update.update_type == 'Listing' %}
       <ul class="thumbnails newsfeed-thumbnails">
         <li>
           <div class="thumbnail">
-            <a href="{% url 'listings:view' listing.id %}">
+            <a href="{% url 'listings:view' update.id %}">
             <div class="thumbnail-wrapper">
-              {% if listing.images.all.0.image %}
-              <img src="{{ listing.images.all.0.image.url }}" alt="{{ listing.name }}">
+              {% if update.images.all.0.image %}
+              <img src="{{ update.images.all.0.image.url }}" alt="{{ update.name }}">
               {% else %}
               <p>No image for this item.</p>
               {% endif %}
             </div>
-            <h5>{{ listing.name }}</h5>
+            <h5>{{ update.name }}</h5>
             </a>
             <div class="thumbnail-info-wrapper" style="padding: 10px;">
               <p class="pull-left">
-                USD {{ listing.price }}
+                USD {{ update.price }}
               </p>
               <p class="pull-right">
-              <a {% if listing.likes.count > 0  %} data-placement="top" rel="tooltip" href="#" data-original-title="{% if user.is_authenticated and user in listing.likes.all %}You liked this.{% endif %}" {% endif %}><i class="icon-heart"></i> {{ listing.likes.count }} Likes</a>
+              <i class="icon-heart"></i> {{ update.likes.count }} Likes
               </p>
             </div>
           </div>
           </a>
         </li>
       </ul>
+
+      {% else %}
+      <div class="collection-preview">
+        <a href="{% url 'collections:view' update.id %}">
+        <div class="collection-preview-image" {% if update.image %}style="background-image: url('{{ update.image.url }}')"{% endif %}>
+          <h3>{{ update.name }}</h3>
+          <p>{{ update.listings.count }} items in this collection.</p>
+        </div>
+        </a>
+      </div>
+
+      {% endif %}
     </div>
     {% endfor %}
 

@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+from operator import attrgetter
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -51,13 +52,16 @@ def view(request, listing_id):
 
 @login_required
 def dashboard(request):
-    listings = []
+    updates = []
     following_users = request.user.get_profile().following.all()
     if following_users.count() > 0:
-        listings = Listing.objects.filter(user__in=following_users).order_by('-created_at').all()[:20]
+        updates = list(Listing.objects.filter(user__in=following_users).order_by('-created_at').all()[:20])
+        updates.extend(list(Collection.objects.filter(user__in=following_users).order_by('-created_at').all()[:20]))
+
+        updates = sorted(updates, key=attrgetter('created_at'), reverse=True)
 
     return render(request, 'listings/dashboard.html', {
-        'listings': listings,
+        'updates': updates,
     })
 
 

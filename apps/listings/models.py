@@ -6,7 +6,13 @@ from imagekit.processors import ResizeToFill
 from categories.models import Category
 
 
-class Listing(models.Model):
+class UpdateMixin(object):
+    @property
+    def update_type(self):
+        return self.__class__.__name__
+
+
+class Listing(models.Model, UpdateMixin):
     user = models.ForeignKey(User, related_name='listings')
     name = models.CharField(max_length=150)
     description = models.TextField()
@@ -46,7 +52,7 @@ class ListingImage(models.Model):
     )
 
 
-class Collection(models.Model):
+class Collection(models.Model, UpdateMixin):
     listings = models.ManyToManyField(Listing, related_name='collections')
     user = models.ForeignKey(User, related_name='collections')
     name = models.CharField(max_length=150)
