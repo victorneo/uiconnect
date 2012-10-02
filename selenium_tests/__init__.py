@@ -34,3 +34,4 @@ from collectionmanage import *
 from collectiondelete import *
 from managefollowship import *
 from newsfeed import *
+from viewotherusersprofile import *

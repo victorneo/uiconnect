@@ -47,9 +47,27 @@ class ItemdetailOthers(unittest.TestCase):
         driver.find_element_by_id("btn_follow").click()
         try: self.assertEqual("Elmo's ABC Book", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("0 follower", driver.find_element_by_id("span_followers").text)
+        try: self.assertEqual("0 followers", driver.find_element_by_id("span_followers").text)
         except AssertionError as e: self.verificationErrors.append(str(e))               
         self.assertTrue("interested?" in driver.find_element_by_tag_name("body").text)
+        
+        try: self.assertEqual("Elmo's ABC Book", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))        
+        driver.find_element_by_name("content").clear()
+        driver.find_element_by_name("content").send_keys("testing non-owner comments...")
+        driver.find_element_by_css_selector("#comment-form > input.btn").click()
+        try: self.assertEqual("Elmo's ABC Book", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e)) 
+        self.assertTrue("testing non-owner comments..." in driver.find_element_by_tag_name("body").text)   
+        self.assertTrue("Mabel commented 0 minutes ago." in driver.find_element_by_tag_name("body").text)
+        
+        driver.find_element_by_link_text("Books").click()
+        try: self.assertEqual("All Items in Books sorted by popularity", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        self.assertTrue("Elmo's ABC Book" in driver.find_element_by_tag_name("body").text)
+        driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/ul/li[8]/div/a/div/img").click()
+        try: self.assertEqual("Elmo's ABC Book", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))       
                 
         driver.find_element_by_link_text("LOGOUT").click()
         

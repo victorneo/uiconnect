@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import unittest, time, re
-from common import login, additem, deleteitem
+from common import login, addcollection, deletecollection
 
 class Newsfeed(unittest.TestCase):
     def setUp(self):
@@ -55,9 +55,9 @@ class Newsfeed(unittest.TestCase):
         self.assertTrue("asd added \"Rubik Cube\" for sale." in driver.find_element_by_tag_name("body").text)                    
         driver.find_element_by_link_text("LOGOUT").click()
         
-        #simulate user:asd add an item#
+        #simulate user:asd add an item and collection#
         login(driver, self, "asd", "asd")
-        additem(driver, self)        
+        addcollection(driver, self)        
         driver.find_element_by_link_text("LOGOUT").click()
         
         #verify user:zgal receive user:asd latest update(new item)#
@@ -65,6 +65,7 @@ class Newsfeed(unittest.TestCase):
         driver.find_element_by_link_text("Newsfeed").click()
         try: self.assertEqual("Newsfeed", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
+        self.assertTrue("asd added the collection \"testcollection\"" in driver.find_element_by_tag_name("body").text)
         self.assertTrue("asd added \"test\" for sale." in driver.find_element_by_tag_name("body").text)
         self.assertTrue("asd added \"Elmo's ABC Book\" for sale." in driver.find_element_by_tag_name("body").text)        
         self.assertTrue("asd added \"Rubik Cube\" for sale." in driver.find_element_by_tag_name("body").text)        
@@ -72,12 +73,12 @@ class Newsfeed(unittest.TestCase):
         
         #simulate user:asd delete an item#
         login(driver, self, "asd", "asd")
-        driver.find_element_by_link_text("My items and collections").click()
-        driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/div[2]/ul/li[3]/div/a/h5").click() 
-        deleteitem(driver, self)        
+        driver.find_element_by_link_text("My items and collections").click()        
+        driver.find_element_by_css_selector("div.collection-preview-image").click()
+        deletecollection(driver, self)        
         driver.find_element_by_link_text("LOGOUT").click()
         
-        #verify user:zgal receive user:asd latest udpate(delete item)#
+        #verify user:zgal receive user:asd latest udpate(delete item & collection)#
         login(driver, self, "zgal", "asd")
         driver.find_element_by_link_text("Newsfeed").click()
         try: self.assertEqual("Newsfeed", driver.find_element_by_css_selector("h3").text)

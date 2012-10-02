@@ -39,6 +39,16 @@ class CollectiondetailOwn(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("testcollection").click()
         
+        try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        driver.find_element_by_name("content").clear()
+        driver.find_element_by_name("content").send_keys("testing owner comments...")
+        driver.find_element_by_css_selector("input.btn").click()
+        try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        self.assertTrue("testing owner comments..." in driver.find_element_by_tag_name("body").text)   
+        self.assertTrue("(Owner) Mabel commented 0 minutes ago." in driver.find_element_by_tag_name("body").text)
+        
         driver.find_element_by_link_text("Edit Collection").click()
         try: self.assertEqual("Update Collection", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e)) 
