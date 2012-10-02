@@ -8,11 +8,17 @@
 
     {% include 'messages.html' %}
 
+    <div id="injection_site"></div>
     {% if listing.images.all %}
       {% for img in listing.images.all %}
       <div class="row">
       <div class="span2">
-        <img class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
+        <img id="image{{img.id}}" class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
+
+        Please ignore this edit first, testing out something
+        <!-- Add an edit button, passing the HTML id of the image and the public URL ot the image -->
+        <p><input type="image" src="http://advanced.aviary.com/images/feather/edit-photo.png" value="Edit photo" onclick="return launchEditor('image{{ img.id }}', 'http://54.251.19.202{{ img.image.url }}');" /></p>
+
       </div>
       <div class="span4">
         <form class="form-inline">
@@ -99,4 +105,31 @@
       }, "json");
     }
 </script>
+
+<!-- Load Feather code -->
+<script type="text/javascript" src="http://feather.aviary.com/js/feather.js"></script>
+
+<!-- Instantiate Feather -->
+<script type="text/javascript">
+    var featherEditor = new Aviary.Feather({
+        apiKey: '5416c69ae',
+        apiVersion: 2,
+        tools: 'all',
+        appendTo: '',
+        onSave: function(imageID, newURL) {
+            var img = document.getElementById(imageID);
+            img.src = newURL;
+        },
+        postUrl: 'http://54.251.19.202/items/aviary-post/',
+    });
+
+    function launchEditor(id, src) {
+        featherEditor.launch({
+            image: id,
+            url: src
+        });
+        return false;
+    }
+</script>
+
 {% endblock %}

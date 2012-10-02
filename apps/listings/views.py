@@ -354,3 +354,8 @@ def delete_collection(request, collection_id):
     messages.success(request, u'Collection has been deleted.')
 
     return redirect(reverse('items_and_collections'))
+
+
+def aviary_post(self):
+    print self.POST
+    return HttpResponse('Hi')
