@@ -11,6 +11,8 @@ class UserProfile(models.Model):
     avatar = ProcessedImageField([ResizeToFill(100, 100),], upload_to='avatars', format='PNG', null=True, blank=True, default=None)
     bio = models.TextField(max_length=500, null=True, blank=True)
     following = models.ManyToManyField('self', through='Relationship', related_name='followers', symmetrical=False)
+
+    alternate_login = models.BooleanField(default=False)
     fb_id = models.CharField(max_length=200, null=True, blank=True)
 
     points = models.IntegerField(default=0)

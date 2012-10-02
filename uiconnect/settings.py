@@ -189,7 +189,7 @@ JENKINS_TASKS = (
 )
 
 
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'accounts.backends.FacebookBackend')
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'accounts.backends.FacebookBackend', 'accounts.backends.PersonaBackend')
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PAYPAL_RECEIVER_EMAIL = 'seller_1347808967_biz@gmail.com'

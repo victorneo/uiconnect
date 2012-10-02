@@ -328,3 +328,8 @@ iframe.twitter-share-button { margin-top: 10px; }
 
 .bubble:after{ left: 0.5em; }
 .bubble-owner:after{ right: 7.4em; }
+
+/* persona */
+img#persona-signin{
+    cursor: pointer;
+}
