@@ -13,11 +13,11 @@
       {% for img in listing.images.all %}
       <div class="row">
       <div class="span2">
-        <img id="image{{img.id}}" class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
+        <img id="{{img.id}}" class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
 
         Please ignore this edit first, testing out something
         <!-- Add an edit button, passing the HTML id of the image and the public URL ot the image -->
-        <p><input type="image" src="http://advanced.aviary.com/images/feather/edit-photo.png" value="Edit photo" onclick="return launchEditor('image{{ img.id }}', 'http://54.251.19.202{{ img.image.url }}');" /></p>
+        <p><input type="image" src="http://advanced.aviary.com/images/feather/edit-photo.png" value="Edit photo" onclick="initEditor({{ img.id }}); setTimeout(function(){return launchEditor('{{ img.id }}', 'http://54.251.19.202{{ img.image.url }}');}, 500);" /></p>
 
       </div>
       <div class="span4">
@@ -111,7 +111,10 @@
 
 <!-- Instantiate Feather -->
 <script type="text/javascript">
-    var featherEditor = new Aviary.Feather({
+    var featherEditor = null;
+
+    function initEditor(id){
+      featherEditor = new Aviary.Feather({
         apiKey: '5416c69ae',
         apiVersion: 2,
         tools: 'all',
@@ -120,13 +123,17 @@
             var img = document.getElementById(imageID);
             img.src = newURL;
         },
-        postUrl: 'http://54.251.19.202/items/aviary-post/',
-    });
+        postUrl: 'http://54.251.19.202/items/aviary-post/'+id+'/',
+        onError: function(errorObj){
+          console.log(errorObj.message);
+        }
+      });
+    }
 
     function launchEditor(id, src) {
         featherEditor.launch({
-            image: id,
-            url: src
+          image: id,
+           url: src
         });
         return false;
     }

@@ -1,8 +1,10 @@
 import json
+import urllib
 from decimal import Decimal
 from operator import attrgetter
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.http import HttpResponse
@@ -356,6 +358,12 @@ def delete_collection(request, collection_id):
     return redirect(reverse('items_and_collections'))
 
 
-def aviary_post(self):
-    print self.POST
-    return HttpResponse('Hi')
+@csrf_exempt
+def aviary_post(request):
+    print request.POST
+    url = request.POST.get('url', None)
+
+    if not url:
+        return HttpResponse(status_code=500)
+
+    return HttpReponse('ok')
