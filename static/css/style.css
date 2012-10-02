@@ -26,8 +26,12 @@ div.info i{font-size: 5em; display: block; width: 60px; margin-left: auto; margi
 
 ul.thumbnails div.thumbnail{
   border-radius: 0;
-  border: none;
+  border: none; !important
+  box-shadow: none; !important
   text-align: center;
+}
+div.thumbnail h5{
+    text-align: center;
 }
 ul.thumbnails>li>div.thumbnail a{
   color: #333;
