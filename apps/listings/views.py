@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
+from comments.forms import CommentForm
 from .forms import (ListingForm, AddImageForm,
         CollectionForm, AddCollectionListingsForm,
         CaptionForm)
@@ -45,8 +46,19 @@ def category(request, slug):
 
 def view(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
+    form = CommentForm(request.POST or None)
+    commented = None
+
+    if form.is_valid() and request.user.is_authenticated():
+        comment = form.save(commit=False)
+        comment.content_object = listing
+        comment.user = request.user
+        comment.save()
+        commented = comment.id
+
     return render(request, 'listings/view.html', {
         'listing': listing,
+        'commented': commented,
     })
 
 
@@ -228,9 +240,19 @@ def view_collections(request):
 
 def view_collection(request, collection_id):
     collection = get_object_or_404(Collection, pk=collection_id)
+    form = CommentForm(request.POST or None)
+    commented = None
+
+    if form.is_valid() and request.user.is_authenticated():
+        comment = form.save(commit=False)
+        comment.content_object = collection
+        comment.user = request.user
+        comment.save()
+        commented = comment.id
 
     return render(request, 'collections/view.html', {
         'collection': collection,
+        'commented': commented,
     })
 
 

@@ -1,0 +1,14 @@
+{% for c in comments %}
+<div id="comment-{{ c.id }}" {% if commented == c.id %}style="background-color: #A6F7A7;"{% endif %}>
+  <p class="bubble{% if viewed_user == c.user %}-owner{% endif %}">{{ c.content }}</p>
+  <p {% if c.user == viewed_user %} style="text-align: right;" {% endif %}>
+    {% if c.user.get_profile.avatar %}
+    <img src="{{ c.user.get_profile.avatar.url }}" width="32" style="margin-right: 10px;" />
+    {% endif %}
+    {% if viewed_user == c.user %}(Owner) {% endif %}{{ c.user.first_name }} commented {{ c.created_at|timesince }} ago.
+  </p>
+
+</div>
+{% endfor %}
+
+<div class="clearfix">&nbsp;</div>

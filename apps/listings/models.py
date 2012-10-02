@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save, pre_delete
 from imagekit.models.fields import ImageSpecField
 from imagekit.processors import ResizeToFill
 from categories.models import Category
+from comments.models import Comment
 
 
 class UpdateMixin(object):
@@ -20,6 +22,7 @@ class Listing(models.Model, UpdateMixin):
     is_featured = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category, related_name="listings")
     likes = models.ManyToManyField(User, related_name='liked_listings')
+    comments = generic.GenericRelation(Comment)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -60,6 +63,7 @@ class Collection(models.Model, UpdateMixin):
     is_featured = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name='liked_collections')
     image = models.ImageField(null=True, blank=True, upload_to='collections')
+    comments = generic.GenericRelation(Comment)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

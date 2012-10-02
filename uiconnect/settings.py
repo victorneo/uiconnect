@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'endless_pagination',
     'django_jenkins',
     'paypal.standard.pdt',
+    'comments',
     'accounts',
     'listings',
     'rewards',
