@@ -15,6 +15,8 @@ class Collectionmanage(unittest.TestCase):
     def test_collectionmanage(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
+        
+        #insert a test collection and item#
         addcollection(driver, self)
         
         driver.find_element_by_link_text("Manage Items").click()
@@ -32,6 +34,7 @@ class Collectionmanage(unittest.TestCase):
         self.assertTrue("6-inch Black Heel" in driver.find_element_by_tag_name("body").text)
         self.assertTrue("Samsung Galaxy Camera" in driver.find_element_by_tag_name("body").text)
         
+        #manual revert/cleanup#
         deletecollection(driver, self)              
         driver.find_element_by_link_text("LOGOUT").click()       
     

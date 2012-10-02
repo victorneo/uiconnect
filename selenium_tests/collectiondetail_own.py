@@ -15,24 +15,26 @@ class CollectiondetailOwn(unittest.TestCase):
     def test_collectiondetail_own(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
+        
+        #insert a test collection and item#
         addcollection(driver, self)
         
         try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("0 likes this.", driver.find_element_by_css_selector("div.social > span").text)
+        try: self.assertEqual("0 likes this collection.", driver.find_element_by_css_selector("div.social > span").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("btn_like").click()
         try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("1 likes this.", driver.find_element_by_css_selector("div.social > span").text)
+        try: self.assertEqual("1 likes this collection.", driver.find_element_by_css_selector("div.social > span").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("btn_like").click()
         try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("0 likes this.", driver.find_element_by_css_selector("div.social > span").text)
+        try: self.assertEqual("0 likes this collection.", driver.find_element_by_css_selector("div.social > span").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
                
-        driver.find_element_by_link_text("test").click()
+        driver.find_element_by_css_selector("div.thumbnail-wrapper").click()        
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("testcollection").click()
@@ -44,7 +46,7 @@ class CollectiondetailOwn(unittest.TestCase):
         driver.find_element_by_link_text("New collections").click()
         try: self.assertEqual("Collections", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        driver.find_element_by_link_text("testcollection (1 items)").click()        
+        driver.find_element_by_css_selector("div.collection-preview-image").click()        
         driver.find_element_by_link_text("Manage Items").click()
         try: self.assertEqual("Add Items to Collection", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))  
@@ -52,8 +54,7 @@ class CollectiondetailOwn(unittest.TestCase):
         driver.find_element_by_link_text("New collections").click()
         try: self.assertEqual("Collections", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        driver.find_element_by_link_text("testcollection (1 items)").click()
-        
+        driver.find_element_by_css_selector("div.collection-preview-image").click()
         deletecollection(driver, self)
            
         driver.find_element_by_link_text("LOGOUT").click()       

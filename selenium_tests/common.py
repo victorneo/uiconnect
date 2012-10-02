@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import Select
+import os
 
 def login(driver, self, username, pwd):
     driver.get(self.base_url)
@@ -49,7 +50,7 @@ def deleteitem(driver, self):
 
 def addcollection(driver,self):
     additem(driver,self)
-    driver.find_element_by_link_text("Dashboard").click()
+    driver.find_element_by_link_text("DASHBOARD").click()
     driver.find_element_by_link_text("Add Collection").click()
     try: self.assertEqual("Add Collection", driver.find_element_by_css_selector("h3").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
@@ -57,13 +58,14 @@ def addcollection(driver,self):
     driver.find_element_by_id("id_name").send_keys("testcollection")
     driver.find_element_by_id("id_description").clear()
     driver.find_element_by_id("id_description").send_keys("testing collection 123")
+    driver.find_element_by_id("id_image").send_keys(os.path.abspath("C:\Users\hp\Desktop\CSC303\Images\world_different_colour.jpg"))
     driver.find_element_by_id("submit-id-submit").click()
 
     try: self.assertEqual("Add Items to Collection", driver.find_element_by_css_selector("h3").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
     self.assertTrue("Collection added. Add your items to it!" in driver.find_element_by_tag_name("body").text)
     select = Select(driver.find_element_by_id("id_listings"))        
-    select.select_by_visible_text("test")    
+    select.select_by_visible_text("test")       
     driver.find_element_by_id("submit-id-submit").click()
     
     try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
@@ -78,7 +80,8 @@ def deletecollection(driver,self):
     try: self.assertEqual("Dashboard", driver.find_element_by_css_selector("h1").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
     self.assertTrue("Collection has been deleted." in driver.find_element_by_tag_name("body").text)
-    driver.find_element_by_css_selector("span.default-thumbnail-dashboard").click() 
+    driver.find_element_by_link_text("My items and collections").click()
+    driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/div[2]/ul/li[3]/div/a/h5").click() 
     deleteitem(driver,self)
 
 

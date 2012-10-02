@@ -16,9 +16,10 @@ class UpdateprofileClearavatar(unittest.TestCase):
         driver = self.driver
         login(driver, self, "zgal", "asd")
 
-        driver.find_element_by_link_text("Mabel").click()
+        driver.find_element_by_link_text("MABEL").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
+        self.assertTrue("Clear" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_id("avatar-clear_id").click()
         driver.find_element_by_id("submit-id-submit").click()
         

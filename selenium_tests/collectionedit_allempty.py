@@ -15,6 +15,8 @@ class CollectioneditAllempty(unittest.TestCase):
     def test_collectionedit_allempty(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
+        
+        #insert a test item and collection#
         addcollection(driver, self)
         driver.find_element_by_link_text("Edit Collection").click()      
         
@@ -26,8 +28,16 @@ class CollectioneditAllempty(unittest.TestCase):
         driver.find_element_by_id("id_description").send_keys("")
         driver.find_element_by_id("submit-id-submit").click()
         
+        try: self.assertEqual("Update Collection", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_name > strong").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_description > strong").text)       
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        
+        #manual revert/clean up#
         driver.find_element_by_link_text("My items and collections").click()
-        driver.find_element_by_link_text("testcollection").click()
+        driver.find_element_by_css_selector("div.collection-preview-image").click()
         try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         deletecollection(driver, self)              
