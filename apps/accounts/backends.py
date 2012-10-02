@@ -1,6 +1,7 @@
 import json
 import requests
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from .models import UserProfile
 
 
@@ -22,7 +23,8 @@ class FacebookBackend(object):
 class PersonaBackend(object):
     def authenticate(self, assertion=None):
         # Send the assertion to Mozilla's verifier service.
-        data = {'assertion': assertion, 'audience': 'http://127.0.0.1:8000'}
+        site = Site.objects.all()[0]
+        data = {'assertion': assertion, 'audience': site.domain}
         resp = requests.post('https://verifier.login.persona.org/verify', data=data, verify=True)
 
         # Did the verifier respond?
