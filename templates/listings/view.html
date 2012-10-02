@@ -117,7 +117,7 @@
       <h6>categories</h6>
       <p>
         {% for c in listing.categories.all %}
-        <span class="label">{{ c.name }}</span>{% if not forloop.last %}, {% endif %}
+        <a class="label" href="{% url 'listings:category' c.slug %}">{{ c.name }}</a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
       </p>
 
