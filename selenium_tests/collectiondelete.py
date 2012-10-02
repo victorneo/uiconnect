@@ -14,7 +14,9 @@ class Collectiondelete(unittest.TestCase):
     
     def test_collectiondelete(self):
         driver = self.driver
-        login(driver, self, "zgal", "asd")        
+        login(driver, self, "zgal", "asd")   
+
+        #insert a test collection and item#
         addcollection(driver, self)
         
         driver.find_element_by_link_text("Delete Collection").click()      

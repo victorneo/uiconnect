@@ -15,6 +15,8 @@ class CollectioneditNormal(unittest.TestCase):
     def test_collectionedit_normal(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
+        
+        #insert a test item and collection#
         addcollection(driver, self)
         driver.find_element_by_link_text("Edit Collection").click()      
         
@@ -31,6 +33,7 @@ class CollectioneditNormal(unittest.TestCase):
         self.assertTrue("Collection Updated." in driver.find_element_by_tag_name("body").text)  
         self.assertTrue("testing collection 123!" in driver.find_element_by_tag_name("body").text)
         
+        #manual revert/clean up#
         deletecollection(driver, self)              
         driver.find_element_by_link_text("LOGOUT").click()       
     

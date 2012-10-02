@@ -16,7 +16,7 @@ class UpdateprofileSamepwd(unittest.TestCase):
         driver = self.driver      
         login(driver, self, "zgal", "asd")
         
-        driver.find_element_by_link_text("Mabel").click()
+        driver.find_element_by_link_text("MABEL").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_password").clear()
@@ -34,7 +34,7 @@ class UpdateprofileSamepwd(unittest.TestCase):
         login(driver, self, "zgal", "123")
         
         #manual revert/cleanup#
-        driver.find_element_by_link_text("Mabel").click()
+        driver.find_element_by_link_text("MABEL").click()
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_password").clear()

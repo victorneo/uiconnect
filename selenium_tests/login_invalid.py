@@ -14,7 +14,7 @@ class LoginInvalid(unittest.TestCase):
     def test_login_invalid(self):
         driver = self.driver      
         driver.get(self.base_url)
-        driver.find_element_by_link_text("Login").click()
+        driver.find_element_by_link_text("LOGIN").click()
         try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_id("id_username").clear()
