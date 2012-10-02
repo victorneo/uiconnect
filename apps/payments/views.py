@@ -8,7 +8,7 @@ from .models import Payment
 
 @login_required
 def index(request):
-    payments = request.user.payments.all()
+    payments = request.user.payments.filter(is_paid=True).all()
 
     return render(request, 'payments/index.html', {
         'payments': payments,
