@@ -10,7 +10,7 @@
   <p>{{ viewed_user.get_profile.bio }}</p>
 
   <p><small>{{ viewed_user.listings.count }} items, {{ viewed_user.collections.count }} collections.</small></p>
-  <p><small>Followed by {{ viewed_user.get_profile.followers.count }} user{% if viewed_user.get_profile.followers.count != 1 %}s{% endif %}.</small></p>
+  <p><small><span id="span_followers">{{ viewed_user.get_profile.followers.count }} follower{% if viewed_user.get_profile.followers.count != 1 %}s{% endif %}</span>.</small></p>
 
   {% if user.is_authenticated and user != viewed_user %}
   <button id="btn_follow" class="btn btn-small" style="margin-top: -5px;">

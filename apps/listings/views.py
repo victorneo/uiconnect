@@ -331,4 +331,4 @@ def delete_collection(request, collection_id):
     collection.delete()
     messages.success(request, u'Collection has been deleted.')
 
-    return redirect(reverse('dashboard'))
+    return redirect(reverse('items_and_collections'))
