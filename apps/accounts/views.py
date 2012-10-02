@@ -11,6 +11,7 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 import facebook
 import requests
 from uiconnect import settings
@@ -94,7 +95,7 @@ def update_profile(request):
     }
     form = ProfileForm(request.POST or None, request.FILES or None, initial=initial)
 
-    if profile.fb_id:
+    if profile.alternate_login:
         form.hide_password()
 
     if form.is_valid():
@@ -233,6 +234,7 @@ def facebook_login(request):
                                        email=user_info['email'])
         user.first_name = user_info['name']
         user.save()
+        user.get_profile().alternate_login = True
         user.get_profile().fb_id = fb_id
         user.get_profile().save()
 
@@ -240,3 +242,23 @@ def facebook_login(request):
     lgin(request, user)
 
     return redirect(reverse('dashboard'))
+
+
+@csrf_exempt
+def persona_login(request):
+    assertion = request.POST.get('assertion', None)
+
+    try:
+        if assertion:
+            user = authenticate(assertion=assertion)
+            if user:
+                lgin(request, user)
+                data = {'success': True}
+                return HttpResponse(json.JSONEncoder().encode(data),
+                            content_type='application/json')
+    except Exception as e:
+        print e
+    else:
+        print 'authenticated user is ', user
+
+    return HttpResponse(status=500)
