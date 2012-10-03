@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('listings.views',
     url(r'^add/$', 'add', name='add'),
+    url(r'^aviary-post/(?P<image_id>[\d]+)/$', 'aviary_post', name='aviary_post'),
     url(r'^categories/(?P<slug>[-\w]+)/$', 'category', name='category'),
     url(r'^categories/', 'categories', name='categories'),
     url(r'^like/(?P<listing_id>[\d]+)/$', 'like', name='like'),

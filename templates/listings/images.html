@@ -8,11 +8,16 @@
 
     {% include 'messages.html' %}
 
+    <div id="injection_site"></div>
     {% if listing.images.all %}
       {% for img in listing.images.all %}
       <div class="row">
       <div class="span2">
-        <img class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
+        <img id="{{img.id}}" class="thumbnail" src="{{img.formatted_image.url}}" width="200" alt="" style="margin-bottom: 10px;">
+
+        <!-- Add an edit button, passing the HTML id of the image and the public URL ot the image -->
+        <p><button class="btn btn-small" onclick="initEditor({{ img.id }}); setTimeout(function(){return launchEditor('{{ img.id }}', 'http://54.251.19.202{{ img.image.url }}');}, 500);">Edit Image</button></p>
+
       </div>
       <div class="span4">
         <form class="form-inline">
@@ -99,4 +104,38 @@
       }, "json");
     }
 </script>
+
+<!-- Load Feather code -->
+<script type="text/javascript" src="http://feather.aviary.com/js/feather.js"></script>
+
+<!-- Instantiate Feather -->
+<script type="text/javascript">
+    var featherEditor = null;
+
+    function initEditor(id){
+      featherEditor = new Aviary.Feather({
+        apiKey: '5416c69ae',
+        apiVersion: 2,
+        tools: 'all',
+        appendTo: '',
+        onSave: function(imageID, newURL) {
+            var img = document.getElementById(imageID);
+            img.src = newURL;
+        },
+        postUrl: 'http://54.251.19.202/items/aviary-post/'+id+'/',
+        onError: function(errorObj){
+          console.log(errorObj.message);
+        }
+      });
+    }
+
+    function launchEditor(id, src) {
+        featherEditor.launch({
+          image: id,
+           url: src
+        });
+        return false;
+    }
+</script>
+
 {% endblock %}

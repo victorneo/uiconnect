@@ -1,8 +1,10 @@
 import json
+import urllib
 from decimal import Decimal
 from operator import attrgetter
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.http import HttpResponse
@@ -354,3 +356,27 @@ def delete_collection(request, collection_id):
     messages.success(request, u'Collection has been deleted.')
 
     return redirect(reverse('items_and_collections'))
+
+
+@csrf_exempt
+def aviary_post(request, image_id):
+    url = request.POST.get('url', None)
+    image = get_object_or_404(ListingImage, pk=image_id)
+
+    if not url:
+        return HttpResponse(status_code=500)
+
+    try:
+        img = urllib.urlretrieve(url)
+        f = File(open(img[0], 'rb'))
+        image.image = f
+        image.save()
+    except urllib.ContentTooShortError:
+        print('Unable to download file %s for image id %s' % (url, image_id))
+        return HttpResponse(status_code=500)
+    except Exception as e:
+        print e
+        print img
+        print image
+
+    return HttpResponse("Ok.", content_type="text/plain")
