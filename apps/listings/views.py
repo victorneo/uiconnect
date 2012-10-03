@@ -359,11 +359,21 @@ def delete_collection(request, collection_id):
 
 
 @csrf_exempt
-def aviary_post(request):
-    print request.POST
+def aviary_post(request, image_id):
     url = request.POST.get('url', None)
+    image = get_object_or_404(ListingImage, pk=image_id)
 
     if not url:
+        return HttpResponse(status_code=500)
+
+    try:
+        img = urllib.urlretrieve(url)
+        f = File(open(img[0]))
+        image.image = img
+        image.save()
+        print("Image saved.")
+    except urllib.ContentToShortError:
+        print('Unable to download file %s for image id %s' % (url, image_id))
         return HttpResponse(status_code=500)
 
     return HttpReponse('ok')
