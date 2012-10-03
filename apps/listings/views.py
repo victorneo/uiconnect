@@ -368,12 +368,15 @@ def aviary_post(request, image_id):
 
     try:
         img = urllib.urlretrieve(url)
-        f = File(open(img[0]))
-        image.image = img
+        f = File(open(img[0], 'rb'))
+        image.image = f
         image.save()
-        print("Image saved.")
-    except urllib.ContentToShortError:
+    except urllib.ContentTooShortError:
         print('Unable to download file %s for image id %s' % (url, image_id))
         return HttpResponse(status_code=500)
+    except Exception as e:
+        print e
+        print img
+        print image
 
-    return HttpReponse('ok')
+    return HttpResponse("Ok.", content_type="text/plain")
