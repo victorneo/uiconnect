@@ -161,14 +161,19 @@
     <div class="span8 offset2">
       <h6>comments</h6>
 
+      {% if not item.comments.all %}
+        <p>No comments on this item.</p>
+      {% endif %}
+
       {% include 'comments/comments.html' with comments=listing.comments.all viewed_user=listing.user commented=commented %}
 
+      {% if user.is_authenticated %}
       <form id="comment-form" class="form-inline" style="text-align: right;" method="POST">
         {% csrf_token %}
         <textarea style="width: 100%; margin-bottom: 5px;" name="content"></textarea>
         <input class="btn" style="margin-right: -15px;" type="submit" value="Comment" />
       </form>
-
+      {% endif %}
     </div>
   </div>
 

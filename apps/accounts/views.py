@@ -264,3 +264,17 @@ def persona_login(request):
         print 'authenticated user is ', user
 
     return HttpResponse(status=500)
+
+
+def avatar(request):
+    try:
+        user = User.objects.get(username=request.GET.get('username', None))
+    except User.DoesNotExist:
+        user = None
+
+    if user and user.get_profile().avatar:
+        data = {'url': user.get_profile().avatar.url}
+        return HttpResponse(json.JSONEncoder().encode(data),
+                    content_type='application/json')
+
+    return HttpResponse('')

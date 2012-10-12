@@ -303,6 +303,11 @@ div.payment-heading a { color: #333; }
 /* social buttons */
 iframe.twitter-share-button { margin-top: 10px; }
 
+/* reward thumbnails */
+ul#reward-thumbnails li{
+  height: 270px;
+}
+
 /* bubble */
 .bubble, .bubble-owner {
   position: relative;
@@ -336,4 +341,15 @@ iframe.twitter-share-button { margin-top: 10px; }
 /* persona */
 img#persona-signin{
     cursor: pointer;
+}
+
+/* login form */
+
+#login-form #user-avatar{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 64px;
+  width: 64px;
+  border: 1px solid #ccc;
 }

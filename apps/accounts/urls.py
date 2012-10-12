@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('accounts.views',
     url(r'^login/', 'login', name='login'),
+    url(r'^avatar/', 'avatar', name='avatar'),
     url(r'^forgot-password/', 'forgot_password', name='forgot_password'),
     url(r'^facebook-login/', 'facebook_login', name='facebook_login'),
     url(r'^persona-login/', 'persona_login', name='persona_login'),

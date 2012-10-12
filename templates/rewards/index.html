@@ -1,5 +1,6 @@
 {% extends 'listings/dashboard.html' %}
 {% load url from future %}
+{% load rewardpoints %}
 
 {% block dashboard_content %}
     <h3>Rewards</h3>
@@ -8,40 +9,51 @@
 
     {% if user.is_authenticated %}
     <p>You have {{ user.get_profile.points }} points. <small>(<a href="#" data-target="#redeemHelp" data-toggle="modal">How do I earn points?</a>)</small></p>
+    <p>If you do not receive your e-voucher within three working days, please contact <a href="mailto:support@uiconnect.com">support@uiconnect.com</a>.</p>
     {% endif %}
 
-    <ul class="thumbnails">
+    <ul id="reward-thumbnails" class="thumbnails">
       {% for r in rewards %}
       <li class="span4">
         <div class="thumbnail">
           {% if r.formatted_image %}
-          <img src="{{ r.formatted_image.url }}" />
+          <img src="{{ r.formatted_image.url }}" width=150 />
           {% endif %}
-          <h5>{{ r.name }}</h5>
+          <h5>{{ r.name }}
+            {% if user.is_authenticated and r in user.redeemed_rewards.all %}
+            <br />
+            <small>(you have redeemed this reward previously)</small>
+            {% endif %}
+          </h5>
           <div class="thumbnail-info-wrapper" style="padding: 10px;">
             <p class="pull-left">
               Points required: {{ r.points_required }}
             </p>
             <p class="pull-right">
 
-              {% if user.is_authenticated and user.get_profile.points >= r.points_required %}
-              <a class="btn btn-small" href="#" data-target="#redeemModal_{{ r.id }}" data-toggle="modal">Redeem</a>
+              <a class="btn btn-small" href="#" data-target="#redeemModal_{{ r.id }}" data-toggle="modal">View More</a>
 
               <div class="modal hide" id="redeemModal_{{ r.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                  <h3 id="myModalLabel">Are you sure you want to redeem this reward?</h3>
+                  <h3 id="myModalLabel">{{ r.name }}</h3>
                 </div>
                 <div class="modal-body">
+                  <img src="{{ r.formatted_image.url }}" style="display: block; margin-left: auto; margin-right: auto;" />
+                  <p>{{ r.description }}</p>
                   <p>You will receive an email from us with the voucher code.</p>
                 </div>
                 <div class="modal-footer">
                   <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                  <a class="btn btn-success" href="{% url 'rewards:redeem' r.id %}">Yes, redeem</a>
+                  {% if user.is_authenticated %}
+                  {% if user.get_profile.points >= r.points_required %}
+                  <a class="btn btn-success" href="{% url 'rewards:redeem' r.id %}">Redeem</a>
+                  {% else %}
+                  You need {{ r.points_required|subtract:user.get_profile.points }} more points.
+                  {% endif %}
+                  {% endif %}
                 </div>
               </div>
-              {% endif %}
-
             </p>
           </div>
         </div>

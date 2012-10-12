@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 {% load url from future %}
+{% load crispy_forms_tags %}
 
 {% block content %}
   <div class="span6 offset3">
-    {% include 'form.html' with legend='Login' %}
+
+    <form id="login-form" class="form-horizontal" method="POST">
+      <h3>Login</h3>
+      {% include 'messages.html' %}
+
+      <img id="user-avatar" src='{{ STATIC_URL }}img/no_pic.jpg' />
+
+      {% crispy form %}
+    </form>
 
     <p><a href="{% url 'accounts:forgot_password' %}">Forgot your password?</a></p>
 
@@ -14,6 +23,27 @@
 {% endblock %}
 
 {% block js_footer %}
+<script>
+  $('#id_username').focusout(function(){
+    var username = $('#id_username').val();
+    var url = '{{ STATIC_URL }}img/no_pic.jpg';
+
+    $.getJSON('{% url 'accounts:avatar' %}', {'username': username}, function(data) {
+
+      if (data !== null){
+        url = data.url;
+      }
+
+      $("#user-avatar").fadeOut(800, "linear", function(){
+        $("#user-avatar").attr("src", url);
+        $("#user-avatar").fadeIn(800, "linear");
+      });
+
+    });
+  });
+</script>
+
+
 <script src="https://login.persona.org/include.js"></script>
 
 <script>
