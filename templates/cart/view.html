@@ -12,9 +12,10 @@
   {% endif %}
 
   {% if cart.items.count == 0 %}
-  <p>No items in shopping cart.</p>
+  <p>No items in your shopping cart.</p>
+  <p><a href="{% url 'listings:categories' %}">Check out the most popular items here!</a></p>
   {% else %}
-  <p>You have {{ cart.items.count }} item{% if cart.items.count > 1 %}s{% endif %} in your shopping cart.</p>
+  <p>You have {{ cart.items.count }} item{% if cart.items.count > 1 %}s{% endif %} in your shopping cart. <a class="btn btn-mini btn-warning pull-right" href="{% url 'cart:empty' %}">Empty shopping cart</a></p>
   <div class="row">
     <div class="span9">
       <table id="shopping-cart">
@@ -52,7 +53,15 @@
   </div>
 
   <div>
-  {% crispy form %}
+    {% crispy form %}
+    <p>
+      {% if user.get_profile.address %}
+      We have prepopulated the delivery address based on the one you have given us. Kindly edit the address below if this is intended
+      for another address.
+      {% else %}
+      We will save this address for your future purchases.
+      {% endif %}
+    </p>
   </div>
 
   {% endif %}

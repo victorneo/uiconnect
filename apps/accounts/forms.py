@@ -101,16 +101,15 @@ class ProfileForm(forms.Form):
         max_length=200,
         required=False,
         widget=forms.PasswordInput,
-        help_text='Leave empty if you do not want to change password.'
-    )
+        help_text='Leave empty if you do not want to change password.')
     password2 = forms.CharField(
         max_length=200,
         required=False,
         widget=forms.PasswordInput,
-        label=u'Password Again',
-    )
+        label=u'Password Again')
     bio = forms.CharField(max_length=400, required=False, widget=forms.Textarea)
     avatar = forms.ImageField(required=False)
+    address = forms.CharField(required=False, widget=forms.Textarea)
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -123,6 +122,7 @@ class ProfileForm(forms.Form):
                 Field('password', css_class='span6'),
                 Field('password2', css_class='span6'),
                 Field('bio', css_class='span6'),
+                Field('address', css_class='span6'),
                 Field('avatar', css_class='span6'),
             ),
             FormActions(
