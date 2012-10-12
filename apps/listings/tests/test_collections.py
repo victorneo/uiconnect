@@ -150,7 +150,7 @@ class CollectionViewTest(TestCase):
     def test_delete_collection_valid(self):
         url = reverse('collections:delete', kwargs={'collection_id': self.c1.id})
         response = self.c.get(url)
-        self.assertRedirects(response, reverse('dashboard'))
+        self.assertRedirects(response, reverse('items_and_collections'))
 
     def test_delete_collection_invalid_collection(self):
         url = reverse('collections:delete', kwargs={'collection_id': 9999})

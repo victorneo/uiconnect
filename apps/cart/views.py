@@ -96,13 +96,13 @@ def add(request, listing_id):
 
 @login_required
 def remove(request, listing_id):
-    listing = get_object_or_404(listing, pk=listing_id)
+    listing = get_object_or_404(Listing, pk=listing_id)
 
     cart = request.user.cart
 
     try:
         item = cart.items.get(listing=listing)
-    except item.doesnotexist:
+    except Item.DoesNotExist:
         pass
     else:
         item.delete()
