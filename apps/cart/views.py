@@ -12,7 +12,15 @@ from .models import Cart, Item
 @login_required
 def view(request):
     cart = request.user.cart
-    form = PaymentForm(request.POST or None, cancel_url=reverse('listings:categories'))
+    initial = {'address': request.user.get_profile().address}
+    if request.GET.get('edit', None):
+        try:
+            payment = request.user.payments.get(is_paid=False)
+            initial['address'] = payment.address
+        except:
+            request.user.payments.filter(is_paid=False).all().delete()
+
+    form = PaymentForm(request.POST or None, cancel_url=reverse('listings:categories'), initial=initial)
 
     if form.is_valid():
         # delete any unpaid payments
@@ -21,6 +29,11 @@ def view(request):
         payment = form.save(commit=False)
         payment.user = request.user
         payment.save()
+
+        # only save address if it is empty
+        if not request.user.get_profile().address:
+            request.user.get_profile().address = payment.address
+            request.user.get_profile().save()
 
         for l in cart.items.all():
             payment.listings.add(l.listing)
@@ -83,16 +96,22 @@ def add(request, listing_id):
 
 @login_required
 def remove(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+    listing = get_object_or_404(listing, pk=listing_id)
 
     cart = request.user.cart
 
     try:
         item = cart.items.get(listing=listing)
-    except Item.DoesNotExist:
+    except item.doesnotexist:
         pass
     else:
         item.delete()
-        messages.success(request, u'Removed item from cart.')
+        messages.success(request, u'removed item from cart.')
 
+    return redirect(reverse('cart:view'))
+
+
+@login_required
+def empty(request):
+    request.user.cart.clear()
     return redirect(reverse('cart:view'))

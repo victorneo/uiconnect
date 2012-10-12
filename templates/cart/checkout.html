@@ -43,19 +43,22 @@
   </div>
 
   <div class="row">
-    <div class="span9">
-      <h5>Address for items to be delivered to:</h5>
-      <p>{{ payment.address }}</p>
+    <div class="span5">
+    <h4>Delivery Address</h4>
       <p>
         <span class="label label-info">Heads up!</span><br />
         Please check that the delivery address is correct.<br />
         We are not responsible if the item is delivered to the wrong address.
       </p>
+      <h5>Items will be delivered to:</h5>
+      <p>{{ payment.address|linebreaksbr }}</p>
+      <a class="btn" href="{% url 'cart:view' %}?edit=True">Edit Address or shopping cart</a>
+    </div>
+    <div class="span4">
+      <h4>Make payment</h4>
+      {{ paypal_form.sandbox }}
     </div>
   </div>
-
-  <h4>Make payment</h4>
-  {{ paypal_form.sandbox }}
 
   {% endif %}
 {% endblock %}

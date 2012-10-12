@@ -92,6 +92,7 @@ def update_profile(request):
         'email': user.email,
         'bio': profile.bio,
         'avatar': profile.avatar,
+        'address': profile.address,
     }
     form = ProfileForm(request.POST or None, request.FILES or None, initial=initial)
 
@@ -107,6 +108,7 @@ def update_profile(request):
 
         user.save()
         profile.bio = form.cleaned_data['bio']
+        profile.address = form.cleaned_data['address']
 
         if form.cleaned_data.get('avatar', None):
             if profile.avatar and form.cleaned_data['avatar'] != profile.avatar:
