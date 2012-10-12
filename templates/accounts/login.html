@@ -24,7 +24,7 @@
 
 {% block js_footer %}
 <script>
-  $('#id_username').focusout(function(){
+  function change_avatar(){
     var username = $('#id_username').val();
     var url = '{{ STATIC_URL }}img/no_pic.jpg';
 
@@ -34,13 +34,22 @@
         url = data.url;
       }
 
-      $("#user-avatar").fadeOut(800, "linear", function(){
+      $("#user-avatar").fadeOut(400, "linear", function(){
         $("#user-avatar").attr("src", url);
-        $("#user-avatar").fadeIn(800, "linear");
+        $("#user-avatar").fadeIn(400, "linear");
       });
 
     });
+  }
+
+  $(document).ready(function(){
+    var username = $('#id_username').val();
+    if (username){
+      change_avatar();
+    }
   });
+
+  $('#id_username').focusout(change_avatar);
 </script>
 
 
