@@ -24,7 +24,8 @@ def redeem(request, reward_id):
 
     try:
         reward.redeem(profile)
-    except:
+    except Exception as e:
+        raise e
         messages.error(request, u'Insufficient points to redeem.')
     else:
         messages.success(request, u'Redeemed!')
