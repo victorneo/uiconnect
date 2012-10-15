@@ -13,11 +13,14 @@ class AddItemForm(forms.ModelForm):
 
 
 class PaymentForm(forms.ModelForm):
+    discount_code = forms.CharField(required=False)
+
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Fieldset(
                 '',
+                Field('discount_code', css_class='span6'),
                 Field('address', css_class='span9 delivery-address'),
             ),
             FormActions(

@@ -5,6 +5,7 @@
   <h3>Checkout</h3>
 
   {% include 'messages.html' %}
+
   {% include 'cart/steps.html' with step2=1 %}
 
   {% if cart.items.count == 0 %}
@@ -35,7 +36,10 @@
       <tr>
         <td class="span5">&nbsp;</td>
         <td class="span4">
-          <h5>Total: USD {{ cart.total }}</h5>
+          <h5>Total: USD {{ amount }}</h5>
+          {% if amount != cart.total %}
+          <small>(after discount)</small>
+          {% endif %}
         </td>
       </tr>
       </table>

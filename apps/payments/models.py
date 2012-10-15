@@ -31,3 +31,10 @@ class Payment(models.Model):
         profile = self.user.get_profile()
         profile.points += self.points_earned
         profile.save()
+
+
+class Discount(models.Model):
+    user = models.ForeignKey(User, related_name='discounts')
+    code = models.CharField(max_length=50, unique=True)
+    percentage = models.DecimalField(decimal_places=2, max_digits=3)
+    payment = models.OneToOneField(Payment, related_name='discount', blank=True, null=True, on_delete=models.SET_NULL)

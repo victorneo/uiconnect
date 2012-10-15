@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
@@ -5,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from paypal.standard.forms import PayPalPaymentsForm
 from listings.models import Listing
+from payments.models import Discount, Payment
 from .forms import AddItemForm, PaymentForm
 from .models import Cart, Item
 
@@ -19,6 +21,12 @@ def view(request):
             initial['address'] = payment.address
         except:
             request.user.payments.filter(is_paid=False).all().delete()
+
+        try:
+            discount = payment.discount
+            initial['discount_code'] = discount.code
+        except Discount.DoesNotExist:
+            pass
 
     form = PaymentForm(request.POST or None, cancel_url=reverse('listings:categories'), initial=initial)
 
@@ -40,6 +48,24 @@ def view(request):
 
         payment.save()
 
+        if form.cleaned_data['discount_code']:
+            try:
+                discount = Discount.objects.get(
+                    code=form.cleaned_data['discount_code'],
+                    user=request.user)
+
+                if not discount.payment or not discount.payment.is_paid:
+                    discount.payment = payment
+                    discount.save()
+                else:
+                    discount = None
+
+            except (Discount.DoesNotExist, Payment.DoesNotExist) as e:
+                discount = None
+
+            if not discount:
+                messages.error(request, u'Invalid discount code given. No discount applied.')
+
         return redirect(reverse('cart:checkout'))
 
     return render(request, 'cart/view.html', {
@@ -54,9 +80,16 @@ def checkout(request):
     payment = request.user.payments.get(is_paid=False)
     domain = Site.objects.all()[0].domain
 
+    amount = cart.total
+    try:
+        if payment.discount.percentage > 0:
+            amount -= (amount / Decimal(100) * Decimal(payment.discount.percentage))
+    except Discount.DoesNotExist as e:
+        pass
+
     paypal_dict = {
         'business': 'seller_1347808967_biz@gmail.com',
-        'amount': str(cart.total),
+        'amount': str(amount),
         "invoice": "%d" % payment.id,
         'item_name': 'UIConnect items',
         'return_url': 'http://%s/payments/pdt' % domain,
@@ -67,6 +100,7 @@ def checkout(request):
     return render(request, 'cart/checkout.html', {
         'cart': cart,
         'payment': payment,
+        'amount': amount,
         'paypal_form': paypal_form,
     })
 

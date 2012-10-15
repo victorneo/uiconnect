@@ -133,10 +133,10 @@ INSTALLED_APPS = (
     'comments',
     'accounts',
     'listings',
-    'rewards',
     'categories',
     'search',
     'payments',
+    'rewards',
     'cart',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
