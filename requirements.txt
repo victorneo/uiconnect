@@ -12,6 +12,7 @@ factory-boy==1.2.0
 facebook-sdk==0.3.2
 logilab-astng==0.24.0
 logilab-common==0.58.1
+mock==1.0b1
 nose==1.2.1
 pycrypto==2.6
 pylint==0.25.2
