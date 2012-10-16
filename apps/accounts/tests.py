@@ -7,8 +7,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
+import requests
+import mock
 from uiconnect import settings
-from .backends import FacebookBackend
+from .backends import FacebookBackend, PersonaBackend
 from .factories import UserFactory, UserProfileFactory
 
 
@@ -124,6 +126,17 @@ class AccountsViewTest(TestCase):
         response = self.c.get(PROFILE_URL)
 
         self.assertTemplateUsed(response, 'accounts/profile.html')
+        self.c.logout()
+
+    def test_profile_template_hide_password(self):
+        self.c.login(username=self.user.username, password='1234')
+        self.user.get_profile().alternate_login = True
+        self.user.get_profile().save()
+        response = self.c.get(PROFILE_URL)
+
+        self.assertTemplateUsed(response, 'accounts/profile.html')
+        self.assertContains(response, 'input id="id_password" type="hidden"')
+        self.assertContains(response, 'input id="id_password2" type="hidden"')
         self.c.logout()
 
     def test_profile_valid_update(self):
@@ -256,7 +269,7 @@ class AccountsViewTest(TestCase):
         self.assertRedirects(response, FOLLOWING_URL)
 
 
-class AccountsUnitTest(TestCase):
+class AccountsFacebookBackendUnitTest(TestCase):
     def setUp(self):
         self.user = UserFactory.build()
         self.user.set_password('1234')
@@ -279,3 +292,53 @@ class AccountsUnitTest(TestCase):
 
     def test_get_user_invalid(self):
         self.assertEquals(None, self.backend.get_user(user_id=1234))
+
+
+class RequestResponse(object):
+    pass
+
+
+def requests_post(url, data, verify=False):
+    obj = RequestResponse()
+    out_data = {'status': 'okay', 'email': 'persona@user.com'}
+    if data['assertion'] == '12345678':
+        obj.ok = True
+        obj.content = str(json.JSONEncoder().encode(out_data))
+    else:
+        obj.ok = False
+
+    return obj
+
+
+class AccountsPersonaBackendUnitTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory.build(email='persona@user.com')
+        self.user.set_password('1234')
+        self.user.save()
+
+        p = self.user.get_profile()
+        p.alternate_login = True
+        p.save()
+
+        self.backend = PersonaBackend()
+
+    def test_authenticate_valid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(self.user, self.backend.authenticate(assertion='12345678'))
+
+    def test_authenticate_valid_create_new(self):
+        self.user.delete()
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals('persona@user.com', self.backend.authenticate(assertion='12345678').email)
+
+    def test_authenticate_invalid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(None, self.backend.authenticate(assertion='asd'))
+
+    def test_get_user_valid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(self.user, self.backend.get_user(user_id=self.user.id))
+
+    def test_get_user_invalid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(None, self.backend.get_user(user_id=1234))
