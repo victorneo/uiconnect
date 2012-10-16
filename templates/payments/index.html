@@ -20,11 +20,12 @@
     <div class="accordion-group">
       <div class="accordion-heading payment-heading">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ p.id }}">
-          <strong>Transaction Reference {{ p.transaction_id }}</strong>, USD {{ p.amount }} paid on {{ p.payment_date }}
+          <strong>Transaction Reference {{ p.transaction_id }}</strong>, USD {{ p.amount }} paid on {{ p.payment_date }}.
         </a>
       </div>
       <div id="collapse{{ p.id }}" class="accordion-body collapse">
         <div class="accordion-inner">
+          {% if p.discount %}<small>Discount coupon {{ p.discount.code }} used</small>{% endif %}
           <h4>Delivery Address</h4>
           <p>
             Items will be delivered to:<br />
