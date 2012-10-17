@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
+{% block html_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.dataTables.css">
+{% endblock %}
+
 {% block content %}
     <div class="span12">
       <h1>Collections</h1>
@@ -16,16 +20,31 @@
     <div class="span10">
       {% include 'messages.html' %}
 
-      <div id="tabContent" class="tab-content" style="min-height: 300px;">
-        {% include 'collections/preview.html' with collections=collections %}
-      </div>
+        <table id="collections" class="table">
+        <thead>
+          <th>Name</th>
+        </thead>
+        <tbody>
+        {% include 'collections/preview.html' with collections=collections table=1 %}
+        </tbody>
+        </table>
     </div>
 {% endblock %}
 
 {% block js_footer %}
 <script>
-$(document).ready(function() {
-  $('#categories_tab a:first').tab('show');
-});
+</script>
+
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+<script src="{{ STATIC_URL }}js/paging.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#collections').dataTable({
+      "sDom": "<'row'<'span4'l><'span4 offset2'f>r>t<'row'<'span4'i><'span6'p>>",
+      "sPaginationType": "bootstrap",
+      "aLengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+      "iDisplayLength": 5,
+    });
+  });
 </script>
 {% endblock %}

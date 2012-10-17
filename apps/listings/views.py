@@ -232,7 +232,7 @@ def view_collections(request):
     else:
         qs = qs.filter(is_featured=True)
 
-    collections = qs.all()[:10]
+    collections = qs.all()
 
     return render(request, 'collections/collections.html', {
         'type': col_type,
