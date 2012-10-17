@@ -220,10 +220,10 @@ class AccountsViewTest(TestCase):
 
         response = self.c.get(url)
         self.assertTrue(json.loads(response.content)['success'])
-        self.assertEquals(1, self.user2.get_profile().followers.count())
+        self.assertEquals(1, self.user2.get_profile().get_followers().count())
 
         response = self.c.get(url)
-        self.assertEquals(0, self.user2.get_profile().followers.count())
+        self.assertEquals(0, self.user2.get_profile().get_followers().count())
 
     def test_follow_ownself(self):
         url = reverse('accounts:follow', kwargs={'user_id': self.user.id})
@@ -267,6 +267,31 @@ class AccountsViewTest(TestCase):
 
         response = self.c.get(url)
         self.assertRedirects(response, FOLLOWING_URL)
+
+    def test_view_valid_profile(self):
+        url = reverse('accounts:view_profile', kwargs={'user_id': self.user.id})
+        response = self.c.get(url)
+
+        self.assertTemplateUsed(response, 'accounts/view.html')
+
+    def test_view_invalid_profile(self):
+        url = reverse('accounts:view_profile', kwargs={'user_id': 9999})
+        response = self.c.get(url)
+
+        self.assertEquals(404, response.status_code)
+
+    def test_avatar_valid(self):
+        url = reverse('accounts:avatar')
+        response = self.c.get(url + '?username=%s' % self.user.username)
+
+        data = json.loads(response.content)
+        self.assertEquals(self.user.get_profile().avatar.url, data['url'])
+
+    def test_avatar_invalid(self):
+        url = reverse('accounts:avatar')
+        response = self.c.get(url + '?username=ahhahahahaha')
+
+        self.assertEquals('', response.content)
 
 
 class AccountsFacebookBackendUnitTest(TestCase):
