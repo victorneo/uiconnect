@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Reward
 
 
+@login_required
 def index(request):
     rewards = Reward.objects.all()
     template = 'rewards/index.html'
