@@ -51,8 +51,6 @@ class PersonaBackend(object):
             user.get_profile().alternate_login = True
             user.get_profile().save()
 
-        print user
-
         return user
 
     def get_user(self, user_id):
