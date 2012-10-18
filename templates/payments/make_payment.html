@@ -2,11 +2,11 @@
 {% load url from future %}
 
 {% block dashboard_content %}
-  <h3>Checkout</h3>
+  <h3>Payment</h3>
 
   {% include 'messages.html' %}
 
-  {% include 'cart/steps.html' with step2=1 %}
+  {% include 'cart/steps.html' with step2=3 %}
 
   {% if cart.items.count == 0 %}
   <p>No items in shopping cart.</p>
@@ -20,7 +20,7 @@
             <th>Price</th>
           </tr>
         </thead>
-      {% for item in cart.items.all %}
+      {% for item in payment.listings.all %}
       <tr>
         <td class="span5">
           {% if item.listing.images.all.0.thumbnail %}
@@ -64,3 +64,4 @@
 
   {% endif %}
 {% endblock %}
+

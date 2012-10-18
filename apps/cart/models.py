@@ -8,6 +8,8 @@ from listings.models import Listing
 class Cart(models.Model):
     user = models.OneToOneField(User, related_name='cart')
     listings = models.ManyToManyField(Listing)
+    address = models.TextField()
+    discount_code = models.CharField(max_length=50, null=True, blank=True)
 
     @property
     def total(self):
@@ -30,6 +32,7 @@ class Cart(models.Model):
             i.delete()
 
 
+# TODO use M2M through
 class Item(models.Model):
     cart = models.ForeignKey(Cart, related_name='items')
     listing = models.ForeignKey(Listing)

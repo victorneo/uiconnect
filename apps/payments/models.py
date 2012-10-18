@@ -12,7 +12,22 @@ class Payment(models.Model):
     listings = models.ManyToManyField(Listing, related_name='payments')
 
     @property
-    def amount(self):
+    def amount_due(self):
+        total = 0.0
+        for l in listings:
+            total + l.price
+
+        try:
+            discounted_amt = self.discount.percentage * (total / 100)
+        except Discount.DoesNotExist:
+            pass
+        else:
+            total -= discount_amt
+
+        return total
+
+    @property
+    def amount_paid(self):
         return self.pdt.mc_gross
 
     @property

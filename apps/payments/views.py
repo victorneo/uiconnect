@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.template import RequestContext
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.pdt.models import PayPalPDT
 from paypal.standard.pdt.forms import PayPalPDTForm
 from .models import Payment
@@ -12,6 +14,28 @@ def index(request):
 
     return render(request, 'payments/index.html', {
         'payments': payments,
+    })
+
+
+@login_required
+def make_payment(request, payment_id):
+    payment = get_object_or_404(Payment, pk=payment_id)
+    amount = payment.total
+    domain = Site.objects.all()[0].domain
+
+    paypal_dict = {
+        'business': 'seller_1347808967_biz@gmail.com',
+        'amount': str(amount),
+        "invoice": "%d" % payment.id,
+        'item_name': 'trends items',
+        'return_url': 'http://%s/payments/pdt' % domain,
+    }
+
+    paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+    return render(request, 'payments/make_payment.html', {
+        'form': form,
+        'payment': payment,
     })
 
 
