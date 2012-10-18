@@ -5,7 +5,7 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from listings.models import Listing
-from payments.models import Discount, Payment
+from payments.models import Discount, Payment, PaymentItem
 from .forms import AddItemForm, PaymentForm
 from .models import Cart, Item
 
@@ -84,7 +84,11 @@ def checkout(request):
 
         # move listings over to payment and clear the shopping cart
         for i in cart.items.all():
-            payment.listings.add(i.listing)
+            PaymentItem.objects.create(
+                    listing=i.listing,
+                    quantity=i.quantity,
+                    payment=payment)
+
             i.listing.quantity -= i.quantity
             i.listing.save()
 

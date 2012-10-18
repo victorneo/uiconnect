@@ -9,13 +9,13 @@ class Payment(models.Model):
     pdt = models.OneToOneField(PayPalPDT, blank=True, null=True)
     is_paid = models.BooleanField(default=False)
     address = models.TextField()
-    listings = models.ManyToManyField(Listing, related_name='payments')
+    listings = models.ManyToManyField(Listing, related_name='payments', through='PaymentItem')
 
     @property
     def amount_due(self):
         total = 0.0
         for l in listings:
-            total + l.price
+            total += l.paymentitem_set.get(payment=self).price
 
         try:
             discounted_amt = self.discount.percentage * (total / 100)
@@ -46,6 +46,16 @@ class Payment(models.Model):
         profile = self.user.get_profile()
         profile.points += self.points_earned
         profile.save()
+
+
+class PaymentItem(models.Model):
+    listing = models.ForeignKey(Listing)
+    payment = models.ForeignKey(Payment)
+    quantity = models.IntegerField(default=1)
+
+    @property
+    def price(self):
+        return self.listing.price * quantity
 
 
 class Discount(models.Model):
