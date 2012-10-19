@@ -152,7 +152,6 @@
       <h6>description</h6>
       <p>{{ listing.description }}</p>
 
-
       {% if user == listing.user %}
       <h6>Owner's menu</h6>
 
@@ -170,13 +169,14 @@
     <div class="span8 offset2">
       <h6>comments</h6>
 
-      {% if not item.comments.all %}
+      {% if not listing.comments.all %}
         <p>No comments on this item.</p>
       {% endif %}
 
-      {% include 'comments/comments.html' with comments=listing.comments.all viewed_user=listing.user commented=commented %}
+      {% include 'comments/comments.html' with comments=comments viewed_user=listing.user commented=commented %}
 
       {% if user.is_authenticated %}
+      <h6>add your comment</h6>
       <form id="comment-form" class="form-inline" style="text-align: right;" method="POST">
         {% csrf_token %}
         <textarea style="width: 100%; margin-bottom: 5px;" name="content"></textarea>
@@ -253,9 +253,7 @@ $(document).ready(function() {
 
 <script type="text/javascript">
     $(document).ready(function(){
-      // Load exchange rates data via AJAX:
       $.getJSON(
-        // NB: using Open Exchange Rates here, but you can use any source!
           'http://openexchangerates.org/api/latest.json?app_id=246942995bab4c39bdfec341f008fbda',
           function(data) {
               // Check money.js has finished loading:
@@ -282,5 +280,20 @@ $(document).ready(function() {
     });
 </script>
 
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+<script src="{{ STATIC_URL }}js/paging.js"></script>
+<script>
+  $(document).ready(function() {
+    var tbl = $('#comments').dataTable({
+      "sDom": "<'row'<'span5'l>r>t<'row'<'span0'i><'span6'p>>",
+      "sPaginationType": "bootstrap",
+      "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      "iDisplayLength": 10,
+      "aaSorting": []
+    });
+
+    tbl.fnPageChange('last');
+  });
+</script>
 
 {% endblock %}

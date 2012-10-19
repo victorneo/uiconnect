@@ -2,8 +2,10 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
+from uiconnect import settings
 from listings.models import Listing
 from payments.models import Discount, Payment, PaymentItem
 from .forms import AddItemForm, CartForm
@@ -104,6 +106,20 @@ def checkout(request):
         cart.clear()
         cart.discount_code = None
         cart.save()
+
+        sellers = set([l.user for l in payment.listings.all()])
+        item_count = ''
+
+        for s in sellers:
+            for l in payment.listings.filter(user=s).all():
+                item_count += 'Item: %s, %d left.\n' % (l.name, l.quantity)
+
+            send_mail(
+                'A user has purchased your item',
+                settings.ITEM_BOUGHT_TEMPLATE % (s.first_name, item_count),
+                'uiconnect303@gmail.com',
+                [s.email,]
+            )
 
         # redirect to payment
         return redirect(reverse('payments:make_payment',
