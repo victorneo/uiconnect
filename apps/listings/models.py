@@ -23,7 +23,7 @@ class Listing(models.Model, UpdateMixin):
     categories = models.ManyToManyField(Category, related_name="listings")
     likes = models.ManyToManyField(User, related_name='liked_listings')
     comments = generic.GenericRelation(Comment)
-
+    quantity = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

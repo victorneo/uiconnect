@@ -97,12 +97,13 @@ def checkout(request):
                     quantity=i.quantity,
                     payment=payment)
 
-            # TODO deduct quantity
-            # i.listing.quantity -= i.quantity
-            # i.listing.save()
+            i.listing.quantity -= i.quantity
+            i.listing.save()
 
         payment.save()
         cart.clear()
+        cart.discount_code = None
+        cart.save()
 
         # redirect to payment
         return redirect(reverse('payments:make_payment',
@@ -120,7 +121,7 @@ def add(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id)
     cart = request.user.cart
 
-    if listing.user == request.user:
+    if listing.user == request.user or listing.quantity == 0:
         return redirect(reverse('listings:view', kwargs={'listing_id': listing_id}))
 
     try:

@@ -13,8 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
 from comments.forms import CommentForm
 from .forms import (ListingForm, AddImageForm,
-        CollectionForm, AddCollectionListingsForm,
-        CaptionForm)
+                    CollectionForm, AddCollectionListingsForm,
+                    CaptionForm)
 from .models import Listing, ListingImage, Collection
 
 
@@ -31,7 +31,10 @@ def index(request):
 def categories(request):
     categories = Category.objects.all()
     for c in categories:
-        c.display_listings = c.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()[:4]
+        c.display_listings = c.listings.annotate(num_likes=Count('likes'))\
+            .order_by('-num_likes')\
+            .filter(quantity__gte=1)\
+            .all()[:4]
 
     return render(request, 'listings/categories.html', {
         'categories': categories,
@@ -40,7 +43,11 @@ def categories(request):
 
 def category(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    category.display_listings = category.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()
+    category.display_listings = category.listings\
+        .annotate(num_likes=Count('likes'))\
+        .order_by('-num_likes')\
+        .filter(quantity__gte=1)\
+        .all()
 
     return render(request, 'listings/category.html', {
         'category': category,
@@ -70,7 +77,8 @@ def dashboard(request):
     updates = []
     following_users = request.user.get_profile().following.all()
     if following_users.count() > 0:
-        updates = list(Listing.objects.filter(user__profile__in=following_users).order_by('-created_at').all()[:20])
+        updates = list(Listing.objects.filter(user__profile__in=following_users)\
+                        .order_by('-created_at').all()[:20])
         updates.extend(list(Collection.objects.filter(user__profile__in=following_users).order_by('-created_at').all()[:20]))
 
         updates = sorted(updates, key=attrgetter('created_at'), reverse=True)
