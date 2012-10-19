@@ -265,7 +265,7 @@
 			// item click event
 			this.$items.bind('click.elastislide', function( event ) {
 				instance.options.onClick( $(this) );
-				return false;
+				//return false;
 			});
 			
 			// touch events

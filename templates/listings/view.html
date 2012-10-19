@@ -249,6 +249,7 @@ $(document).ready(function() {
 {% endif %}
 
 
+{% if user.is_authenticated and user.get_profile.default_currency != 'USD' %}
 <script src="{{ STATIC_URL }}js/money.min.js"></script>
 
 <script type="text/javascript">
@@ -270,15 +271,16 @@ $(document).ready(function() {
 
             fx.settings = {
               from : "USD",
-              to : "SGD"
+              to : "{{ user.get_profile.default_currency }}"
             };
 
-            $('#converted_price').html('(~SGD ' + (fx.convert({{ listing.price }}).toFixed(2)) + ')');
+            $('#converted_price').html('(~{{ user.get_profile.default_currency }} ' + (fx.convert({{ listing.price }}).toFixed(2)) + ')');
 
           }
       );
     });
 </script>
+{% endif %}
 
 <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
 <script src="{{ STATIC_URL }}js/paging.js"></script>

@@ -93,6 +93,7 @@ def update_profile(request):
         'bio': profile.bio,
         'avatar': profile.avatar,
         'address': profile.address,
+        'converted_currency': profile.default_currency,
     }
     form = ProfileForm(request.POST or None, request.FILES or None, initial=initial)
 
@@ -109,6 +110,7 @@ def update_profile(request):
         user.save()
         profile.bio = form.cleaned_data['bio']
         profile.address = form.cleaned_data['address']
+        profile.default_currency = form.cleaned_data['converted_currency']
 
         if form.cleaned_data.get('avatar', None):
             if profile.avatar and form.cleaned_data['avatar'] != profile.avatar:
