@@ -11,10 +11,13 @@ from .models import Payment
 
 @login_required
 def index(request):
-    payments = request.user.payments.filter(is_paid=True).all()
+    payments = set(request.user.payments.filter().all())
+    unpaid_payments = set([p for p in payments if p.is_paid is False])
+    payments = payments.difference(unpaid_payments)
 
     return render(request, 'payments/index.html', {
         'payments': payments,
+        'unpaid_payments': unpaid_payments,
     })
 
 

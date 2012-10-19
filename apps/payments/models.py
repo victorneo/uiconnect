@@ -31,7 +31,7 @@ class Payment(models.Model):
         except Discount.DoesNotExist:
             pass
         else:
-            total -= discount_amt
+            total -= discounted_amt
 
         self.total = total
         return total
@@ -46,7 +46,7 @@ class Payment(models.Model):
 
     @property
     def points_earned(self):
-        return int(self.amount / 10)
+        return int(self.amount_due / 10)
 
     @property
     def payment_date(self):

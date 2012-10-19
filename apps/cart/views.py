@@ -79,6 +79,8 @@ def checkout(request):
                 payment=None)
         except (Discount.DoesNotExist, Payment.DoesNotExist) as e:
             discount = None
+        else:
+            amount -= amount / Decimal(100.0) * Decimal(discount.percentage)
 
     if request.method == 'POST' and request.POST.get('confirm', None):
         payment = Payment(user=request.user, address=cart.address)
