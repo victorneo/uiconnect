@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.contrib.auth.models import User
 from django.db import models
 from paypal.standard.pdt.models import PayPalPDT
@@ -11,10 +12,18 @@ class Payment(models.Model):
     address = models.TextField()
     listings = models.ManyToManyField(Listing, related_name='payments', through='PaymentItem')
 
+    def __init__(self, *args, **kwargs):
+        # cache total
+        self.total = None
+        super(Payment, self).__init__(*args, **kwargs)
+
     @property
     def amount_due(self):
-        total = 0.0
-        for l in listings:
+        if self.total:
+            return self.total
+
+        total = Decimal(0.0)
+        for l in self.listings.all():
             total += l.paymentitem_set.get(payment=self).price
 
         try:
@@ -24,6 +33,7 @@ class Payment(models.Model):
         else:
             total -= discount_amt
 
+        self.total = total
         return total
 
     @property
@@ -55,7 +65,7 @@ class PaymentItem(models.Model):
 
     @property
     def price(self):
-        return self.listing.price * quantity
+        return Decimal(self.listing.price * self.quantity)
 
 
 class Discount(models.Model):

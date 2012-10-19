@@ -6,11 +6,8 @@
 
   {% include 'messages.html' %}
 
-  {% include 'cart/steps.html' with step2=3 %}
+  {% include 'cart/steps.html' with step3=1 %}
 
-  {% if cart.items.count == 0 %}
-  <p>No items in shopping cart.</p>
-  {% else %}
   <div class="row">
     <div class="span10">
       <table id="shopping-cart">
@@ -20,48 +17,33 @@
             <th>Price</th>
           </tr>
         </thead>
-      {% for item in payment.listings.all %}
+      {% for l in payment.listings.all %}
       <tr>
         <td class="span5">
-          {% if item.listing.images.all.0.thumbnail %}
-          <img src="{{item.listing.images.all.0.thumbnail.url}}" width="90" />
+          {% if l.images.all.0.thumbnail %}
+          <img src="{{ l.images.all.0.thumbnail.url }}" width="90" />
           {% endif %}
-          <span style="margin-left: 20px;">{{item.listing.name}}</span>
+          <span style="margin-left: 20px;">{{ l.name }}</span>
         </td>
         <td class="span4">
-          <p>USD {{item.listing.price}}</p>
+          <p>USD {{ l.price }}</p>
         </td>
       </tr>
       {% endfor %}
       <tr>
         <td class="span5">&nbsp;</td>
         <td class="span4">
-          <h5>Total: USD {{ amount }}</h5>
-          {% if amount != cart.total %}
+          <h5>Total: USD {{ payment.amount_due }}</h5>
+          {% if payment.discount %}
           <small>(after discount)</small>
           {% endif %}
         </td>
       </tr>
       </table>
+
+      {{ paypal_form.sandbox }}
     </div>
   </div>
 
-    <h4>Items will be delivered to:</h4>
-    <pre>{{ payment.address|linebreaksbr }}</pre>
-    <small><span class="label label-info">Reminder</span> Ensure that your address is correct before you proceed.</small>
-
-    {% if amount != cart.total %}
-    <h4>Discount code applied</h4>
-    <pre>{{ payment.discount.code }}</pre>
-    <small>This discount code can no longer be used after you proceed with the checkout.</small>
-    {% endif %}
-
-
-    <div class="form-actions">
-      <a class="btn" href="{% url 'cart:view' %}?edit=True">Edit Address or shopping cart</a>
-      <a class="btn btn-primary">Checkout and make payment</a>
-    </div>
-
-  {% endif %}
 {% endblock %}
 

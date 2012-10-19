@@ -47,20 +47,24 @@
   </div>
 
     <h4>Items will be delivered to:</h4>
-    <pre>{{ payment.address|linebreaksbr }}</pre>
+    <pre>{{ cart.address|linebreaksbr }}</pre>
     <small><span class="label label-info">Reminder</span> Ensure that your address is correct before you proceed.</small>
 
-    {% if amount != cart.total %}
+    {% if discount %}
     <h4>Discount code applied</h4>
-    <pre>{{ payment.discount.code }}</pre>
+    <pre>{{ discount.code }}</pre>
     <small>This discount code can no longer be used after you proceed with the checkout.</small>
     {% endif %}
 
 
-    <div class="form-actions">
-      <a class="btn" href="{% url 'cart:view' %}?edit=True">Edit Address or shopping cart</a>
-      <a class="btn btn-primary">Checkout and make payment</a>
-    </div>
+    <form class="form" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="confirm" value="True" />
+      <div class="form-actions">
+        <a class="btn" href="{% url 'cart:view' %}?edit=True">Edit Address or shopping cart</a>
+        <input type="submit" class="btn btn-primary" value="Checkout and make payment" />
+      </div>
+    </form>
 
   {% endif %}
 {% endblock %}

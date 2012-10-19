@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from listings.models import Listing
 from payments.models import Discount, Payment, PaymentItem
-from .forms import AddItemForm, PaymentForm
+from .forms import AddItemForm, CartForm
 from .models import Cart, Item
 
 
@@ -14,6 +14,8 @@ from .models import Cart, Item
 def view(request):
     cart = request.user.cart
     initial = {'address': request.user.get_profile().address}
+    discount = None
+
     if request.GET.get('edit', None):
         try:
             payment = request.user.payments.get(is_paid=False)
@@ -22,12 +24,17 @@ def view(request):
             request.user.payments.filter(is_paid=False).all().delete()
 
         try:
-            discount = payment.discount
-            initial['discount_code'] = discount.code
+            discount = Discount.objects.get(user=request.user,
+                code=cart.discount_code)
         except Discount.DoesNotExist:
             pass
+        else:
+            initial['discount_code'] = cart.discount_code
 
-    form = CartForm(request.POST or None, cancel_url=reverse('listings:categories'), initial=initial)
+    form = CartForm(request.POST or None,
+        cancel_url=reverse('listings:categories'),
+        initial=initial,
+        instance=cart)
 
     if form.is_valid():
         cart = form.save()
@@ -62,6 +69,7 @@ def view(request):
 def checkout(request):
     cart = request.user.cart
     amount = cart.total
+    discount = None
 
     if cart.discount_code:
         try:
@@ -71,8 +79,6 @@ def checkout(request):
                 payment=None)
         except (Discount.DoesNotExist, Payment.DoesNotExist) as e:
             discount = None
-
-    payment = request.user.payments.get(is_paid=False)
 
     if request.method == 'POST' and request.POST.get('confirm', None):
         payment = Payment(user=request.user, address=cart.address)
@@ -89,8 +95,9 @@ def checkout(request):
                     quantity=i.quantity,
                     payment=payment)
 
-            i.listing.quantity -= i.quantity
-            i.listing.save()
+            # TODO deduct quantity
+            # i.listing.quantity -= i.quantity
+            # i.listing.save()
 
         payment.save()
         cart.clear()
@@ -101,7 +108,6 @@ def checkout(request):
 
     return render(request, 'cart/checkout.html', {
         'cart': cart,
-        'payment': payment,
         'discount': discount,
         'amount': amount,
     })

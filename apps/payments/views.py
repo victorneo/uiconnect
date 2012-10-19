@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
+from django.http import Http404
 from django.template import RequestContext
 from django.shortcuts import render, get_object_or_404
 from paypal.standard.forms import PayPalPaymentsForm
@@ -19,9 +20,15 @@ def index(request):
 
 @login_required
 def make_payment(request, payment_id):
-    payment = get_object_or_404(Payment, pk=payment_id)
-    amount = payment.total
+    try:
+        payment = Payment.objects.get(is_paid=False, id=payment_id)
+    except Payment.DoesNotExist:
+        raise Http404
+
+    amount = payment.amount_due
     domain = Site.objects.all()[0].domain
+
+    print payment.listings.all()
 
     paypal_dict = {
         'business': 'seller_1347808967_biz@gmail.com',
@@ -34,7 +41,7 @@ def make_payment(request, payment_id):
     paypal_form = PayPalPaymentsForm(initial=paypal_dict)
 
     return render(request, 'payments/make_payment.html', {
-        'form': form,
+        'paypal_form': paypal_form,
         'payment': payment,
     })
 
