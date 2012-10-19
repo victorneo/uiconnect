@@ -4,10 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from paypal.standard.forms import PayPalPaymentsForm
 from listings.models import Listing
-from payments.models import Discount, Payment
-from .forms import AddItemForm, PaymentForm
+from payments.models import Discount, Payment, PaymentItem
+from .forms import AddItemForm, CartForm
 from .models import Cart, Item
 
 
@@ -15,6 +14,8 @@ from .models import Cart, Item
 def view(request):
     cart = request.user.cart
     initial = {'address': request.user.get_profile().address}
+    discount = None
+
     if request.GET.get('edit', None):
         try:
             payment = request.user.payments.get(is_paid=False)
@@ -23,48 +24,38 @@ def view(request):
             request.user.payments.filter(is_paid=False).all().delete()
 
         try:
-            discount = payment.discount
-            initial['discount_code'] = discount.code
+            discount = Discount.objects.get(user=request.user,
+                code=cart.discount_code)
         except Discount.DoesNotExist:
             pass
+        else:
+            initial['discount_code'] = cart.discount_code
 
-    form = PaymentForm(request.POST or None, cancel_url=reverse('listings:categories'), initial=initial)
+    form = CartForm(request.POST or None,
+        cancel_url=reverse('listings:categories'),
+        initial=initial,
+        instance=cart)
 
     if form.is_valid():
-        # delete any unpaid payments
-        request.user.payments.filter(is_paid=False).all().delete()
-
-        payment = form.save(commit=False)
-        payment.user = request.user
-        payment.save()
+        cart = form.save()
 
         # only save address if it is empty
         if not request.user.get_profile().address:
-            request.user.get_profile().address = payment.address
+            request.user.get_profile().address = cart.address
             request.user.get_profile().save()
-
-        for l in cart.items.all():
-            payment.listings.add(l.listing)
-
-        payment.save()
 
         if form.cleaned_data['discount_code']:
             try:
                 discount = Discount.objects.get(
                     code=form.cleaned_data['discount_code'],
                     user=request.user)
-
-                if not discount.payment or not discount.payment.is_paid:
-                    discount.payment = payment
-                    discount.save()
-                else:
-                    discount = None
-
             except (Discount.DoesNotExist, Payment.DoesNotExist) as e:
                 discount = None
 
             if not discount:
                 messages.error(request, u'Invalid discount code given. No discount applied.')
+            else:
+                cart.discount_code = discount.code
 
         return redirect(reverse('cart:checkout'))
 
@@ -77,31 +68,50 @@ def view(request):
 @login_required
 def checkout(request):
     cart = request.user.cart
-    payment = request.user.payments.get(is_paid=False)
-    domain = Site.objects.all()[0].domain
-
     amount = cart.total
-    try:
-        if payment.discount.percentage > 0:
-            amount -= (amount / Decimal(100) * Decimal(payment.discount.percentage))
-    except Discount.DoesNotExist as e:
-        pass
+    discount = None
 
-    paypal_dict = {
-        'business': 'seller_1347808967_biz@gmail.com',
-        'amount': str(amount),
-        "invoice": "%d" % payment.id,
-        'item_name': 'UIConnect items',
-        'return_url': 'http://%s/payments/pdt' % domain,
-    }
+    if cart.discount_code:
+        try:
+            discount = Discount.objects.get(
+                code=cart.discount_code,
+                user=request.user,
+                payment=None)
+        except (Discount.DoesNotExist, Payment.DoesNotExist) as e:
+            discount = None
+        else:
+            amount -= amount / Decimal(100.0) * Decimal(discount.percentage)
 
-    paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+    if request.method == 'POST' and request.POST.get('confirm', None):
+        payment = Payment(user=request.user, address=cart.address)
+        payment.save()
+
+        if discount:
+            discount.payment = payment
+            discount.save()
+
+        # move listings over to payment and clear the shopping cart
+        for i in cart.items.all():
+            PaymentItem.objects.create(
+                    listing=i.listing,
+                    quantity=i.quantity,
+                    payment=payment)
+
+            # TODO deduct quantity
+            # i.listing.quantity -= i.quantity
+            # i.listing.save()
+
+        payment.save()
+        cart.clear()
+
+        # redirect to payment
+        return redirect(reverse('payments:make_payment',
+                                 kwargs={'payment_id': payment.id}))
 
     return render(request, 'cart/checkout.html', {
         'cart': cart,
-        'payment': payment,
+        'discount': discount,
         'amount': amount,
-        'paypal_form': paypal_form,
     })
 
 

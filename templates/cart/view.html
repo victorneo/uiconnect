@@ -54,14 +54,6 @@
 
   <div>
     {% crispy form %}
-    <p>
-      {% if user.get_profile.address %}
-      We have prepopulated the delivery address based on the one you have given us. Kindly edit the address below if this is intended
-      for another address.
-      {% else %}
-      We will save this address for your future purchases.
-      {% endif %}
-    </p>
   </div>
 
   {% endif %}

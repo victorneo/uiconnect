@@ -37,6 +37,7 @@ def categories(request):
         'categories': categories,
     })
 
+
 def category(request, slug):
     category = get_object_or_404(Category, slug=slug)
     category.display_listings = category.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()
