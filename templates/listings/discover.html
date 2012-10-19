@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block html_head %}
+    <link href="{{STATIC_URL}}css/elastislide.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <h1>discover <small>the newest, the coolest</small></h1>
+
+  <p>bringing you the newest items on sale!</p>
+
+  <ul class="nav nav-pills">
+    <li class="active"><a href="#all" data-toggle="tab" onclick="showItems(0);">All items</a></li>
+    {% for c in categories %}
+    <li><a href="#{{ c.id }}" data-toggle="tab" onclick="showItems({{ c.id }});">{{ c.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <div id="discovery" class="es-carousel-wrapper">
+    <div class="es-carousel">
+      <ul id="items" style="min-height: 190px;">
+        {% for l in listings %}
+        {% if l.images.all.0 %}
+        <li><a href="{% url 'listings:view' l.id %}"><img src="{{ l.images.all.0.formatted_image.url }}" alt="{{ l.name }}" /></a></li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block js_footer %}
+<script src="{{ STATIC_URL }}js/jquery.easing.1.3.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.elastislide.js"></script>
+
+<script>
+
+  $('#discovery').elastislide({
+    imageW  : 200,
+    minItems  : 3,
+    margin    : 2,
+    border    : 0,
+    current   : 12
+  });
+
+  var current = 0;
+  function showItems(category_id){
+    current = category_id;
+    console.log(category_id);
+    $('#items').empty();
+
+    $.get("{% url 'listings:discover_items' %}?category_id="+category_id, function(data){
+      var count = 2000;
+      $.each(data.items, function() {
+        var $item = $('<li style="display:none;"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></li>');
+        $('#items').append($item);
+        count += 1000;
+        $item.fadeIn(count);
+        $('#discovery').elastislide( 'add', $item );
+      });
+    });
+  }
+
+  function doPoll(){
+    $.get('{% url 'listings:discover_new_items' %}?category_id='+current, function(data) {
+    var count = 2000;
+        $.each(data.items, function() {
+          var $item = $('<li style="display:none;"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></li>');
+          $('#items').prepend($item);
+          $item.fadeIn(count + 1000);
+          $('#discovery').elastislide( 'add', $item );
+        });
+        setTimeout(doPoll,30000);
+    });
+  }
+
+  $(document).ready(function(){
+    doPoll();
+  });
+
+</script>
+{% endblock %}
+

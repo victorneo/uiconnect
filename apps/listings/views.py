@@ -1,5 +1,6 @@
 import json
 import urllib
+from datetime import datetime
 from decimal import Decimal
 from operator import attrgetter
 from django.contrib import messages
@@ -26,6 +27,65 @@ def index(request):
     return render(request, 'index.html', {
         'categories': categories,
     })
+
+
+def discover(request):
+    listings = Listing.objects.order_by('-id').all()[:20]
+    categories = Category.objects.all()
+
+    for c in categories:
+        c.display_listings = c.listings.order_by('-id').all()
+
+    return render(request, 'listings/discover.html', {
+        'listings': listings,
+        'categories': categories,
+    })
+
+
+def discover_items(request):
+    category_id = request.GET.get('category_id', 0)
+    try:
+        category = Category.objects.get(id=category_id)
+    except Category.DoesNotExist:
+        category = None
+
+    if category:
+        listings = category.listings.order_by('-id').all()
+    else:
+        listings = Listing.objects.order_by('-id').all()[:20]
+
+    items = [{'thumbnail': l.images.all()[0].formatted_image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
+    data = {'items': items}
+
+    request.session['discover_time'] = datetime.now()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
+
+
+def discover_new_items(request):
+    category_id = request.GET.get('category_id', 0)
+    prev_time = request.session['discover_time']
+
+    try:
+        category = Category.objects.get(id=category_id)
+    except Category.DoesNotExist:
+        category = None
+
+    if category:
+        listings = category.listings.order_by('-id')
+    else:
+        listings = Listing.objects.order_by('-id')
+
+    listings = listings.filter(created_at__gt=prev_time).all()
+
+    items = [{'thumbnail': l.images.all()[0].formatted_image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
+    data = {'items': items}
+
+    request.session['discover_time'] = datetime.now()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
 
 
 def categories(request):
