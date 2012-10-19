@@ -59,6 +59,8 @@ def view(request, listing_id):
     form = CommentForm(request.POST or None)
     commented = None
 
+    comments = listing.comments.order_by('created_at').all()
+
     if form.is_valid() and request.user.is_authenticated():
         comment = form.save(commit=False)
         comment.content_object = listing
@@ -68,6 +70,7 @@ def view(request, listing_id):
 
     return render(request, 'listings/view.html', {
         'listing': listing,
+        'comments': comments,
         'commented': commented,
     })
 
