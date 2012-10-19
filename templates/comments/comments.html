@@ -1,3 +1,4 @@
+{% if comments %}
 <table id="comments" class="table">
 <thead>
 <tr>
@@ -23,6 +24,7 @@
 {% endfor %}
 </tbody>
 </table>
+{% endif %}
 
 {% comment %}
 {% for c in comments %}
