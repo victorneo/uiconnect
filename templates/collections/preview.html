@@ -1,6 +1,7 @@
 {% load url from future %}
 
   {% for c in collections %}
+  {% if table %}<tr><td>{% endif %}
   <div class="collection-preview">
     <a href="{% url 'collections:view' c.id %}">
     <div class="collection-preview-image" {% if c.image %}style="background-image: url('{{ c.image.url }}')"{% endif %}>
@@ -9,4 +10,5 @@
     </div>
     </a>
   </div>
+  {% if table %}</td></tr>{% endif %}
   {% endfor %}

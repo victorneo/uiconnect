@@ -122,27 +122,35 @@
       </p>
 
       {% if user.is_authenticated and listing.user != user %}
+        <h6>interested?</h6>
         {% if listing in user.cart.added_listings %}
           Already in your shopping cart.
         {% else %}
-          <h6>interested?</h6>
-          <form action="{% url 'cart:add' listing.id %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="quantity" value="1" />
-            {% if listing.user != user %}
-            <input type="submit" class="btn btn-large" href="{% url 'cart:add' listing.id %}" style="display: block;" value="Add to Cart" />
-            {% endif %}
-          </form>
+
+          {% if listing.quantity == 0 %}
+            <span class="label label-warning">Sold out - check back later!</span>
+          {% else %}
+
+            <form action="{% url 'cart:add' listing.id %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1" />
+              {% if listing.user != user and listing.quantity > 0 %}
+              <input type="submit" class="btn btn-large" href="{% url 'cart:add' listing.id %}" style="display: block;" value="Add to Cart" />
+              {% if listing.quantity == 1  %}<small>Hurry - only 1 left!</small>{% endif %}
+              {% endif %}
+            </form>
+
+          {% endif %}
+
         {% endif %}
       {% endif %}
     </div>
     <div class="span4">
       <h6>price</h6>
-      <p>USD {{ listing.price }}</p>
+      <p>USD {{ listing.price }} <small id="converted_price"></small></p>
 
       <h6>description</h6>
       <p>{{ listing.description }}</p>
-
 
       {% if user == listing.user %}
       <h6>Owner's menu</h6>
@@ -161,13 +169,14 @@
     <div class="span8 offset2">
       <h6>comments</h6>
 
-      {% if not item.comments.all %}
+      {% if not listing.comments.all %}
         <p>No comments on this item.</p>
       {% endif %}
 
-      {% include 'comments/comments.html' with comments=listing.comments.all viewed_user=listing.user commented=commented %}
+      {% include 'comments/comments.html' with comments=comments viewed_user=listing.user commented=commented %}
 
       {% if user.is_authenticated %}
+      <h6>add your comment</h6>
       <form id="comment-form" class="form-inline" style="text-align: right;" method="POST">
         {% csrf_token %}
         <textarea style="width: 100%; margin-bottom: 5px;" name="content"></textarea>
@@ -226,8 +235,8 @@ $(document).ready(function() {
 </script>
 
 {% include 'follow/follow_js.html' with viewed_user=listing.user %}
-<script src="{{STATIC_URL}}js/lightbox.js"></script>
-<link href="{{STATIC_URL}}css/lightbox.css" rel="stylesheet" />
+<script src="{{ STATIC_URL }}js/lightbox.js"></script>
+<link href="{{ STATIC_URL }}css/lightbox.css" rel="stylesheet" />
 
 {% if commented %}
 <script src="{{ STATIC_URL }}js/jquery.color.js"></script>
@@ -238,5 +247,55 @@ $(document).ready(function() {
   });
 </script>
 {% endif %}
+
+
+{% if user.is_authenticated and user.get_profile.default_currency != 'USD' %}
+<script src="{{ STATIC_URL }}js/money.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+      $.getJSON(
+          'http://openexchangerates.org/api/latest.json?app_id=246942995bab4c39bdfec341f008fbda',
+          function(data) {
+              // Check money.js has finished loading:
+              if ( typeof fx !== "undefined" && fx.rates ) {
+                  fx.rates = data.rates;
+                  fx.base = data.base;
+              } else {
+                  // If not, apply to fxSetup global:
+                  var fxSetup = {
+                      rates : data.rates,
+                      base : data.base
+                  }
+              }
+
+            fx.settings = {
+              from : "USD",
+              to : "{{ user.get_profile.default_currency }}"
+            };
+
+            $('#converted_price').html('(~{{ user.get_profile.default_currency }} ' + (fx.convert({{ listing.price }}).toFixed(2)) + ')');
+
+          }
+      );
+    });
+</script>
+{% endif %}
+
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+<script src="{{ STATIC_URL }}js/paging.js"></script>
+<script>
+  $(document).ready(function() {
+    var tbl = $('#comments').dataTable({
+      "sDom": "<'row'<'span5'l>r>t<'row'<'span0'i><'span6'p>>",
+      "sPaginationType": "bootstrap",
+      "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      "iDisplayLength": 10,
+      "aaSorting": []
+    });
+
+    tbl.fnPageChange('last');
+  });
+</script>
 
 {% endblock %}

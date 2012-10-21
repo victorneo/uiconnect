@@ -199,6 +199,38 @@ PAYPAL_IDENTITY_TOKEN = "wW9IcqvvXDJbK1DK_NSzQY0KdOHltev0LSYQ35qYqdM6N5xcLUQLtju
 FB_CODE = ''
 FB_SECRET = ''
 
+ITEM_BOUGHT_TEMPLATE = '''
+Hello %s,
+
+The following item(s) has been purchased on UIConnect.
+Here is an update on the item on the quantity left:
+
+%s
+
+Thanks!
+
+Team UIConnect
+'''
+
+DISCOUNT_EMAIL_TEMPLATE = '''
+Hello %s,
+
+Below you will find the discount coupon that you have redeemed for
+at trends. Please enter the discount coupon code at the checkout screen
+to enjoy the discount.
+
+Discount code:
+%s
+
+Note: You can only use this discount code once.
+
+
+Thanks and have a nice day!
+
+Team UIConnect
+'''
+
+
 try:
     from local_settings import *
 except:

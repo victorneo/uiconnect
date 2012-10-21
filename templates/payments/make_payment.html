@@ -1,0 +1,51 @@
+{% extends 'listings/dashboard.html' %}
+{% load url from future %}
+
+{% block dashboard_content %}
+  <h3>Payment</h3>
+
+  {% include 'messages.html' %}
+
+  {% include 'cart/steps.html' with step3=1 %}
+
+  <div class="row">
+    <div class="span10">
+      <table id="shopping-cart">
+        <thead style="text-align: left;">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+      {% for l in payment.listings.all %}
+      <tr>
+        <td class="span5">
+          {% if l.images.all.0.thumbnail %}
+          <img src="{{ l.images.all.0.thumbnail.url }}" width="90" />
+          {% endif %}
+          <span style="margin-left: 20px;">{{ l.name }}</span>
+        </td>
+        <td class="span4">
+          <p>USD {{ l.price }}</p>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td class="span5">&nbsp;</td>
+        <td class="span4">
+          <h5>Total: USD {{ payment.amount_due }}</h5>
+          {% if payment.discount %}
+          <small>(after discount)</small>
+          {% endif %}
+        </td>
+      </tr>
+      </table>
+
+      <h4>Pay now with Paypal</h4>
+      {{ paypal_form.sandbox }}
+      <small>You will be redirected back here after your payment.</small>
+    </div>
+  </div>
+
+{% endblock %}
+

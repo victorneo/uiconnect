@@ -17,6 +17,7 @@ class ListingForm(forms.ModelForm):
                 Field('description', css_class='span6'),
                 Field('price', css_class='span6'),
                 Field('categories', css_class='span6'),
+                Field('quantity', css_class='span1'),
             ),
             FormActions(
                 Submit('submit', kwargs.pop('submit_name', u'Add'), css_class='btn btn-primary')

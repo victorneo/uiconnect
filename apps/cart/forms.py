@@ -2,8 +2,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Button, Field
 from crispy_forms.bootstrap import FormActions
-from payments.models import Payment
-from .models import Item
+from .models import Cart, Item
 
 
 class AddItemForm(forms.ModelForm):
@@ -12,24 +11,28 @@ class AddItemForm(forms.ModelForm):
         fields = ('quantity',)
 
 
-class PaymentForm(forms.ModelForm):
-    discount_code = forms.CharField(required=False)
+class CartForm(forms.ModelForm):
+    discount_code = forms.CharField(required=False, help_text=u'Use any discount code you have here.')
+    address = forms.CharField(
+            required=True,
+            widget=forms.Textarea,
+            help_text=u'Enter the full address for the items to be delivered to, including the Country.')
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Fieldset(
                 '',
-                Field('discount_code', css_class='span6'),
+                Field('discount_code', css_class='span4'),
                 Field('address', css_class='span9 delivery-address'),
             ),
             FormActions(
                 HTML('<a class="btn" href="%s">Continue shopping</a> ' % kwargs.pop('cancel_url')),
-                Submit('submit', 'Checkout', css_class='btn btn-success btn-checkout')
+                Submit('submit', 'Proceed to Checkout', css_class='btn btn-primary btn-checkout')
             )
         )
-        super(PaymentForm, self).__init__(*args, **kwargs)
+        super(CartForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        model = Payment
-        fields = ('address',)
+        model = Cart
+        fields = ('address', 'discount_code')

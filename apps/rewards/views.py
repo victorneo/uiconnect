@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Reward
 
 
+@login_required
 def index(request):
     rewards = Reward.objects.all()
     template = 'rewards/index.html'
@@ -28,6 +29,6 @@ def redeem(request, reward_id):
         raise e
         messages.error(request, u'Insufficient points to redeem.')
     else:
-        messages.success(request, u'Redeemed!')
+        messages.success(request, u'Redeemed! You should receive an email shortly with the discount code.')
 
     return redirect(reverse('rewards:index'))

@@ -6,13 +6,27 @@ from imagekit.models.fields import ProcessedImageField
 from imagekit.processors import ResizeToFill
 
 
+CURRENCY_CHOICES = (
+    ('USD', 'US Dollars'),
+    ('SGD', 'Singapore Dollars'),
+    ('GBP', 'Great Britain Pounds'),
+    ('EUR', 'Euros'),
+    ('AUD', 'Australian Dollars'),
+    ('JPY', 'Japanese Yen'),
+)
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     avatar = ProcessedImageField([ResizeToFill(100, 100),], upload_to='avatars', format='PNG', null=True, blank=True, default=None)
     bio = models.TextField(max_length=500, null=True, blank=True)
     following = models.ManyToManyField('self', through='Relationship', related_name='followers', symmetrical=False)
     address = models.TextField(null=True, blank=True)
-
+    default_currency = models.CharField(
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default='USD',
+        help_text=u'Prices are in USD, but can be converted to another currency for your convenience.')
     alternate_login = models.BooleanField(default=False)
     fb_id = models.CharField(max_length=200, null=True, blank=True)
 

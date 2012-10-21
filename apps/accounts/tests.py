@@ -7,8 +7,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
+import requests
+import mock
 from uiconnect import settings
-from .backends import FacebookBackend
+from .backends import FacebookBackend, PersonaBackend
 from .factories import UserFactory, UserProfileFactory
 
 
@@ -126,6 +128,17 @@ class AccountsViewTest(TestCase):
         self.assertTemplateUsed(response, 'accounts/profile.html')
         self.c.logout()
 
+    def test_profile_template_hide_password(self):
+        self.c.login(username=self.user.username, password='1234')
+        self.user.get_profile().alternate_login = True
+        self.user.get_profile().save()
+        response = self.c.get(PROFILE_URL)
+
+        self.assertTemplateUsed(response, 'accounts/profile.html')
+        self.assertContains(response, 'input id="id_password" type="hidden"')
+        self.assertContains(response, 'input id="id_password2" type="hidden"')
+        self.c.logout()
+
     def test_profile_valid_update(self):
         self.c.login(username=self.user.username, password='1234')
         f = File(open(os.path.join(settings.SETTINGS_DIR, '..', 'static', 'tests', 'new_avatar.jpg'), 'r'))
@@ -207,10 +220,10 @@ class AccountsViewTest(TestCase):
 
         response = self.c.get(url)
         self.assertTrue(json.loads(response.content)['success'])
-        self.assertEquals(1, self.user2.get_profile().followers.count())
+        self.assertEquals(1, self.user2.get_profile().get_followers().count())
 
         response = self.c.get(url)
-        self.assertEquals(0, self.user2.get_profile().followers.count())
+        self.assertEquals(0, self.user2.get_profile().get_followers().count())
 
     def test_follow_ownself(self):
         url = reverse('accounts:follow', kwargs={'user_id': self.user.id})
@@ -255,8 +268,33 @@ class AccountsViewTest(TestCase):
         response = self.c.get(url)
         self.assertRedirects(response, FOLLOWING_URL)
 
+    def test_view_valid_profile(self):
+        url = reverse('accounts:view_profile', kwargs={'user_id': self.user.id})
+        response = self.c.get(url)
 
-class AccountsUnitTest(TestCase):
+        self.assertTemplateUsed(response, 'accounts/view.html')
+
+    def test_view_invalid_profile(self):
+        url = reverse('accounts:view_profile', kwargs={'user_id': 9999})
+        response = self.c.get(url)
+
+        self.assertEquals(404, response.status_code)
+
+    def test_avatar_valid(self):
+        url = reverse('accounts:avatar')
+        response = self.c.get(url + '?username=%s' % self.user.username)
+
+        data = json.loads(response.content)
+        self.assertEquals(self.user.get_profile().avatar.url, data['url'])
+
+    def test_avatar_invalid(self):
+        url = reverse('accounts:avatar')
+        response = self.c.get(url + '?username=ahhahahahaha')
+
+        self.assertEquals('', response.content)
+
+
+class AccountsFacebookBackendUnitTest(TestCase):
     def setUp(self):
         self.user = UserFactory.build()
         self.user.set_password('1234')
@@ -279,3 +317,53 @@ class AccountsUnitTest(TestCase):
 
     def test_get_user_invalid(self):
         self.assertEquals(None, self.backend.get_user(user_id=1234))
+
+
+class RequestResponse(object):
+    pass
+
+
+def requests_post(url, data, verify=False):
+    obj = RequestResponse()
+    out_data = {'status': 'okay', 'email': 'persona@user.com'}
+    if data['assertion'] == '12345678':
+        obj.ok = True
+        obj.content = str(json.JSONEncoder().encode(out_data))
+    else:
+        obj.ok = False
+
+    return obj
+
+
+class AccountsPersonaBackendUnitTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory.build(email='persona@user.com')
+        self.user.set_password('1234')
+        self.user.save()
+
+        p = self.user.get_profile()
+        p.alternate_login = True
+        p.save()
+
+        self.backend = PersonaBackend()
+
+    def test_authenticate_valid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(self.user, self.backend.authenticate(assertion='12345678'))
+
+    def test_authenticate_valid_create_new(self):
+        self.user.delete()
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals('persona@user.com', self.backend.authenticate(assertion='12345678').email)
+
+    def test_authenticate_invalid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(None, self.backend.authenticate(assertion='asd'))
+
+    def test_get_user_valid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(self.user, self.backend.get_user(user_id=self.user.id))
+
+    def test_get_user_invalid(self):
+        with mock.patch.object(requests, 'post', requests_post):
+            self.assertEquals(None, self.backend.get_user(user_id=1234))

@@ -6,7 +6,7 @@
 
   {% include 'messages.html' %}
 
-  {% if not payments %}
+  {% if not payments and not unpaid_payments %}
   <p>You have not bought anything from us.</p>
   {% else %}
 
@@ -14,13 +14,46 @@
 
   <p>For enquires, please email <a href="mailto:payment@uiconnect.com">payment@uiconnect.com</a>. Kindly quote the reference number in your email.</p>
 
+  {% if unpaid_payments %}
+  <h4>Pending payments</h4>
+  <div class="accordion" id="accordion2">
+
+    {% for p in unpaid_payments %}
+    <div class="accordion-group">
+      <div class="accordion-heading payment-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ p.id }}">
+          USD {{ p.amount_due }} unpaid.
+        </a>
+      </div>
+      <div id="collapse{{ p.id }}" class="accordion-body collapse">
+        <div class="accordion-inner">
+          {% if p.discount %}<small>Discount coupon {{ p.discount.code }} used</small>{% endif %}
+          <h4>Delivery Address</h4>
+          <p>
+            Items will be delivered to:<br />
+            {{ p.address }}
+          </p>
+          <h4>Items bought</h4>
+          {% include 'listings/thumbnails.html' with listings=p.listings.all %}
+          <a style="display: inline;" class="btn btn-primary" href="{% url 'payments:make_payment' p.id %}">Pay now</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% endif %}
+
+  {% if payments %}
+  <h4>Completed payments</h4>
   <div class="accordion" id="accordion2">
 
     {% for p in payments %}
     <div class="accordion-group">
       <div class="accordion-heading payment-heading">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ p.id }}">
-          <strong>Transaction Reference {{ p.transaction_id }}</strong>, USD {{ p.amount }} paid on {{ p.payment_date }}.
+          <strong>Transaction Reference {{ p.transaction_id }}</strong>, USD {{ p.amount_due }} paid on {{ p.payment_date }}.
         </a>
       </div>
       <div id="collapse{{ p.id }}" class="accordion-body collapse">
@@ -39,6 +72,7 @@
     {% endfor %}
 
   </div>
+  {% endif %}
 
   {% endif %}
 {% endblock %}

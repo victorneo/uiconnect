@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.contrib.auth.models import User
 from django.db import models
 from paypal.standard.pdt.models import PayPalPDT
@@ -9,10 +10,34 @@ class Payment(models.Model):
     pdt = models.OneToOneField(PayPalPDT, blank=True, null=True)
     is_paid = models.BooleanField(default=False)
     address = models.TextField()
-    listings = models.ManyToManyField(Listing, related_name='payments')
+    listings = models.ManyToManyField(Listing, related_name='payments', through='PaymentItem')
+
+    def __init__(self, *args, **kwargs):
+        # cache total
+        self.total = None
+        super(Payment, self).__init__(*args, **kwargs)
 
     @property
-    def amount(self):
+    def amount_due(self):
+        if self.total:
+            return self.total
+
+        total = Decimal(0.0)
+        for l in self.listings.all():
+            total += l.paymentitem_set.get(payment=self).price
+
+        try:
+            discounted_amt = self.discount.percentage * (total / 100)
+        except Discount.DoesNotExist:
+            pass
+        else:
+            total -= discounted_amt
+
+        self.total = total
+        return total
+
+    @property
+    def amount_paid(self):
         return self.pdt.mc_gross
 
     @property
@@ -21,7 +46,7 @@ class Payment(models.Model):
 
     @property
     def points_earned(self):
-        return int(self.amount / 10)
+        return int(self.amount_due / 10)
 
     @property
     def payment_date(self):
@@ -31,6 +56,16 @@ class Payment(models.Model):
         profile = self.user.get_profile()
         profile.points += self.points_earned
         profile.save()
+
+
+class PaymentItem(models.Model):
+    listing = models.ForeignKey(Listing)
+    payment = models.ForeignKey(Payment)
+    quantity = models.IntegerField(default=1)
+
+    @property
+    def price(self):
+        return Decimal(self.listing.price * self.quantity)
 
 
 class Discount(models.Model):

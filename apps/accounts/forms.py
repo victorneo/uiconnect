@@ -2,6 +2,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Button, Field
 from crispy_forms.bootstrap import FormActions
+from .models import CURRENCY_CHOICES
 
 
 class ForgotPasswordForm(forms.Form):
@@ -110,6 +111,7 @@ class ProfileForm(forms.Form):
     bio = forms.CharField(max_length=400, required=False, widget=forms.Textarea)
     avatar = forms.ImageField(required=False)
     address = forms.CharField(required=False, widget=forms.Textarea)
+    converted_currency= forms.ChoiceField(choices=CURRENCY_CHOICES, help_text=u'Prices are in USD, but can be converted to another currency for your convenience.')
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -124,6 +126,7 @@ class ProfileForm(forms.Form):
                 Field('bio', css_class='span6'),
                 Field('address', css_class='span6'),
                 Field('avatar', css_class='span6'),
+                Field('converted_currency', css_class='span3'),
             ),
             FormActions(
                 Submit('submit', 'Update', css_class='btn btn-primary')

@@ -9,7 +9,7 @@
 
     {% if user.is_authenticated %}
     <p>You have {{ user.get_profile.points }} points. <small>(<a href="#" data-target="#redeemHelp" data-toggle="modal">How do I earn points?</a>)</small></p>
-    <p>If you do not receive your e-voucher within three working days, please contact <a href="mailto:support@uiconnect.com">support@uiconnect.com</a>.</p>
+    <p>If you do not receive your voucher or discount code within three working days, please contact <a href="mailto:support@uiconnect.com">support@uiconnect.com</a>.</p>
     {% endif %}
 
     <ul id="reward-thumbnails" class="thumbnails">
@@ -41,7 +41,7 @@
                 <div class="modal-body">
                   <img src="{{ r.formatted_image.url }}" style="display: block; margin-left: auto; margin-right: auto;" />
                   <p>{{ r.description }}</p>
-                  <p>You will receive an email from us with the voucher code.</p>
+                  <p>You will receive an email from us with the {% if r.reward_type == 'V' %}voucher{% else %}discount{% endif %} code.</p>
                 </div>
                 <div class="modal-footer">
                   <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>

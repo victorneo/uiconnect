@@ -1,5 +1,6 @@
 import json
 import urllib
+from datetime import datetime
 from decimal import Decimal
 from operator import attrgetter
 from django.contrib import messages
@@ -13,8 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 from categories.models import Category
 from comments.forms import CommentForm
 from .forms import (ListingForm, AddImageForm,
-        CollectionForm, AddCollectionListingsForm,
-        CaptionForm)
+                    CollectionForm, AddCollectionListingsForm,
+                    CaptionForm)
 from .models import Listing, ListingImage, Collection
 
 
@@ -28,18 +29,85 @@ def index(request):
     })
 
 
+def discover(request):
+    listings = Listing.objects.order_by('-id').all()[:20]
+    categories = Category.objects.all()
+
+    for c in categories:
+        c.display_listings = c.listings.order_by('-id').all()
+
+    return render(request, 'listings/discover.html', {
+        'listings': listings,
+        'categories': categories,
+    })
+
+
+def discover_items(request):
+    category_id = request.GET.get('category_id', 0)
+    try:
+        category = Category.objects.get(id=category_id)
+    except Category.DoesNotExist:
+        category = None
+
+    if category:
+        listings = category.listings.order_by('-id').all()
+    else:
+        listings = Listing.objects.order_by('-id').all()[:20]
+
+    items = [{'thumbnail': l.images.all()[0].formatted_image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
+    data = {'items': items}
+
+    request.session['discover_time'] = datetime.now()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
+
+
+def discover_new_items(request):
+    category_id = request.GET.get('category_id', 0)
+    prev_time = request.session['discover_time']
+
+    try:
+        category = Category.objects.get(id=category_id)
+    except Category.DoesNotExist:
+        category = None
+
+    if category:
+        listings = category.listings.order_by('-id')
+    else:
+        listings = Listing.objects.order_by('-id')
+
+    listings = listings.filter(created_at__gt=prev_time).all()
+
+    items = [{'thumbnail': l.images.all()[0].formatted_image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
+    data = {'items': items}
+
+    request.session['discover_time'] = datetime.now()
+
+    return HttpResponse(json.JSONEncoder().encode(data),
+                        content_type='application/json')
+
+
 def categories(request):
     categories = Category.objects.all()
     for c in categories:
-        c.display_listings = c.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()[:4]
+        c.display_listings = c.listings.annotate(num_likes=Count('likes'))\
+            .order_by('-num_likes')\
+            .filter(quantity__gte=1)\
+            .all()[:4]
 
     return render(request, 'listings/categories.html', {
         'categories': categories,
     })
 
+
 def category(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    category.display_listings = category.listings.annotate(num_likes=Count('likes')).order_by('-num_likes').all()
+    category.display_listings = category.listings\
+        .annotate(num_likes=Count('likes'))\
+        .order_by('-num_likes')\
+        .filter(quantity__gte=1)\
+        .all()
 
     return render(request, 'listings/category.html', {
         'category': category,
@@ -51,6 +119,8 @@ def view(request, listing_id):
     form = CommentForm(request.POST or None)
     commented = None
 
+    comments = listing.comments.order_by('created_at').all()
+
     if form.is_valid() and request.user.is_authenticated():
         comment = form.save(commit=False)
         comment.content_object = listing
@@ -60,6 +130,7 @@ def view(request, listing_id):
 
     return render(request, 'listings/view.html', {
         'listing': listing,
+        'comments': comments,
         'commented': commented,
     })
 
@@ -69,8 +140,9 @@ def dashboard(request):
     updates = []
     following_users = request.user.get_profile().following.all()
     if following_users.count() > 0:
-        updates = list(Listing.objects.filter(user__in=following_users).order_by('-created_at').all()[:20])
-        updates.extend(list(Collection.objects.filter(user__in=following_users).order_by('-created_at').all()[:20]))
+        updates = list(Listing.objects.filter(user__profile__in=following_users)\
+                        .order_by('-created_at').all()[:20])
+        updates.extend(list(Collection.objects.filter(user__profile__in=following_users).order_by('-created_at').all()[:20]))
 
         updates = sorted(updates, key=attrgetter('created_at'), reverse=True)
 
@@ -232,7 +304,7 @@ def view_collections(request):
     else:
         qs = qs.filter(is_featured=True)
 
-    collections = qs.all()[:10]
+    collections = qs.all()
 
     return render(request, 'collections/collections.html', {
         'type': col_type,

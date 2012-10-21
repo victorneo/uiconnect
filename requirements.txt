@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 Django==1.4.1
 
+=======
+Django==1.4.2
+>>>>>>> 82ac3734702aaa8ed04cdd8527eb3aec1f4d0a7b
 Fabric==1.4.3
 
 PIL==1.1.7
@@ -25,7 +29,11 @@ facebook-sdk==0.3.2
 logilab-astng==0.24.0
 
 logilab-common==0.58.1
+<<<<<<< HEAD
 
+=======
+mock==1.0b1
+>>>>>>> 82ac3734702aaa8ed04cdd8527eb3aec1f4d0a7b
 nose==1.2.1
 
 pycrypto==2.6

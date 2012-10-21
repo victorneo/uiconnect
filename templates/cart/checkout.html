@@ -46,23 +46,25 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="span5">
-    <h4>Delivery Address</h4>
-      <p>
-        <span class="label label-info">Heads up!</span><br />
-        Please check that the delivery address is correct.<br />
-        We are not responsible if the item is delivered to the wrong address.
-      </p>
-      <h5>Items will be delivered to:</h5>
-      <p>{{ payment.address|linebreaksbr }}</p>
-      <a class="btn" href="{% url 'cart:view' %}?edit=True">Edit Address or shopping cart</a>
-    </div>
-    <div class="span4">
-      <h4>Make payment</h4>
-      {{ paypal_form.sandbox }}
-    </div>
-  </div>
+    <h4>Items will be delivered to:</h4>
+    <pre>{{ cart.address|linebreaksbr }}</pre>
+    <small><span class="label label-info">Reminder</span> Ensure that your address is correct before you proceed.</small>
+
+    {% if discount %}
+    <h4>Discount code applied</h4>
+    <pre>{{ discount.code }}</pre>
+    <small>This discount code can no longer be used after you proceed with the checkout.</small>
+    {% endif %}
+
+
+    <form class="form" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="confirm" value="True" />
+      <div class="form-actions">
+        <a class="btn" href="{% url 'cart:view' %}?edit=True">Edit Address or shopping cart</a>
+        <input type="submit" class="btn btn-primary" value="Checkout and make payment" />
+      </div>
+    </form>
 
   {% endif %}
 {% endblock %}

@@ -2,6 +2,9 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('listings.views',
     url(r'^add/$', 'add', name='add'),
+    url(r'^discover/$', 'discover', name='discover'),
+    url(r'^discover-items/$', 'discover_items', name='discover_items'),
+    url(r'^discover-new-items/$', 'discover_new_items', name='discover_new_items'),
     url(r'^aviary-post/(?P<image_id>[\d]+)/$', 'aviary_post', name='aviary_post'),
     url(r'^categories/(?P<slug>[-\w]+)/$', 'category', name='category'),
     url(r'^categories/', 'categories', name='categories'),

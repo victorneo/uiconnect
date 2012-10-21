@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
+from django.http import Http404
 from django.template import RequestContext
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.pdt.models import PayPalPDT
 from paypal.standard.pdt.forms import PayPalPDTForm
 from .models import Payment
@@ -8,10 +11,41 @@ from .models import Payment
 
 @login_required
 def index(request):
-    payments = request.user.payments.filter(is_paid=True).all()
+    payments = set(request.user.payments.filter().all())
+    unpaid_payments = set([p for p in payments if p.is_paid is False])
+    payments = payments.difference(unpaid_payments)
 
     return render(request, 'payments/index.html', {
         'payments': payments,
+        'unpaid_payments': unpaid_payments,
+    })
+
+
+@login_required
+def make_payment(request, payment_id):
+    try:
+        payment = Payment.objects.get(is_paid=False, id=payment_id)
+    except Payment.DoesNotExist:
+        raise Http404
+
+    amount = payment.amount_due
+    domain = Site.objects.all()[0].domain
+
+    print payment.listings.all()
+
+    paypal_dict = {
+        'business': 'seller_1347808967_biz@gmail.com',
+        'amount': str(amount),
+        "invoice": "%d" % payment.id,
+        'item_name': 'trends items',
+        'return_url': 'http://%s/payments/pdt' % domain,
+    }
+
+    paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+    return render(request, 'payments/make_payment.html', {
+        'paypal_form': paypal_form,
+        'payment': payment,
     })
 
 
