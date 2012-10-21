@@ -39,7 +39,7 @@ class PaymentsUnitTest(TestCase):
         self.c.login(username=self.user.username, password='1234')
 
     def test_amount(self):
-        self.assertEquals(333, self.payment.amount)
+        self.assertEquals(333, self.payment.amount_paid)
 
     def test_transaction_id(self):
         self.assertEquals(123, self.payment.transaction_id)

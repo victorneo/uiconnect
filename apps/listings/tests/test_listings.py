@@ -70,6 +70,7 @@ class ListingViewTest(TestCase):
             'name': 'ListingAddValid',
             'description': 'Desc for ListingAddValid',
             'price': 111,
+            'quantity': 1,
             'categories': '%d' % category.id,
         }
 
@@ -156,6 +157,7 @@ class ListingViewTest(TestCase):
             'name': 'Update Listing',
             'description': 'Desc for Update listing',
             'price': 222.0,
+            'quantity': 1,
             'categories': '%d' % category.id,
         }
 
@@ -178,6 +180,7 @@ class ListingViewTest(TestCase):
             'name': '',
             'description': 'Desc for Update listing',
             'price': 222.0,
+            'quantity': 1,
             'categories': '%d' % category.id,
         }
 
