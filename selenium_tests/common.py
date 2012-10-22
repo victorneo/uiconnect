@@ -3,9 +3,9 @@ import os
 
 def login(driver, self, username, pwd):
     driver.get(self.base_url)
-    driver.find_element_by_link_text("LOGIN").click()
-    try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
-    except AssertionError as e: self.verificationErrors.append(str(e))
+    driver.find_element_by_link_text("LOGIN").click()   
+    
+    verifylogin(driver, self)
     driver.find_element_by_id("id_username").clear()
     driver.find_element_by_id("id_username").send_keys(username)
     driver.find_element_by_id("id_password").clear()
@@ -14,6 +14,19 @@ def login(driver, self, username, pwd):
     
     try: self.assertEqual("Dashboard", driver.find_element_by_css_selector("h1").text)
     except AssertionError as e: self.verificationErrors.append(str(e))
+    
+def verifylogin(driver, self):
+    try: self.assertEqual("Login", driver.find_element_by_css_selector("h3").text)
+    except AssertionError as e: self.verificationErrors.append(str(e))
+    try: self.assertEqual("", driver.find_element_by_id("user-avatar").text)
+    except AssertionError as e: self.verificationErrors.append(str(e))
+    self.assertTrue("Forgot your password?" in driver.find_element_by_tag_name("body").text)    
+    try: self.assertEqual("Alternative logins", driver.find_element_by_css_selector("h6").text)
+    except AssertionError as e: self.verificationErrors.append(str(e))
+    try: self.assertEqual("", driver.find_element_by_css_selector("a > img").text)
+    except AssertionError as e: self.verificationErrors.append(str(e))
+    try: self.assertEqual("", driver.find_element_by_id("persona-signin").text)
+    except AssertionError as e: self.verificationErrors.append(str(e))    
     
 def additem(driver, self):
     driver.find_element_by_link_text("Add Item").click()
