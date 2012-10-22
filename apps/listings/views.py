@@ -50,11 +50,13 @@ def discover_items(request):
         category = None
 
     if category:
-        listings = category.listings.order_by('-id').all()
+        listings = category.listings.order_by('-id')
     else:
-        listings = Listing.objects.order_by('-id').all()[:20]
+        listings = Listing.objects.order_by('-id')
 
-    items = [{'thumbnail': l.images.all()[0].formatted_image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
+    listings = listings.annotate(img_count=Count('images')).filter(img_count__gt=0).all()[:20]
+
+    items = [{'thumbnail': l.images.all()[0].image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
     data = {'items': items}
 
     request.session['discover_time'] = datetime.now()
@@ -77,9 +79,9 @@ def discover_new_items(request):
     else:
         listings = Listing.objects.order_by('-id')
 
-    listings = listings.filter(created_at__gt=prev_time).all()
+    listings = listings.annotate(img_count=Count('images')).filter(created_at__gt=prev_time,img_count__gt=0).all()
 
-    items = [{'thumbnail': l.images.all()[0].formatted_image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
+    items = [{'thumbnail': l.images.all()[0].image.url, 'url': reverse('listings:view', kwargs={'listing_id': l.id})} for l in listings if l.images.count() > 0]
     data = {'items': items}
 
     request.session['discover_time'] = datetime.now()
