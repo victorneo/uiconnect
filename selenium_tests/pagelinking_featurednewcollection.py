@@ -13,12 +13,13 @@ class PagelinkingFeaturednewcollection(unittest.TestCase):
         self.verificationErrors = []
     
     def test_pagelinking_featurednewcollection(self):
-        driver = self.driver
+        driver = self.driver               
         login(driver, self, "zgal", "asd") 
         
         #simulate new collection, differentiate featured collection and new collection# 
         addcollection(driver, self)
         
+        #featured collection       
         try: self.assertEqual("Featured collections", driver.find_element_by_link_text("Featured collections").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("Featured collections").click()
@@ -26,12 +27,12 @@ class PagelinkingFeaturednewcollection(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e))     
         self.assertTrue("testcollection" not in driver.find_element_by_tag_name("body").text)        
         self.assertTrue("Harry Potter Book Series" in driver.find_element_by_tag_name("body").text)
-        
-        
+                
         driver.find_element_by_css_selector("div.collection-preview-image").click()
         try: self.assertEqual("Harry Potter Book Series", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
+        #new collection
         try: self.assertEqual("New collections", driver.find_element_by_link_text("New collections").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("New collections").click()
@@ -40,11 +41,11 @@ class PagelinkingFeaturednewcollection(unittest.TestCase):
         self.assertTrue("testcollection" in driver.find_element_by_tag_name("body").text)        
         self.assertTrue("Harry Potter Book Series" in driver.find_element_by_tag_name("body").text)
         
-        driver.find_element_by_xpath("//div[@id='tabContent']/div[2]/a/div").click()
+        driver.find_element_by_css_selector("div.collection-preview-image").click()        
         try: self.assertEqual("Harry Potter Book Series", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         driver.find_element_by_link_text("New collections").click()
-        driver.find_element_by_css_selector("div.collection-preview-image").click()
+        driver.find_element_by_xpath("//table[@id='collections']/tbody/tr[2]/td/div/a/div").click()
         try: self.assertEqual("testcollection", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))           
         

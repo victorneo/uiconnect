@@ -17,50 +17,51 @@
     {% endfor %}
   </ul>
 
-  <div id="discovery" class="es-carousel-wrapper">
-    <div class="es-carousel">
-      <ul id="items" style="min-height: 190px;">
-        {% for l in listings %}
-        {% if l.images.all.0 %}
-        <li><a href="{% url 'listings:view' l.id %}"><img src="{{ l.images.all.0.formatted_image.url }}" alt="{{ l.name }}" /></a></li>
-        {% endif %}
-        {% endfor %}
-      </ul>
+  <div id="container" class="clearfix">
+    {% for l in listings %}
+    {% if l.images.all.0.image %}
+    <div class="box photo col3">
+      <a href="{% url 'listings:view' l.id  %}"><img src="{{ l.images.all.0.image.url }}" alt="{{ l.name }}" /></a>
     </div>
+    {% endif %}
+    {% endfor %}
   </div>
 
 
 {% endblock %}
 
 {% block js_footer %}
-<script src="{{ STATIC_URL }}js/jquery.easing.1.3.js"></script>
-<script src="{{ STATIC_URL }}js/jquery.elastislide.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.masonry.min.js"></script>
 
 <script>
 
-  $('#discovery').elastislide({
-    imageW  : 200,
-    minItems  : 3,
-    margin    : 2,
-    border    : 0,
-    current   : 12
+  var $container = $('#container');
+
+  $container.imagesLoaded( function(){
+    $container.masonry({
+      itemSelector : '.box',
+      isAnimated: true,
+      animationOptions: {
+        duration: 500,
+        easing: 'linear',
+        queue: false
+      }
+    });
   });
 
   var current = 0;
+
   function showItems(category_id){
     current = category_id;
-    console.log(category_id);
-    $('#items').empty();
-
-    $.get("{% url 'listings:discover_items' %}?category_id="+category_id, function(data){
-      var count = 2000;
-      $.each(data.items, function() {
-        var $item = $('<li style="display:none;"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></li>');
-        $('#items').append($item);
-        count += 1000;
-        $item.fadeIn(count);
-        $('#discovery').elastislide( 'add', $item );
-      });
+    $('#container').empty();
+    var count = 500;
+    $.get('{% url 'listings:discover_items' %}?category_id='+category_id, function(data) {
+        $.each(data.items, function() {
+          var $item = $('<div class="box photo col3"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></div>');
+          $('#container').append( $item ).masonry( 'reload' );
+          $item.fadeIn(count);
+          count += 1000;
+        });
     });
   }
 
@@ -68,10 +69,9 @@
     $.get('{% url 'listings:discover_new_items' %}?category_id='+current, function(data) {
     var count = 2000;
         $.each(data.items, function() {
-          var $item = $('<li style="display:none;"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></li>');
-          $('#items').prepend($item);
+          var $item = $('<div class="box photo col3"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></div>');
+          $('#container').prepend( $item ).masonry( 'reload' );
           $item.fadeIn(count + 1000);
-          $('#discovery').elastislide( 'add', $item );
         });
         setTimeout(doPoll,30000);
     });

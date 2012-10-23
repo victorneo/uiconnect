@@ -23,6 +23,7 @@ class UpdateprofileValidnameandemail(unittest.TestCase):
         driver.find_element_by_id("id_name").send_keys("tester")
         driver.find_element_by_id("id_email").clear()
         driver.find_element_by_id("id_email").send_keys("test@test.com")
+        Select(driver.find_element_by_id("id_converted_currency")).select_by_visible_text("Singapore Dollars")        
         driver.find_element_by_id("submit-id-submit").click()
         
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
@@ -32,17 +33,38 @@ class UpdateprofileValidnameandemail(unittest.TestCase):
         except AssertionError as e: self.verificationErrors.append(str(e))
         try: self.assertEqual("test@test.com", driver.find_element_by_id("id_email").get_attribute("value"))
         except AssertionError as e: self.verificationErrors.append(str(e))
-          
+        
+        driver.find_element_by_link_text("All Categories").click()
+        try: self.assertEqual("All Categories", driver.find_element_by_link_text("All Categories").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))  
+        driver.find_element_by_css_selector("img[alt=\"6-inch Black Heel\"]").click()
+        try: self.assertEqual("6-inch Black Heel", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e)) 
+        self.assertTrue("SGD" in driver.find_element_by_tag_name("body").text)
+                         
         #manual revert/cleanup#
+        driver.find_element_by_link_text("TESTER").click()
+        try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))         
         driver.find_element_by_id("id_name").clear()
         driver.find_element_by_id("id_name").send_keys("Mabel")
         driver.find_element_by_id("id_email").clear()
         driver.find_element_by_id("id_email").send_keys("zgal@zgal.com")
+        Select(driver.find_element_by_id("id_converted_currency")).select_by_visible_text("US Dollars")
         driver.find_element_by_id("submit-id-submit").click()
         
         try: self.assertEqual("Profile", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e)) 
-        self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("Your profile has been updated." in driver.find_element_by_tag_name("body").text)        
+        
+        driver.find_element_by_link_text("All Categories").click()
+        try: self.assertEqual("All Categories", driver.find_element_by_link_text("All Categories").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))  
+        driver.find_element_by_css_selector("img[alt=\"6-inch Black Heel\"]").click()
+        try: self.assertEqual("6-inch Black Heel", driver.find_element_by_css_selector("h1").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))          
+        try: self.assertEqual("USD 49.9", driver.find_element_by_xpath("//div[@id='listing-info']/div[2]/p").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
         
         driver.find_element_by_link_text("LOGOUT").click()
     

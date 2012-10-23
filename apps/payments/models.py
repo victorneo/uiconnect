@@ -46,7 +46,7 @@ class Payment(models.Model):
 
     @property
     def points_earned(self):
-        return int(self.amount_due / 10)
+        return int(self.amount_paid / 10)
 
     @property
     def payment_date(self):

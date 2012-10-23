@@ -150,6 +150,8 @@ class AccountsViewTest(TestCase):
             'email': 'asd@asd.com',
             'bio': 'New Bio for New Name',
             'avatar': f,
+            'converted_currency': 'SGD',
+            'address': 'Somewhere',
         }
 
         response = self.c.post(PROFILE_URL, data)
@@ -159,6 +161,8 @@ class AccountsViewTest(TestCase):
         self.assertEquals(data['name'], u.first_name)
         self.assertEquals(data['email'], u.email)
         self.assertEquals(data['bio'], u.get_profile().bio)
+        self.assertEquals(data['converted_currency'], u.get_profile().default_currency)
+        self.assertEquals(data['address'], u.get_profile().address)
         self.assertTrue(authenticate(username=self.user.username, password=data['password']))
 
     def test_profile_valid_update_clear_avatar(self):
@@ -171,6 +175,7 @@ class AccountsViewTest(TestCase):
             'email': 'asd@asd.com',
             'bio': 'New Bio for New Name',
             'avatar': '',
+            'converted_currency': 'SGD',
             'avatar-clear': True,
         }
 
@@ -188,6 +193,7 @@ class AccountsViewTest(TestCase):
             'password2': 'abc',
             'email': '',
             'bio': 'New Bio for New Name',
+            'converted_currency': 'SGD',
             'avatar': '',
         }
 
