@@ -5,39 +5,40 @@ from selenium.common.exceptions import NoSuchElementException
 import unittest, time, re
 from common import login
 
-class Itemadd_Allempty(unittest.TestCase):
+class Itemadd_Invalidquantity(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         self.base_url = "http://127.0.0.1:8000/"
         self.verificationErrors = []
     
-    def test_itemadd_allempty(self):
+    def test_itemadd_invalidqty(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")
         
         driver.find_element_by_link_text("Add Item").click()
         try: self.assertEqual("Add Item", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("1", driver.find_element_by_id("id_quantity").get_attribute("value"))
-        except AssertionError as e: self.verificationErrors.append(str(e))  
+        driver.find_element_by_id("id_name").clear()
+        driver.find_element_by_id("id_name").send_keys("test")
+        driver.find_element_by_id("id_description").clear()
+        driver.find_element_by_id("id_description").send_keys("testing 123")
+        driver.find_element_by_id("id_price").clear()
+        driver.find_element_by_id("id_price").send_keys("123")
         driver.find_element_by_id("id_quantity").clear()
+        driver.find_element_by_id("id_quantity").send_keys("asd")
+        select = Select(driver.find_element_by_id("id_categories"))        
+        select.select_by_visible_text("Fashion")
+        select.select_by_visible_text("Electronic & IT Gadget")
         driver.find_element_by_id("submit-id-submit").click()
-        
+      
         try: self.assertEqual("Add Item", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_name > strong").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_description > strong").text)       
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_price > strong").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_categories > strong").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_quantity > strong").text)
+        try: self.assertEqual("Enter a whole number.", driver.find_element_by_css_selector("#error_1_id_quantity > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
-        driver.find_element_by_link_text("LOGOUT").click()        
+        driver.find_element_by_link_text("LOGOUT").click()
+        
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)

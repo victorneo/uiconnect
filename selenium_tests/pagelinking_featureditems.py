@@ -25,8 +25,8 @@ class PagelinkingFeatureditems(unittest.TestCase):
         verifyfeatureditem(driver, self)
         driver.find_element_by_link_text("Books").click()
         driver.find_element_by_css_selector("#booksCarousel > div.carousel-inner > div.item.active > a > img.listing-image").click()
-        self.assertTrue("Harry Potter and the Chamber of Secrets" in driver.find_element_by_tag_name("body").text)
-        try: self.assertEqual("Harry Potter and the Chamber of Secrets", driver.find_element_by_css_selector("h1").text)
+        self.assertTrue("Harry Potter and the Prisoner of Azkaban" in driver.find_element_by_tag_name("body").text)
+        try: self.assertEqual("Harry Potter and the Prisoner of Azkaban", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
         verifyfeatureditem(driver, self)
