@@ -34,9 +34,11 @@ class ItemdetailOwn(unittest.TestCase):
         
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
+        self.assertTrue("No comments on this item." in driver.find_element_by_tag_name("body").text)        
         driver.find_element_by_name("content").clear()
         driver.find_element_by_name("content").send_keys("testing owner comments...")
         driver.find_element_by_css_selector("input.btn").click()
+        self.assertTrue("No comments on this item." not in driver.find_element_by_tag_name("body").text)        
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("testing owner comments..." in driver.find_element_by_tag_name("body").text)   

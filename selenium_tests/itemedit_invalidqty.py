@@ -5,52 +5,41 @@ from selenium.common.exceptions import NoSuchElementException
 import unittest, time, re
 from common import login, additem, deleteitem
 
-class Itemedit_Allempty(unittest.TestCase):
+class Itemedit_Invalidqty(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         self.base_url = "http://127.0.0.1:8000/"
         self.verificationErrors = []
     
-    def test_itemedit_allempty(self):
+    def test_itemedit_invalidprice(self):
         driver = self.driver
         login(driver, self, "zgal", "asd")        
         
         #insert a test item#
-        additem(driver, self)        
+        additem(driver, self)       
         driver.find_element_by_link_text("Edit Item").click()        
         
         try: self.assertEqual("Update Item", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))        
-        driver.find_element_by_id("id_name").clear()
-        driver.find_element_by_id("id_name").send_keys("")
-        driver.find_element_by_id("id_description").clear()
-        driver.find_element_by_id("id_description").send_keys("")
-        driver.find_element_by_id("id_price").clear()
-        driver.find_element_by_id("id_price").send_keys("")
         driver.find_element_by_id("id_quantity").clear()
-        driver.find_element_by_id("id_quantity").send_keys("")
+        driver.find_element_by_id("id_quantity").send_keys("asd")
         driver.find_element_by_id("submit-id-submit").click()
-       
+      
         try: self.assertEqual("Update Item", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_name > strong").text)
+        try: self.assertEqual("Enter a whole number.", driver.find_element_by_css_selector("#error_1_id_quantity > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_description > strong").text)       
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_price > strong").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_quantity > strong").text)
-        except AssertionError as e: self.verificationErrors.append(str(e)) 
         
         #manual revert/clean up#
         driver.find_element_by_link_text("My items and collections").click()
         try: self.assertEqual("Dashboard", driver.find_element_by_css_selector("h1").text)
-        except AssertionError as e: self.verificationErrors.append(str(e)) 
-        driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/div[2]/ul/li[3]/div/a/h5").click()
+        except AssertionError as e: self.verificationErrors.append(str(e))   
+        driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/div[2]/ul/li[3]/div/a/h5").click() 
         try: self.assertEqual("test", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        deleteitem(driver,self)        
+        
+        deleteitem(driver,self)
         driver.find_element_by_link_text("LOGOUT").click()
         
     

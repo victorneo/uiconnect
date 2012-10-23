@@ -28,6 +28,8 @@ class Itemedit_normal(unittest.TestCase):
         driver.find_element_by_id("id_description").send_keys("testing123!")
         driver.find_element_by_id("id_price").clear()
         driver.find_element_by_id("id_price").send_keys("10")
+        driver.find_element_by_id("id_quantity").clear()
+        driver.find_element_by_id("id_quantity").send_keys("8")
         driver.find_element_by_id("submit-id-submit").click()
        
         try: self.assertEqual("test!", driver.find_element_by_css_selector("h1").text) 
@@ -36,7 +38,16 @@ class Itemedit_normal(unittest.TestCase):
         self.assertTrue("testing123!" in driver.find_element_by_tag_name("body").text)       
         self.assertTrue("USD 10" in driver.find_element_by_tag_name("body").text)        
         
+        driver.find_element_by_link_text("Edit Item").click()                
+        try: self.assertEqual("Update Item", driver.find_element_by_css_selector("h3").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("8", driver.find_element_by_id("id_quantity").get_attribute("value"))
+        except AssertionError as e: self.verificationErrors.append(str(e))
+                
         #manual revert/clear up#
+        driver.find_element_by_id("submit-id-submit").click()      
+        try: self.assertEqual("test!", driver.find_element_by_css_selector("h1").text) 
+        except AssertionError as e: self.verificationErrors.append(str(e)) 
         deleteitem(driver,self)        
         driver.find_element_by_link_text("LOGOUT").click()        
     
