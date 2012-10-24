@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=1024, user-scalable=no">
+
+	<title>Your deck.js Presentation</title>
+	
+	<!-- Required stylesheet -->
+	<link rel="stylesheet" href="core/deck.core.css">
+	
+	<!-- Extension CSS files go here. Remove or add as needed. -->
+	<link rel="stylesheet" href="extensions/goto/deck.goto.css">
+	<link rel="stylesheet" href="extensions/menu/deck.menu.css">
+	<link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
+	<link rel="stylesheet" href="extensions/status/deck.status.css">
+	<link rel="stylesheet" href="extensions/hash/deck.hash.css">
+	<link rel="stylesheet" href="extensions/scale/deck.scale.css">
+	
+	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
+	<link rel="stylesheet" href="themes/transition/fade.css">
+	
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="home.css">
+	
+	<!-- Required Modernizr file -->
+	<script src="modernizr.custom.js"></script>
+</head>
+<body class="deck-container">
+
+<!-- Begin slides. Just make elements with a class of slide. -->
+
+<section class="slide deck-current" id="intro">
+	<div>
+		<hgroup>
+			<h1>trends</h1>
+			<h2>by team UI Connect</h2>
+		</hgroup>
+	</div>
+</section>
+
+<section class="slide center">
+	<div>
+		<hgroup>
+			<h1>project demo</h1>
+		</hgroup>
+	</div>
+</section>
+
+<section class="slide common">
+	<h2>Main Technology</h2>
+
+	<section class="slide">
+		<h3>Django</h3>
+		<ul>
+			<li>Python based Web development framework</li>
+			<li>Chosen because it allows rapid prototyping and familiarity</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h3>Javascript libraries</h3>
+		<ul>
+			<li>JQuery</li>
+			<li>Aviary</li>
+			<li>Money <small>(currency conversion)</small></li>
+		</ul>
+	</section>
+</section>
+
+<section class="slide common">
+	<h2>Development Methodolody</h2>
+
+	<section class="slide">
+		<h3>Agile Methodology</h3>
+		<ul>
+			<li>Customer facing website</li>
+			<li>Changes to suit customer needs happens frequently based on feedback</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h3>Agile Samurai</h3>
+		<img src="images/agilesamurai.jpg" width=200 />
+	</section>
+	<section class="slide">
+		<h3>
+			Agile Testing:<br />A Practical Guide for Testers and Agile Teams
+			<br />
+			<small>by Lisa Crispin</small>
+		</h3>
+	</section>
+</section>
+
+<section class="slide common">
+	<h2>Project Estimation</h2>
+	<section class="slide">
+		<h3>Function Point Analysis</h3>
+		<ul>
+			<li>Unable to find Lines of Code / Function for Python, substituted with Perl</li>
+			<li>Haha</li>
+		</ul>
+	</section>
+</section>
+
+<section class="slide common">
+	<h2>Requirements and Documents</h2>
+
+	<img src="images/gdocs.png" />
+</section>
+
+<section class="slide center">
+	<div>
+		<hgroup>
+			<h1>Questions and Answers</h1>
+		</hgroup>
+	</div>
+</section>
+
+<!-- End slides. -->
+
+
+<!-- End extension snippets. -->
+
+
+<!-- Required JS files. -->
+<script src="jquery-1.7.2.min.js"></script>
+<script src="core/deck.core.js"></script>
+
+<!-- Extension JS files. Add or remove as needed. -->
+<script src="../core/deck.core.js"></script>
+
+<!-- Initialize the deck. You can put this in an external file if desired. -->
+<script>
+	$(function() {
+		$.deck('.slide');
+	});
+</script>
+</body>
+</html>
