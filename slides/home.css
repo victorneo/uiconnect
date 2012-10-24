@@ -21,10 +21,10 @@
   #intro {
     text-align: center;
   }
-  #intro > div {
+  #intro > div .center > div {
     padding-top: 24px;
   }
-  .csstransforms #intro > div {
+  .csstransforms #intro > div, .csstransforms .center > div {
     padding-top: 0;
     position: absolute;
     top: 50%;
@@ -36,7 +36,7 @@
     -o-transform: translate(0, -50%);
     transform: translate(0, -50%);
   }
-  #intro h1 {
+  #intro h1, .center h1 {
     position: static;
     font-size: 84px;
     font-weight: normal;
@@ -51,14 +51,14 @@
     color: #000;
     text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
   }
-  #intro h2 {
+  #intro h2, .center h2 {
     font-size: 24px;
     letter-spacing: 2px;
     color: #999;
     font-weight: 100;
     text-shadow: 1px 1px 1px #fff;
   }
-  #intro hgroup {
+  #intro hgroup, .center hgroup {
     margin-bottom: 32px;
   }
   #intro p {
@@ -373,7 +373,7 @@
     text-align: center;
     position: relative;
     z-index: 3;
-	border-bottom: none;
+  border-bottom: none;
   }
   #now-what > h2:after {
     content: "";
@@ -712,21 +712,25 @@
 }
 
 .common h1, .common h2{
-	text-align: right;
+  text-align: right;
 }
 
 .common h1, .common h2, .common h3{
-	font-family: Georgia, sans-serif !important;
-	font-size: 3em !important;
-	margin-bottom: 20px !important;
+  font-family: Georgia, sans-serif !important;
+  font-size: 3em !important;
+  margin-bottom: 20px !important;
 }
 
 .common h3{
-	font-size: 2.2em !important;
+  font-size: 2.2em !important;
+}
+
+.center h2{
+  margin-top: 120px;
 }
 
 h2{
-	border: none !important;
+  border: none !important;
 }
 
 p, ul>li { font-size: 2em !important; }
@@ -738,12 +742,12 @@ p, ul>li { font-size: 2em !important; }
 }
 
 .center{
-	text-align: center;
-	font-family: Georgia, sans-serif !important;
+  text-align: center;
+  font-family: Georgia, sans-serif !important;
 }
 
 .center h1{
-	font-size: 3em !important;
+  font-size: 3em !important;
 }
 
 @media print {
