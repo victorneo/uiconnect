@@ -7,7 +7,56 @@
     {% include 'messages.html' %}
 
     {% if listings %}
-      {% include 'listings/thumbnails.html' with listings=listings %}
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="listings">
+      <thead style="text-align: left;">
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Likes</th>
+          <th>Menu</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in listings %}
+        <tr>
+          <td style="text-align: center;">
+            <a href="{% url 'listings:view' l.id %}">
+            {% if l.images.all.0.image.url %}<img src="{{ l.images.all.0.image.url }}" style="width: 100px;" alt="{{ l.name }}"><br />{% endif %}
+            {{ l.name }}
+            </a>
+          </td>
+          <td>USD {{ l.price }}</td>
+          <td>{{ l.likes.count }} like{% if l.likes.count != 1 %}s{% endif %}</td>
+          <td>
+            <div class="btn-toolbar" style="width: 240px;">
+              <div class="btn-group">
+                <a class="btn btn-small btn-danger" href="#" data-target="#listing{{ l.id }}" data-toggle="modal"><i class="icon-trash"></i> Delete Item</a>
+                <a class="btn btn-small" href="{% url 'listings:manage_images' l.id %}"><i class="icon-camera"></i> Manage Images</a>
+                <a class="btn btn-small" href="{% url 'listings:update' l.id %}"><i class="icon-pencil"></i> Edit Item</a>
+              </div>
+            </div>
+
+            <div class="modal hide" id="listing{{ l.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Are you sure you want to delete {{ l.name }}?</h3>
+              </div>
+              <div class="modal-body" style="text-align: center;">
+                {% if l.images.all.0.image.url %}<img src="{{ l.images.all.0.image.url }}" style="max-width: 200px;" alt="{{ l.name }}"><br />{% endif %}
+                <p>You will not be able to recover this item in future.</p>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <a class="btn btn-danger" href="{% url 'listings:delete' l.id %}">Yes, delete</a>
+              </div>
+            </div>
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
     {% else %}
       <p>You have not added any items for sale yet. <a href="{% url 'listings:add' %}">Add one?</a></p>
     {% endif %}
@@ -22,7 +71,16 @@
 {% endblock %}
 
 {% block js_footer %}
-<script type="text/javascript">
-    $("[rel=tooltip]").tooltip();
-</script>
+  <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+  <script src="{{ STATIC_URL }}js/paging.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#listings').dataTable({
+        "sDom": "<'row'<'span5'l><'span4'f>r>t<'row'<'span6'i><'span6'p>>",
+        "sPaginationType": "bootstrap",
+        "aLengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        "iDisplayLength": 5,
+      });
+    });
+  </script>
 {% endblock %}

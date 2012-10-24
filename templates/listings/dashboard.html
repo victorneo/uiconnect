@@ -23,6 +23,18 @@
 
     {% if not updates %}
     <p>No items in your newsfeed. Follow users that you like to stay updated on their latest items for sale!</p>
+    <div style="margin-top: 20px;">
+      <h3>New here?</h3>
+      <h4>Start by discovering new cool items to buy</h4>
+      <p>
+        <a href="{% url 'listings:discover' %}"><img src="{{ STATIC_URL }}img/discover.png" style="width: 300px; border: 3px solid #ccc;" /></a>
+        <p><small>You can continue your discovery by clicking on "Discover" in the navigation bar above.</small></p>
+      </p>
+
+      <h4>or Browse all the items available for sale</h4>
+      <a href="{% url 'listings:categories' %}"><img src="{{ STATIC_URL }}img/browse.png" style="width: 300px; border: 3px solid #ccc;" /></a>
+    </div>
+
     {% endif %}
 
     {% for update in updates %}
