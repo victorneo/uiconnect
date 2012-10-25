@@ -41,45 +41,41 @@
     $container.masonry({
       itemSelector : '.box',
       isAnimated: true,
+      columnWidth: 300,
       animationOptions: {
         duration: 500,
         easing: 'linear',
         queue: false
       }
     });
+    doPoll();
   });
 
   var current = 0;
 
   function showItems(category_id){
     current = category_id;
-    $('#container').empty();
-    var count = 500;
+    $container.empty();
     $.get('{% url 'listings:discover_items' %}?category_id='+category_id, function(data) {
         $.each(data.items, function() {
-          var $item = $('<div class="box photo col3"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></div>');
-          $('#container').append( $item ).masonry( 'reload' );
-          $item.fadeIn(count);
-          count += 1000;
+          var item = $('<div class="box photo col3"><a href="' + this.url + '"><img src="' + this.thumbnail + '" width=280 /></a></div>');
+          $container.append(item).masonry( 'reload' );
         });
     });
   }
 
   function doPoll(){
     $.get('{% url 'listings:discover_new_items' %}?category_id='+current, function(data) {
-    var count = 2000;
         $.each(data.items, function() {
-          var $item = $('<div class="box photo col3"><a href="' + this.url + '"><img src="' + this.thumbnail + '" /></a></div>');
-          $('#container').prepend( $item ).masonry( 'reload' );
-          $item.fadeIn(count + 1000);
+          var item = $('<div class="box photo col3"><a href="' + this.url + '"><img src="' + this.thumbnail + '" width=280 /></a></div>');
+          $container.prepend(item);
+        });
+        $container.imagesLoaded( function(){
+          $container.masonry('reload');
         });
         setTimeout(doPoll,30000);
     });
   }
-
-  $(document).ready(function(){
-    doPoll();
-  });
 
 </script>
 {% endblock %}

@@ -36,6 +36,8 @@ def discover(request):
     for c in categories:
         c.display_listings = c.listings.order_by('-id').all()
 
+    request.session['discover_time'] = datetime.now()
+
     return render(request, 'listings/discover.html', {
         'listings': listings,
         'categories': categories,
