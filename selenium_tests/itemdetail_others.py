@@ -52,7 +52,7 @@ class ItemdetailOthers(unittest.TestCase):
         self.assertTrue("interested?" in driver.find_element_by_tag_name("body").text)
         
         try: self.assertEqual("Elmo's ABC Book", driver.find_element_by_css_selector("h1").text)
-        except AssertionError as e: self.verificationErrors.append(str(e))        
+        except AssertionError as e: self.verificationErrors.append(str(e))                  
         driver.find_element_by_name("content").clear()
         driver.find_element_by_name("content").send_keys("testing non-owner comments...")
         driver.find_element_by_css_selector("#comment-form > input.btn").click()

@@ -31,6 +31,10 @@ class Newsfeed(unittest.TestCase):
         try: self.assertEqual("Newsfeed", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("No items in your newsfeed. Follow users that you like to stay updated on their latest items for sale!" in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("New here?" in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("Start by discovering new cool items to buy" in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("You can continue your discovery by clicking on \"Discover\" in the navigation bar above." in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("or Browse all the items available for sale" in driver.find_element_by_tag_name("body").text)
         
         #pick an item belong to user:asd an follow user:asd#
         driver.find_element_by_link_text("trends").click()
@@ -112,7 +116,10 @@ class Newsfeed(unittest.TestCase):
         try: self.assertEqual("Newsfeed", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("No items in your newsfeed. Follow users that you like to stay updated on their latest items for sale!" in driver.find_element_by_tag_name("body").text)
-        
+        self.assertTrue("New here?" in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("Start by discovering new cool items to buy" in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("You can continue your discovery by clicking on \"Discover\" in the navigation bar above." in driver.find_element_by_tag_name("body").text)
+        self.assertTrue("or Browse all the items available for sale" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_link_text("LOGOUT").click()
     
     def is_element_present(self, how, what):

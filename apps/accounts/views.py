@@ -191,8 +191,8 @@ def follow(request, user_id):
 
 @login_required
 def following(request):
-    following_users = request.user.get_profile().following.all()[:5]
-    users_following = request.user.get_profile().followers.all()[:5]
+    following_users = request.user.get_profile().following.all()
+    users_following = request.user.get_profile().followers.all()
 
     return render(request, 'accounts/following.html', {
         'following_users': following_users,

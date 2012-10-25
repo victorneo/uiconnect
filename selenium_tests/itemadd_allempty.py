@@ -19,6 +19,9 @@ class Itemadd_Allempty(unittest.TestCase):
         driver.find_element_by_link_text("Add Item").click()
         try: self.assertEqual("Add Item", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("1", driver.find_element_by_id("id_quantity").get_attribute("value"))
+        except AssertionError as e: self.verificationErrors.append(str(e))  
+        driver.find_element_by_id("id_quantity").clear()
         driver.find_element_by_id("submit-id-submit").click()
         
         try: self.assertEqual("Add Item", driver.find_element_by_css_selector("h3").text)
@@ -30,6 +33,8 @@ class Itemadd_Allempty(unittest.TestCase):
         try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_price > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_categories > strong").text)
+        except AssertionError as e: self.verificationErrors.append(str(e))
+        try: self.assertEqual("This field is required.", driver.find_element_by_css_selector("#error_1_id_quantity > strong").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         
         driver.find_element_by_link_text("LOGOUT").click()        
