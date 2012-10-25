@@ -94,7 +94,7 @@ def deletecollection(driver,self):
     except AssertionError as e: self.verificationErrors.append(str(e))
     self.assertTrue("Collection has been deleted." in driver.find_element_by_tag_name("body").text)
     driver.find_element_by_link_text("My items and collections").click()
-    driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/div[2]/ul/li[3]/div/a/h5").click() 
+    driver.find_element_by_link_text("test").click() 
     deleteitem(driver,self)
 
 

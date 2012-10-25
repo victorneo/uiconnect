@@ -56,7 +56,7 @@ class CollectiondetailOwn(unittest.TestCase):
         driver.find_element_by_link_text("New collections").click()
         try: self.assertEqual("Collections", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        driver.find_element_by_css_selector("div.collection-preview-image").click()        
+        driver.find_element_by_xpath("//table[@id='collections']/tbody/tr[2]/td/div/a/div").click()    
         driver.find_element_by_link_text("Manage Items").click()
         try: self.assertEqual("Add Items to Collection", driver.find_element_by_css_selector("h3").text)
         except AssertionError as e: self.verificationErrors.append(str(e))  
@@ -64,7 +64,7 @@ class CollectiondetailOwn(unittest.TestCase):
         driver.find_element_by_link_text("New collections").click()
         try: self.assertEqual("Collections", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
-        driver.find_element_by_css_selector("div.collection-preview-image").click()
+        driver.find_element_by_xpath("//table[@id='collections']/tbody/tr[2]/td/div/a/div").click()
         deletecollection(driver, self)
            
         driver.find_element_by_link_text("LOGOUT").click()       
