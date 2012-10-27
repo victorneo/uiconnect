@@ -107,14 +107,20 @@ def categories(request):
 
 def category(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    category.display_listings = category.listings\
-        .annotate(num_likes=Count('likes'))\
-        .order_by('-num_likes')\
-        .filter(quantity__gte=1)\
-        .all()
+    sort_type = request.GET.get('sort_type', None)
+
+    if sort_type:
+        category.display_listings = category.listings.order_by('-id').filter(quantity__gte=1).all()
+    else:
+        category.display_listings = category.listings\
+            .annotate(num_likes=Count('likes'))\
+            .order_by('-num_likes')\
+            .filter(quantity__gte=1)\
+            .all()
 
     return render(request, 'listings/category.html', {
         'category': category,
+        'sort_type': sort_type,
     })
 
 

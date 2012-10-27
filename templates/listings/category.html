@@ -2,7 +2,12 @@
 {% load url from future %}
 
 {% block content %}
-  <h1>All Items in {{ category.name }} <small>sorted by popularity</small></h1>
+  <h1>All Items in {{ category.name }}</h1>
+
+  <ul class="sort_type nav nav-pills">
+    <li{% if not sort_type %} class="active"{% endif %}><a href="{% url 'listings:category' category.slug %}">Popularity</a></li>
+    <li{% if sort_type %} class="active"{% endif %}><a href="{% url 'listings:category' category.slug %}?sort_type=latest">Latest Items</a></li>
+  </ul>
 
   <ul class="thumbnails">
     {% for listing in category.display_listings %}

@@ -222,8 +222,8 @@ div#listing-info h6{ margin-top: 20px; margin-bottom: 3px; font-weight: lighter;
 }
 
 #featured-listings a{
-  color: #e78f08;
-  text-decoration: none;
+  color: #e78f08 !important;
+  text-decoration: none !important;
 }
 
 #featured-listings ul.nav-pills>li.active>a,
