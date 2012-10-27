@@ -17,6 +17,9 @@ class Payment(models.Model):
         self.total = None
         super(Payment, self).__init__(*args, **kwargs)
 
+    def __unicode__(self):
+        return '%s, is paid: %s' % (str(self.user), self.is_paid)
+
     @property
     def amount_due(self):
         if self.total:

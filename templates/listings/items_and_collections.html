@@ -19,10 +19,10 @@
       <tbody>
         {% for l in listings %}
         <tr>
-          <td style="text-align: center;">
+          <td style="text-align: center; max-width: 150px;">
             <a href="{% url 'listings:view' l.id %}">
             {% if l.images.all.0.image.url %}<img src="{{ l.images.all.0.image.url }}" style="width: 100px;" alt="{{ l.name }}"><br />{% endif %}
-            {{ l.name }}
+            {{ l.name|truncatechars:20 }}
             </a>
           </td>
           <td>USD {{ l.price }}</td>
