@@ -1,51 +1,23 @@
-<<<<<<< HEAD
-Django==1.4.1
-
-=======
 Django==1.4.2
->>>>>>> 82ac3734702aaa8ed04cdd8527eb3aec1f4d0a7b
 Fabric==1.4.3
-
 PIL==1.1.7
-
 South==0.7.6
-
 coverage==3.5.2
-
 django-coverage==1.2.2
-
 django-crispy-forms==1.1.4
-
 django-endless-pagination==1.1
-
 django-imagekit==2.0.1
-
 django-jenkins==0.13.0
-
 factory-boy==1.2.0
-
 facebook-sdk==0.3.2
-
 logilab-astng==0.24.0
-
 logilab-common==0.58.1
-<<<<<<< HEAD
-
-=======
 mock==1.0b1
->>>>>>> 82ac3734702aaa8ed04cdd8527eb3aec1f4d0a7b
 nose==1.2.1
-
 pycrypto==2.6
-
 pylint==0.25.2
-
 requests==0.14.0
-
 selenium==2.25.0
-
 ssh==1.7.14
-
 unittest2==0.5.1
-
 wsgiref==0.1.2
