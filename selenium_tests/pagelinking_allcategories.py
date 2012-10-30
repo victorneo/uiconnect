@@ -21,7 +21,7 @@ class PagelinkingAllcategories(unittest.TestCase):
 
         #fashion
         driver.find_element_by_link_text("see all items under Fashion").click()
-        try: self.assertEqual("All Items in Fashion sorted by popularity", driver.find_element_by_css_selector("h1").text)
+        try: self.assertEqual("All Items in Fashion", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("6-inch Black Heel" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_css_selector("div.thumbnail-wrapper > img").click()
@@ -95,7 +95,7 @@ class PagelinkingAllcategories(unittest.TestCase):
         verifyallcategories(driver, self)
         #electronic & IT Gadget
         driver.find_element_by_link_text("see all items under Electronic & IT Gadget").click()
-        try: self.assertEqual("All Items in Electronic & IT Gadget sorted by popularity", driver.find_element_by_css_selector("h1").text)
+        try: self.assertEqual("All Items in Electronic & IT Gadget", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e)) 
         self.assertTrue("Samsung Galaxy Camera" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_css_selector("div.thumbnail-wrapper > img").click()
@@ -125,7 +125,7 @@ def verifyallcategories(driver, self):
     except AssertionError as e: self.verificationErrors.append(str(e)) 
 
 def verifybooks(driver, self):
-    try: self.assertEqual("All Items in Books sorted by popularity", driver.find_element_by_css_selector("h1").text)
+    try: self.assertEqual("All Items in Books", driver.find_element_by_css_selector("h1").text)
     except AssertionError as e: self.verificationErrors.append(str(e)) 
     self.assertTrue("Harry Potter and the Philosophers Stone" in driver.find_element_by_tag_name("body").text)
     self.assertTrue("Harry Potter and the Chamber of Secrets" in driver.find_element_by_tag_name("body").text)
@@ -137,7 +137,7 @@ def verifybooks(driver, self):
     self.assertTrue("Elmo's ABC Book" in driver.find_element_by_tag_name("body").text)
 
 def verifykids(driver, self):
-    try: self.assertEqual("All Items in Kids sorted by popularity", driver.find_element_by_css_selector("h1").text)
+    try: self.assertEqual("All Items in Kids", driver.find_element_by_css_selector("h1").text)
     except AssertionError as e: self.verificationErrors.append(str(e)) 
     self.assertTrue("Rubik Cube" in driver.find_element_by_tag_name("body").text)
     self.assertTrue("Elmo's ABC Book" in driver.find_element_by_tag_name("body").text)

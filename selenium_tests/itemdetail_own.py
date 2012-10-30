@@ -45,7 +45,7 @@ class ItemdetailOwn(unittest.TestCase):
         self.assertTrue("(Owner) Mabel commented 0 minutes ago." in driver.find_element_by_tag_name("body").text)
         
         driver.find_element_by_link_text("Fashion").click()
-        try: self.assertEqual("All Items in Fashion sorted by popularity", driver.find_element_by_css_selector("h1").text)
+        try: self.assertEqual("All Items in Fashion", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("test" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/ul/li[2]/div/a/h5").click()

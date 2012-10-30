@@ -62,7 +62,7 @@ class ItemdetailOthers(unittest.TestCase):
         self.assertTrue("Mabel commented 0 minutes ago." in driver.find_element_by_tag_name("body").text)
         
         driver.find_element_by_link_text("Books").click()
-        try: self.assertEqual("All Items in Books sorted by popularity", driver.find_element_by_css_selector("h1").text)
+        try: self.assertEqual("All Items in Books", driver.find_element_by_css_selector("h1").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
         self.assertTrue("Elmo's ABC Book" in driver.find_element_by_tag_name("body").text)
         driver.find_element_by_xpath("//div[@id='container-wrapper']/div/div/ul/li[8]/div/a/div/img").click()
