@@ -1,6 +1,6 @@
 # UI Connect
 
-![Screenshot](http://victorneo.github.com/uiconnect/screenshot.png)
+![Screenshot](https://raw.github.com/victorneo/uiconnect/development/screenshot.png)
 
 UI Connect is a social commerce website built in partial fulfillment for a course project (Software Engineering II).
 It is built on top of the Django web framework and several Javascript libraries.
